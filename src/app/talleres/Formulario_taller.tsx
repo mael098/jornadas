@@ -34,6 +34,7 @@ export function Formulario_taller() {
             })
             if (request.error) {
                 console.log(request)
+                alert('Ha sucedido un error, intente de nuevo')
             } else {
                 alert(request.message)
             }

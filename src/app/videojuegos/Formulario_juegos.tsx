@@ -23,6 +23,7 @@ export function Formulario_juegos() {
             })
             if (request.error) {
                 // hubo un error
+                alert('Ha sucedido un error, intente de nuevo')
                 console.log(request.error)
             } else {
                 alert(request.message)

@@ -23,6 +23,7 @@ export function Formulario_viernes() {
             })
             if (request.error) {
                 // hubo un error
+                alert('Ha sucedido un error, intente de nuevo')
                 console.log(request)
             } else {
                 alert(request.message)
