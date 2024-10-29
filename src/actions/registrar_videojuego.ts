@@ -62,6 +62,7 @@ export async function registrarVideojuego({
             })
         }
     } catch (error) {
+        console.log(error)
         return {
             error: 'Error Interno',
         }
@@ -81,6 +82,7 @@ export async function registrarVideojuego({
                 error: 'Usuario Registrado',
             }
     } catch (error) {
+        console.log(error)
         return {
             error: 'Error Interno',
         }
@@ -99,6 +101,7 @@ export async function registrarVideojuego({
             },
         })
     } catch (error) {
+        console.log(error)
         return {
             error: 'Error Interno',
         }

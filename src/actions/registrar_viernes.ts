@@ -54,6 +54,7 @@ export async function registrarViernes({
             })
         }
     } catch (error) {
+        console.log(error)
         return {
             error: 'Error Interno',
         }
@@ -73,6 +74,7 @@ export async function registrarViernes({
                 error: 'Usuario Registrado',
             }
     } catch (error) {
+        console.log(error)
         return {
             error: 'Error Interno',
         }
@@ -91,7 +93,10 @@ export async function registrarViernes({
             }
         }
     } catch (error) {
-        console.log('Error al contar los talleres:', error)
+        console.log(error)
+        return {
+            error: 'Error Interno',
+        }
     }
 
     // REGISTRO
@@ -107,6 +112,7 @@ export async function registrarViernes({
             },
         })
     } catch (error) {
+        console.log(error)
         return {
             error: 'Error Interno',
         }
