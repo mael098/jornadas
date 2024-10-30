@@ -33,7 +33,7 @@ export function Formulario_taller() {
                 taller_horario3,
             })
             if (request.error) {
-                alert(`Error: ${request.error}`)
+                console.log(request.error)
                 alert('Ha sucedido un error, intente de nuevo')
             } else {
                 alert(request.message || 'registro exitoso')
