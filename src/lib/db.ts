@@ -6,13 +6,12 @@ import { createClient } from '@libsql/client'
 declare const globalThis: {
     prismaGlobal: PrismaClient
 } & typeof global
-console.log(process.env.NODE_ENV)
 
 const db =
     globalThis.prismaGlobal ??
     new PrismaClient({
         adapter:
-            process.env.NODE_ENV === 'production' ?
+            process.env.NODE_ENV !== 'production' ?
                 null
             :   new PrismaLibSQL(
                     createClient({
