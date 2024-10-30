@@ -72,9 +72,10 @@ export async function registrarTaller({
             })
         }
     } catch (error) {
-        console.log(error)
+        console.log('error el crear el usuario', error)
         return {
             error: 'Error Interno',
+            message: 'hubo un error al crear el usuario',
         }
     }
 
@@ -90,9 +91,9 @@ export async function registrarTaller({
         if (taller)
             return {
                 error: 'Usuario Registrado',
+                message: 'este usuario ya tiene un taller registrados',
             }
     } catch (error) {
-        console.log(error)
         return {
             error: 'Error Interno',
         }
@@ -131,10 +132,7 @@ export async function registrarTaller({
             }
         }
     } catch (error) {
-        console.log(error)
-        return {
-            error: 'Error Interno',
-        }
+        console.log('Error al contar los talleres:', error)
     }
 
     // REGISTRO
@@ -152,9 +150,10 @@ export async function registrarTaller({
             },
         })
     } catch (error) {
-        console.log(error)
+        console.log('error al registrar el taller:', error)
         return {
             error: 'Error Interno',
+            message: 'hubo un error al registrar el taller',
         }
     }
 
