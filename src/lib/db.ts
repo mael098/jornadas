@@ -11,14 +11,15 @@ const db =
     globalThis.prismaGlobal ??
     new PrismaClient({
         adapter:
-            process.env.NODE_ENV !== 'production' ?
-                null
-            :   new PrismaLibSQL(
-                    createClient({
-                        url: process.env.TURSO_DATABASE_URL as string,
-                        authToken: process.env.TURSO_AUTH_TOKEN as string,
-                    }),
-                ),
+            // process.env.NODE_ENV !== 'production' ?
+            //     null
+            // :
+            new PrismaLibSQL(
+                createClient({
+                    url: process.env.TURSO_DATABASE_URL as string,
+                    authToken: process.env.TURSO_AUTH_TOKEN as string,
+                }),
+            ),
     })
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = db
