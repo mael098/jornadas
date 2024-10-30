@@ -32,3 +32,11 @@ export const JUEGOS = {
     Juego_2: 'Super Smash Bros',
     Juego_3: 'Mario Kart',
 }
+
+export const HEADERS = {
+    PATHNAME: 'pathname',
+}
+
+export const LIMITE_DE_SUSCRIPCION = {
+    TALLER: 37,
+}
