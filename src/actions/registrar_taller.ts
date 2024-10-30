@@ -1,6 +1,7 @@
 'use server'
 
 import {
+    LIMITE_DE_SUSCRIPCION,
     TalleresHorario1,
     TalleresHorario2,
     TalleresHorario3,
@@ -105,7 +106,7 @@ export async function registrarTaller({
                 taller_horario1,
             },
         })
-        if (countTalleres1 >= 37) {
+        if (countTalleres1 >= LIMITE_DE_SUSCRIPCION.TALLER) {
             return {
                 error: 'Taller lleno 1',
             }
@@ -115,7 +116,7 @@ export async function registrarTaller({
                 taller_horario2,
             },
         })
-        if (countTalleres2 >= 37) {
+        if (countTalleres2 >= LIMITE_DE_SUSCRIPCION.TALLER) {
             return {
                 error: 'Taller lleno 2',
             }
@@ -125,7 +126,7 @@ export async function registrarTaller({
                 taller_horario3,
             },
         })
-        if (countTalleres3 >= 37) {
+        if (countTalleres3 >= LIMITE_DE_SUSCRIPCION.TALLER) {
             return {
                 error: 'Taller lleno 3',
             }

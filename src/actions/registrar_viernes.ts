@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { Juegos } from '@/lib/constantes'
+import { Juegos, LIMITE_DE_SUSCRIPCION } from '@/lib/constantes'
 import { TalleresViernes } from '@/lib/constantes'
 
 export interface RegistrarViernesProps {
@@ -87,7 +87,7 @@ export async function registrarViernes({
                 taller,
             },
         })
-        if (count >= 37) {
+        if (count >= LIMITE_DE_SUSCRIPCION.TALLER) {
             return {
                 error: 'Taller lleno',
             }
