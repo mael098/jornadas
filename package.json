@@ -10,11 +10,11 @@
         "db:migrate": "cat migration.sql |  turso db shell jornadassistemas"
     },
     "dependencies": {
-        "@libsql/client": "^0.14.0",
+        "@libsql/client": "^0.8.1",
         "@prisma/adapter-libsql": "^5.21.1",
         "next": "15.0.2",
-        "react": "19.0.0-rc-69d4b800-20241021",
-        "react-dom": "19.0.0-rc-69d4b800-20241021"
+        "react": "19.0.0-rc-02c0e824-20241028",
+        "react-dom": "19.0.0-rc-02c0e824-20241028"
     },
     "devDependencies": {
         "@prisma/client": "^5.21.1",

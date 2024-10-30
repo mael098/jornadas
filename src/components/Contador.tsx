@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 // Estilos
 import './contador.css'
+import { FECHA_DEL_EVENTO } from '@/lib/constantes'
 
 export function Contador() {
     const [dias, setday] = useState(0)
@@ -13,9 +14,7 @@ export function Contador() {
     const [iniciado, setIniciado] = useState(false)
 
     useEffect(() => {
-        const eventoFecha = new Date(
-            'November 7, 2024 09:00:00 GMT-0600',
-        ).getTime()
+        const eventoFecha = new Date(FECHA_DEL_EVENTO).getTime()
 
         const intervalo = setInterval(function () {
             const ahora = new Date().getTime()

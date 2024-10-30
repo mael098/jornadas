@@ -40,3 +40,7 @@ export const HEADERS = {
 export const LIMITE_DE_SUSCRIPCION = {
     TALLER: 37,
 }
+
+export const FECHA_DEL_EVENTO: number | string | Date = new Date(
+    'November 7, 2024 09:00:00 GMT-0600',
+)

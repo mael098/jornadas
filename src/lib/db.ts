@@ -6,6 +6,7 @@ import { createClient } from '@libsql/client'
 declare const globalThis: {
     prismaGlobal: PrismaClient
 } & typeof global
+console.log(process.env.NODE_ENV)
 
 const db =
     globalThis.prismaGlobal ??
