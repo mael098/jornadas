@@ -33,20 +33,20 @@ export function Formulario_taller() {
                 taller_horario3,
             })
             if (request.error) {
-                console.log(request)
+                alert(`Error: ${request.error}`)
                 alert('Ha sucedido un error, intente de nuevo')
             } else {
-                alert(request.message)
+                alert(request.message || 'registro exitoso')
             }
         } catch (error) {
             console.log(error)
+            alert('has ocurrido un error. intente de nuevo.')
         }
     }
 
     return (
         <form action={handleaction}>
             <div>
-                {/* Talleres por horario */}
                 <h3>Horario 1: 9:00 AM - 11:00 AM</h3>
                 <Radio
                     name="taller_horario1"
@@ -70,20 +70,19 @@ export function Formulario_taller() {
                 <h3>Horario 2: 1:00 PM - 3:00 PM</h3>
                 <Radio
                     name="taller_horario2"
-                    taller="Taller 1: Estructuras HTML con hojas de estilo de
-                        JavaScript"
+                    taller="Taller 1: Estructuras HTML con hojas de estilo de JavaScript"
                     descripcion="Fundamentos de programación y desarrollo web."
                     value={TALLERES_HORARIO2.Taller_4}
                 />
                 <Radio
                     name="taller_horario2"
-                    taller="  Taller 2: CiberSeguridad"
+                    taller="Taller 2: CiberSeguridad"
                     descripcion="Purple Team: una entrada a la cyberseguridad"
                     value={TALLERES_HORARIO2.Taller_5}
                 />
                 <Radio
                     name="taller_horario2"
-                    taller="taller_horario2"
+                    taller="Taller 3: Transformación educativa"
                     descripcion="Cómo las tecnologías transforman la educación."
                     value={TALLERES_HORARIO2.Taller_6}
                 />
@@ -97,7 +96,7 @@ export function Formulario_taller() {
                 />
                 <Radio
                     name="taller_horario3"
-                    taller="Taller 2: Analisis, diseño e implementación de estructura de datos lineales en java"
+                    taller="Taller 2: Análisis de datos"
                     descripcion="Estrategias de marketing digital para pymes."
                     value={TALLERES_HORARIO3.Taller_8}
                 />

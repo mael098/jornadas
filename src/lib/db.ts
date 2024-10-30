@@ -12,7 +12,7 @@ const db =
     globalThis.prismaGlobal ??
     new PrismaClient({
         adapter:
-            process.env.NODE_ENV !== 'production' ?
+            process.env.NODE_ENV === 'production' ?
                 null
             :   new PrismaLibSQL(
                     createClient({
