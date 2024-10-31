@@ -26,7 +26,7 @@ export function Formulario_juegos({
                 email,
                 numero_control,
                 semestre,
-                videojuego: juego,
+                videojuego: juego as keyof typeof JUEGOS,
             })
             if (request.error) {
                 alert('Ha sucedido un error, intente de nuevo')
