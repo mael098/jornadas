@@ -74,14 +74,6 @@ export function Formulario_viernes() {
                 <option value="7">Séptimo semestre</option>
             </select>
 
-            <label htmlFor="taller">Taller:</label>
-            <select id="taller" name="taller" required>
-                {Object.entries(TALLERES_VIERNES).map(([key, value]) => (
-                    <option key={key} value={value}>
-                        {value}
-                    </option>
-                ))}
-            </select>
             <button type="submit">Registrarse en Taller</button>
             <p id="mensaje_viernes"></p>
         </form>

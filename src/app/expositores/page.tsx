@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import logo from '@/Logos/LOGO_JORNADAS_SIN.png'
 import expositor2 from '@/expositores/expositor2.webp'
+import expositor1 from '@/expositores/expositor1.webp'
+import expositor3 from '@/expositores/expositor3.webp'
+
 export default function page() {
     return (
         <div id="expositores" className="tabcontent">
@@ -20,6 +23,53 @@ export default function page() {
                         experiencia en desarrollo web. Su taller tratará sobre
                         los fundamentos de la programación y cómo empezar a
                         desarrollar aplicaciones web. Creditos: ChatGPT
+                    </p>
+                </div>
+            </div>
+            <div className="expositor">
+                <Image
+                    src={expositor3}
+                    width={100}
+                    height={100}
+                    alt="Expositor 2"
+                    className="expositor-img"
+                />
+                <div className="expositor-info">
+                    <h3>Dra. Claudia Guadalupe Gómez Santillán </h3>
+                    <h4 className="text-xl">
+                        Toma de Decisiones Basada en Datos
+                    </h4>
+                    <p>
+                        Objetivo: Demostrar cómo aprovechar los datos mediante
+                        técnicas de análisis y visualización para respaldar
+                        procesos de toma de decisiones. Requisitos: Power BI
+                        (software gratuito; debe estar instalado previamente)
+                        Kaggle (plataforma web; se requiere una cuenta,
+                        preferiblemente creada antes del taller, pero puede
+                        hacerse durante el mismo) Conexión a Internet Modalidad:
+                        Trabajo en equipo o individual
+                    </p>
+                </div>
+            </div>
+            <div className="expositor">
+                <Image
+                    src={expositor1}
+                    width={100}
+                    height={100}
+                    alt="Expositor 2"
+                    className="expositor-img"
+                />
+                <div className="expositor-info">
+                    <h3>Dr. Nelson Ragel Valdez </h3>
+                    <h4 className="text-xl">
+                        Presentar los componentes esenciales para construir un
+                        agente inteligente mediante un estudio de caso práctico.
+                    </h4>
+                    <p>
+                        Requisitos: Arduino IDE (incluye la instalación de
+                        controladores USB y board para NodeMCU-ESP32) Python
+                        (cualquier versión) NodeJS (cualquier versión) Editor de
+                        texto ligero (Sublime, por ejemplo) Conexión a Internet
                     </p>
                 </div>
             </div>

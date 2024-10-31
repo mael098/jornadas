@@ -72,14 +72,7 @@ export function Formulario_juegos() {
                 <option value="5">Quinto semestre</option>
                 <option value="7">Séptimo semestre</option>
             </select>
-            <label htmlFor="juego">Juego:</label>
-            <select id="juego" name="juego" required>
-                {Object.entries(JUEGOS).map(([key, value]) => (
-                    <option key={key} value={value}>
-                        {value}
-                    </option>
-                ))}
-            </select>
+
             <button type="submit">
                 Registrarse en Concurso de Videojuegos
             </button>

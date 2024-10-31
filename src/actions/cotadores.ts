@@ -65,6 +65,7 @@ export async function conteoDeTalleres() {
             },
         }),
     ])
+
     return {
         taller1,
         taller2,
