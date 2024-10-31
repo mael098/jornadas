@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import logo from '@/Logos/LOGO_JORNADAS_SIN.png'
 import expositor2 from '@/expositores/expositor2.webp'

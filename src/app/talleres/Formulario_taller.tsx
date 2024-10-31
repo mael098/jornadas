@@ -10,7 +10,11 @@ import {
     TalleresHorario3,
 } from '@/lib/constantes'
 
-export function Formulario_taller() {
+interface FormularioTallersProps {
+    onRegistroExito: () => void
+}
+
+export function Formulario_taller({ onRegistroExito }: FormularioTallersProps) {
     const handleaction = async (data: FormData) => {
         const apellidos = data.get('apellidos') as string
         const nombre = data.get('nombre') as string
