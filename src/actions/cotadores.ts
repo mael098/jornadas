@@ -1,3 +1,4 @@
+'use server'
 import {
     JUEGOS,
     TALLERES_HORARIO1,
