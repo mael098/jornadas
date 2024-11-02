@@ -20,7 +20,7 @@ nav {
             background-color: #0056b3;
         }
 
-        &.active {
+        &[data-active='true'] {
             background-color: #0611a7;
         }
     }
