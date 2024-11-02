@@ -14,17 +14,18 @@ model Registro_talleres {
   taller_horario2 String
   taller_horario3 String
   fecha_registro  DateTime @default(now())
-  usuario_id      Int
-  usuario         Usuario  @relation(fields: [usuario_id], references: [id])
+  usuario_nc      String
+
+  usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
 }
 
-model Usuario {
-  id                   Int                    @id @default(autoincrement())
-  apellidos            String
-  nombre               String
-  numero_control       String                 @unique
-  email                String                 @unique
-  semestre             Int
+model Usuarios {
+  apellidos String
+  nombre    String
+  nc        String @id
+  email     String @unique
+  semestre  Int
+
   registro_talleres    Registro_talleres[]
   Registro_videojuegos Registro_videojuegos[]
   Registro_viernes     Registro_viernes[]
@@ -34,14 +35,20 @@ model Registro_videojuegos {
   id                      Int      @id @default(autoincrement())
   fecha_registro          DateTime @default(now())
   videojuego_seleccionado String
-  usuario_id              Int
-  usuario                 Usuario  @relation(fields: [usuario_id], references: [id])
+  usuario_nc              String
+
+  usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
+
+  @@map("RegistroVideojuegos")
 }
 
 model Registro_viernes {
   id             Int      @id @default(autoincrement())
   fecha_registro DateTime @default(now())
   taller         String
-  usuario_id     Int
-  usuario        Usuario  @relation(fields: [usuario_id], references: [id])
+  usuario_nc     String
+
+  usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
+
+  @@map("RegistroViernes")
 }

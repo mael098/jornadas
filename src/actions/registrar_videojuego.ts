@@ -45,18 +45,18 @@ export async function registrarVideojuego({
 
     // Crear el usuario
     try {
-        const user = await db.usuario.findFirst({
+        const user = await db.usuarios.findFirst({
             where: {
-                numero_control,
+                nc: numero_control,
             },
         })
         if (!user) {
-            await db.usuario.create({
+            await db.usuarios.create({
                 data: {
                     apellidos,
                     nombre,
                     email,
-                    numero_control,
+                    nc: numero_control,
                     semestre,
                 },
             })
@@ -73,7 +73,7 @@ export async function registrarVideojuego({
         const taller = await db.registro_videojuegos.findFirst({
             where: {
                 usuario: {
-                    numero_control,
+                    nc: numero_control,
                 },
             },
         })
@@ -95,7 +95,7 @@ export async function registrarVideojuego({
                 videojuego_seleccionado: videojuego,
                 usuario: {
                     connect: {
-                        numero_control,
+                        nc: numero_control,
                     },
                 },
             },

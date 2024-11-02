@@ -60,18 +60,18 @@ export async function registrarTaller({
 
     // Crear el usuario
     try {
-        const user = await db.usuario.findFirst({
+        const user = await db.usuarios.findFirst({
             where: {
-                numero_control,
+                nc: numero_control,
             },
         })
         if (!user) {
-            await db.usuario.create({
+            await db.usuarios.create({
                 data: {
                     apellidos,
                     nombre,
                     email,
-                    numero_control,
+                    nc: numero_control,
                     semestre,
                 },
             })
@@ -95,7 +95,7 @@ export async function registrarTaller({
         const taller = await db.registro_talleres.findFirst({
             where: {
                 usuario: {
-                    numero_control,
+                    nc: numero_control,
                 },
             },
         })
@@ -155,7 +155,7 @@ export async function registrarTaller({
                 taller_horario3,
                 usuario: {
                     connect: {
-                        numero_control,
+                        nc: numero_control,
                     },
                 },
             },

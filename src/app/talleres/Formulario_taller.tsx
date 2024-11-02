@@ -1,5 +1,6 @@
 'use client'
 import { registrarTaller } from '@/actions/registrar_taller'
+import { getUser } from '@/actions/user'
 import Radio from '@/components/Radio'
 import { sessionContext } from '@/contexts/session'
 import { getSession } from '@/lib/auth'
@@ -54,10 +55,11 @@ export function Formulario_taller({ onRegistroExito }: FormularioTallersProps) {
 
     useEffect(() => {
         const executeAsync = async () => {
-            const session = await getSession()
+            if (!session) return
+            const user = await getUser(session.numero_control)
         }
         executeAsync()
-    }, [])
+    }, [session])
 
     return (
         <form action={handleaction}>
