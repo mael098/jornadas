@@ -1,13 +1,17 @@
 'use server'
 
 import {
+    COOKIES,
     LIMITE_DE_SUSCRIPCION,
+    SECRET_KEY,
     TalleresHorario1,
     TalleresHorario2,
     TalleresHorario3,
 } from '@/lib/constantes'
 import { db } from '@/lib/db'
-
+import { SignJWT } from 'jose'
+import next from 'next'
+import { cookies } from 'next/headers'
 export interface RegistrarTallerProps {
     apellidos: string
     nombre: string
@@ -71,6 +75,12 @@ export async function registrarTaller({
                     semestre,
                 },
             })
+            const token = await new SignJWT({ numero_control })
+                .setProtectedHeader({ alg: 'HS256' })
+                .setIssuedAt()
+                .setExpirationTime('48h')
+                .sign(SECRET_KEY)
+            ;(await cookies()).set(COOKIES.SESSION, token)
         }
     } catch (error) {
         console.log('error el crear el usuario', error)

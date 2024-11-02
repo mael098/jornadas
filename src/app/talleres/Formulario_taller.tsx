@@ -1,6 +1,8 @@
 'use client'
 import { registrarTaller } from '@/actions/registrar_taller'
 import Radio from '@/components/Radio'
+import { sessionContext } from '@/contexts/session'
+import { getSession } from '@/lib/auth'
 import {
     TALLERES_HORARIO1,
     TALLERES_HORARIO2,
@@ -9,12 +11,14 @@ import {
     TalleresHorario2,
     TalleresHorario3,
 } from '@/lib/constantes'
+import { useContext, useEffect } from 'react'
 
 interface FormularioTallersProps {
     onRegistroExito: () => void
 }
 
 export function Formulario_taller({ onRegistroExito }: FormularioTallersProps) {
+    const { session, setSession } = useContext(sessionContext)!
     const handleaction = async (data: FormData) => {
         const apellidos = data.get('apellidos') as string
         const nombre = data.get('nombre') as string
@@ -47,6 +51,13 @@ export function Formulario_taller({ onRegistroExito }: FormularioTallersProps) {
             alert('has ocurrido un error. intente de nuevo.')
         }
     }
+
+    useEffect(() => {
+        const executeAsync = async () => {
+            const session = await getSession()
+        }
+        executeAsync()
+    }, [])
 
     return (
         <form action={handleaction}>
