@@ -2,15 +2,15 @@
 
 import { registrarViernes } from '@/actions/registrar_viernes'
 import Radio from '@/components/Radio'
+import { counterContext } from '@/contexts/Counter'
 import { TALLERES_VIERNES, TalleresViernes } from '@/lib/constantes'
+import { use } from 'react'
 
-interface FormularioViernesProps {
-    onRegistroExitoso: () => void
-}
+interface FormularioViernesProps {}
 
-export function Formulario_viernes({
-    onRegistroExitoso,
-}: FormularioViernesProps) {
+export function FridayForm({}: FormularioViernesProps) {
+    const { sendCounterSignal } = use(counterContext)
+
     const handleaction = async (data: FormData) => {
         const apellidos = data.get('apellidos') as string
         const nombre = data.get('nombre') as string
@@ -33,7 +33,7 @@ export function Formulario_viernes({
                 console.log(request)
             } else {
                 alert(request.message)
-                onRegistroExitoso() // Llamar a la función para actualizar los contadores
+                sendCounterSignal() // Llamar a la función para actualizar los contadores
             }
         } catch (error) {
             console.log(error)

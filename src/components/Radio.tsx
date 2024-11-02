@@ -1,23 +1,21 @@
 // Estilos
+import { InputHTMLAttributes } from 'react'
 import './radio.css'
 
-interface RadioProps {
-    value: string
+interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
     taller: string
     descripcion: string
-    name: string
 }
 
 export default function Radio({
-    value,
     taller,
-    name,
     descripcion: description,
+    ...props
 }: RadioProps) {
     return (
         <label className="taller">
             <div>
-                <input type="radio" name={name} value={value} />
+                <input type="radio" {...props} />
                 {taller}
             </div>
             <p>{description}</p>

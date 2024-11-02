@@ -22,9 +22,11 @@ model Registro_talleres {
 model Usuarios {
   apellidos String
   nombre    String
-  nc        String @id
-  email     String @unique
+  nc        String  @id
+  email     String  @unique
   semestre  Int
+  telefono  String
+  verified  Boolean @default(false)
 
   registro_talleres    Registro_talleres[]
   Registro_videojuegos Registro_videojuegos[]

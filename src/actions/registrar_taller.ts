@@ -1,5 +1,6 @@
 'use server'
 
+import { setSession } from '@/lib/auth'
 import {
     COOKIES,
     LIMITE_DE_SUSCRIPCION,
@@ -12,7 +13,7 @@ import { db } from '@/lib/db'
 import { SignJWT } from 'jose'
 import next from 'next'
 import { cookies } from 'next/headers'
-export interface RegistrarTallerProps {
+export interface RegistrarTallerPropsOld {
     apellidos: string
     nombre: string
     numero_control: string
@@ -23,7 +24,12 @@ export interface RegistrarTallerProps {
     taller_horario3: TalleresHorario3
 }
 
-export async function registrarTaller({
+/**
+ *
+ * @deprecated
+ * @returns
+ */
+export async function registrarTallerOld({
     apellidos,
     numero_control,
     email,
@@ -32,7 +38,7 @@ export async function registrarTaller({
     taller_horario1,
     taller_horario2,
     taller_horario3,
-}: RegistrarTallerProps): Promise<
+}: RegistrarTallerPropsOld): Promise<
     | {
           error?: string
           message: string
@@ -73,14 +79,11 @@ export async function registrarTaller({
                     email,
                     nc: numero_control,
                     semestre,
+                    telefono: '',
+                    verified: false,
                 },
             })
-            const token = await new SignJWT({ numero_control })
-                .setProtectedHeader({ alg: 'HS256' })
-                .setIssuedAt()
-                .setExpirationTime('48h')
-                .sign(SECRET_KEY)
-            ;(await cookies()).set(COOKIES.SESSION, token)
+            await setSession({ nc: numero_control })
         }
     } catch (error) {
         console.log('error el crear el usuario', error)
@@ -164,6 +167,122 @@ export async function registrarTaller({
         console.log('error al registrar el taller:', error)
         return {
             error: 'Error Interno',
+            message: 'hubo un error al registrar el taller',
+        }
+    }
+
+    return {
+        message: 'Usuario Registrado',
+    }
+}
+
+export interface RegistrarTallerProps {
+    nc: string
+    taller_horario1: TalleresHorario1
+    taller_horario2: TalleresHorario2
+    taller_horario3: TalleresHorario3
+}
+export type registerTallerMessageErrors =
+    | 'Faltan Datos'
+    | 'Usuario Registrado'
+    | 'Internal Error'
+    | 'Taller lleno 1'
+    | 'Taller lleno 2'
+    | 'Taller lleno 3'
+export async function registerTaller({
+    nc,
+    taller_horario1,
+    taller_horario2,
+    taller_horario3,
+}: RegistrarTallerProps): Promise<
+    | {
+          error?: registerTallerMessageErrors
+          message: string
+      }
+    | {
+          error: registerTallerMessageErrors
+          message?: string
+      }
+> {
+    if (!(nc && taller_horario1 && taller_horario2 && taller_horario3))
+        return {
+            error: 'Faltan Datos',
+        }
+
+    // Revisar si existe registro
+    try {
+        const taller = await db.registro_talleres.findFirst({
+            where: {
+                usuario: {
+                    nc,
+                },
+            },
+        })
+        if (taller)
+            return {
+                error: 'Usuario Registrado',
+                message: 'este usuario ya tiene un taller registrados',
+            }
+    } catch (error) {
+        return {
+            error: 'Internal Error',
+        }
+    }
+
+    // Límite de talleres a registrar
+    try {
+        const countTalleres1 = await db.registro_talleres.count({
+            where: {
+                taller_horario1,
+            },
+        })
+        if (countTalleres1 >= LIMITE_DE_SUSCRIPCION.TALLER) {
+            return {
+                error: 'Taller lleno 1',
+            }
+        }
+        const countTalleres2 = await db.registro_talleres.count({
+            where: {
+                taller_horario2,
+            },
+        })
+        if (countTalleres2 >= LIMITE_DE_SUSCRIPCION.TALLER) {
+            return {
+                error: 'Taller lleno 2',
+            }
+        }
+        const countTalleres3 = await db.registro_talleres.count({
+            where: {
+                taller_horario3,
+            },
+        })
+        if (countTalleres3 >= LIMITE_DE_SUSCRIPCION.TALLER) {
+            return {
+                error: 'Taller lleno 3',
+            }
+        }
+    } catch (error) {
+        console.log('Error al contar los talleres:', error)
+    }
+
+    // REGISTRO
+    try {
+        await db.registro_talleres.create({
+            data: {
+                taller_horario1,
+                taller_horario2,
+                taller_horario3,
+                usuario: {
+                    connect: {
+                        nc,
+                    },
+                },
+            },
+        })
+    } catch (error) {
+        console.log('error al registrar el taller:', error)
+        return {
+            error: 'Internal Error',
             message: 'hubo un error al registrar el taller',
         }
     }

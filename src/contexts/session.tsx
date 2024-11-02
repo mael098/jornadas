@@ -8,7 +8,7 @@ import {
 } from 'react'
 
 export type SessionCookie = {
-    numero_control: string
+    nc: string
 }
 export const sessionContext = createContext<{
     session: SessionCookie | null
@@ -18,9 +18,9 @@ export const sessionContext = createContext<{
 interface SessionContexProviderProps {
     children: ReactNode
 }
-export const SessionContexProvider = ({
+export function SessionContexProvider({
     children,
-}: SessionContexProviderProps) => {
+}: SessionContexProviderProps) {
     const [session, setSession] = useState<SessionCookie | null>(null)
     return (
         <sessionContext.Provider value={{ session, setSession }}>
