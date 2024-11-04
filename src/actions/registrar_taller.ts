@@ -1,21 +1,26 @@
 'use server'
 
 import {
-    COOKIES,
     LIMITE_DE_SUSCRIPCION,
-    SECRET_KEY,
     TalleresHorario1,
     TalleresHorario2,
     TalleresHorario3,
 } from '@/lib/constantes'
 import { db } from '@/lib/db'
-import { SignJWT } from 'jose'
-import next from 'next'
-import { cookies } from 'next/headers'
-export interface RegistrarTallerProps {
+import { registerUser } from './user'
+
+export type registerTallerMessageErrors =
+    | 'Faltan Datos'
+    | 'Usuario Registrado'
+    | 'Internal Error'
+    | 'Taller lleno 1'
+    | 'Taller lleno 2'
+    | 'Taller lleno 3'
+
+export interface RegisterTallerProps {
     apellidos: string
     nombre: string
-    numero_control: string
+    nc: string
     email: string
     semestre: number
     taller_horario1: TalleresHorario1
@@ -23,29 +28,29 @@ export interface RegistrarTallerProps {
     taller_horario3: TalleresHorario3
 }
 
-export async function registrarTaller({
+export async function registerTaller({
     apellidos,
-    numero_control,
+    nc,
     email,
     nombre,
     semestre,
     taller_horario1,
     taller_horario2,
     taller_horario3,
-}: RegistrarTallerProps): Promise<
+}: RegisterTallerProps): Promise<
     | {
-          error?: string
+          error?: registerTallerMessageErrors
           message: string
       }
     | {
-          error: string
+          error: registerTallerMessageErrors
           message?: string
       }
 > {
     if (
         !(
             apellidos &&
-            numero_control &&
+            nc &&
             email &&
             nombre &&
             semestre &&
@@ -60,32 +65,24 @@ export async function registrarTaller({
 
     // Crear el usuario
     try {
-        const user = await db.usuario.findFirst({
+        const user = await db.usuarios.findFirst({
             where: {
-                numero_control,
+                nc,
             },
         })
         if (!user) {
-            await db.usuario.create({
-                data: {
-                    apellidos,
-                    nombre,
-                    email,
-                    numero_control,
-                    semestre,
-                },
+            await registerUser({
+                apellidos,
+                nombre,
+                email,
+                nc,
+                semestre,
             })
-            const token = await new SignJWT({ numero_control })
-                .setProtectedHeader({ alg: 'HS256' })
-                .setIssuedAt()
-                .setExpirationTime('48h')
-                .sign(SECRET_KEY)
-            ;(await cookies()).set(COOKIES.SESSION, token)
         }
     } catch (error) {
         console.log('error el crear el usuario', error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
             message: 'hubo un error al crear el usuario',
         }
     }
@@ -95,7 +92,7 @@ export async function registrarTaller({
         const taller = await db.registro_talleres.findFirst({
             where: {
                 usuario: {
-                    numero_control,
+                    nc,
                 },
             },
         })
@@ -106,7 +103,7 @@ export async function registrarTaller({
             }
     } catch (error) {
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -155,7 +152,7 @@ export async function registrarTaller({
                 taller_horario3,
                 usuario: {
                     connect: {
-                        numero_control,
+                        nc: nc,
                     },
                 },
             },
@@ -163,7 +160,7 @@ export async function registrarTaller({
     } catch (error) {
         console.log('error al registrar el taller:', error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
             message: 'hubo un error al registrar el taller',
         }
     }

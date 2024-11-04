@@ -2,15 +2,15 @@
 
 import { registrarVideojuego } from '@/actions/registrar_videojuego'
 import Radio from '@/components/Radio'
+import { counterContext } from '@/contexts/Counter'
 import { JUEGOS } from '@/lib/constantes'
+import { use } from 'react'
 
-interface FormularioJuegosProps {
-    onRegistroExitoso: () => void
-}
+interface FormularioJuegosProps {}
 
-export function Formulario_juegos({
-    onRegistroExitoso,
-}: FormularioJuegosProps) {
+export function GamesForm({}: FormularioJuegosProps) {
+    const { sendCounterSignal } = use(counterContext)
+
     const handleaction = async (data: FormData) => {
         const apellidos = data.get('apellidos') as string
         const nombre = data.get('nombre') as string
@@ -34,7 +34,7 @@ export function Formulario_juegos({
             } else {
                 alert(request.message)
                 // Llamar a onRegistroExitoso para actualizar el conteo
-                onRegistroExitoso()
+                sendCounterSignal()
             }
         } catch (error) {
             console.log(error)
@@ -42,13 +42,7 @@ export function Formulario_juegos({
     }
 
     return (
-        <form
-            id="registroVideojuegos"
-            onSubmit={e => {
-                e.preventDefault()
-                handleaction(new FormData(e.target as HTMLFormElement))
-            }}
-        >
+        <form id="registroVideojuegos" action={handleaction}>
             <h3>Elige tu juego</h3>
             <Radio
                 name="juego"

@@ -1,8 +1,8 @@
 'use client'
-import { registrarTaller } from '@/actions/registrar_taller'
+import { registerTaller } from '@/actions/registrar_taller'
+import { getUser } from '@/actions/user'
 import Radio from '@/components/Radio'
-import { sessionContext } from '@/contexts/session'
-import { getSession } from '@/lib/auth'
+import { counterContext } from '@/contexts/Counter'
 import {
     TALLERES_HORARIO1,
     TALLERES_HORARIO2,
@@ -11,53 +11,38 @@ import {
     TalleresHorario2,
     TalleresHorario3,
 } from '@/lib/constantes'
-import { useContext, useEffect } from 'react'
+import { use, useState, useTransition } from 'react'
 
-interface FormularioTallersProps {
-    onRegistroExito: () => void
-}
+export function TallerForm() {
+    const { sendCounterSignal } = use(counterContext)
+    const [isPending, startTransition] = useTransition()
 
-export function Formulario_taller({ onRegistroExito }: FormularioTallersProps) {
-    const { session, setSession } = useContext(sessionContext)!
-    const handleaction = async (data: FormData) => {
-        const apellidos = data.get('apellidos') as string
-        const nombre = data.get('nombre') as string
-        const numero_control = data.get('control') as string
-        const email = data.get('email') as string
-        const semestre = data.get('semestre') as string
+    const [nc, setNc] = useState('')
+    const [lastname, setLastname] = useState('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [semester, setSemester] = useState(1)
+
+    // Handle submit form
+    const handleaction = (data: FormData) => {
         const taller_horario1 = data.get('taller_horario1') as TalleresHorario1
         const taller_horario2 = data.get('taller_horario2') as TalleresHorario2
         const taller_horario3 = data.get('taller_horario3') as TalleresHorario3
 
-        try {
-            const request = await registrarTaller({
-                apellidos,
-                nombre,
+        startTransition(async () => {
+            await registerTaller({
+                apellidos: lastname,
                 email,
-                numero_control,
-                semestre: parseInt(semestre),
+                nc,
+                nombre: name,
+                semestre: semester,
                 taller_horario1,
                 taller_horario2,
                 taller_horario3,
             })
-            if (request.error) {
-                console.log(request.error)
-                alert('Ha sucedido un error, intente de nuevo')
-            } else {
-                alert(request.message || 'registro exitoso')
-            }
-        } catch (error) {
-            console.log(error)
-            alert('has ocurrido un error. intente de nuevo.')
-        }
+            sendCounterSignal()
+        })
     }
-
-    useEffect(() => {
-        const executeAsync = async () => {
-            const session = await getSession()
-        }
-        executeAsync()
-    }, [])
 
     return (
         <form action={handleaction}>
@@ -122,27 +107,85 @@ export function Formulario_taller({ onRegistroExito }: FormularioTallersProps) {
                     value={TALLERES_HORARIO3.Taller_9}
                 />
             </div>
-            <label htmlFor="apellidos">Apellidos:</label>
-            <input type="text" name="apellidos" required />
-
-            <label htmlFor="nombre">Nombre (s):</label>
-            <input type="text" name="nombre" required />
 
             <label htmlFor="control">Número de control:</label>
-            <input type="text" name="control" required />
+            <input
+                type="text"
+                name="control"
+                required
+                value={nc}
+                onChange={e => {
+                    const nnc = e.currentTarget.value
+                    setNc(nnc)
+                    if (!/\d{8}/.test(nnc)) return
+
+                    startTransition(async () => {
+                        const user = await getUser(nnc)
+                        if (!user) return
+                        setNc(user.nc)
+                        setLastname(user.apellidos)
+                        setName(user.nombre)
+                        setEmail(user.email)
+                        setSemester(user.semestre)
+                    })
+                }}
+                disabled={isPending}
+            />
+
+            <label htmlFor="apellidos">Apellidos:</label>
+            <input
+                type="text"
+                name="apellidos"
+                required
+                value={lastname}
+                onChange={e => setLastname(e.currentTarget.value)}
+                disabled={isPending}
+            />
+
+            <label htmlFor="nombre">Nombre (s):</label>
+            <input
+                type="text"
+                name="nombre"
+                required
+                value={name}
+                onChange={e => setName(e.currentTarget.value)}
+                disabled={isPending}
+            />
 
             <label htmlFor="email">Correo institucional:</label>
-            <input type="email" name="email" required />
+            <input
+                type="email"
+                name="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.currentTarget.value)}
+                disabled={isPending}
+            />
 
             <label htmlFor="semestre">Semestre:</label>
-            <select name="semestre" required>
-                <option value="1">Primer semestre</option>
-                <option value="3">Tercer semestre</option>
-                <option value="5">Quinto semestre</option>
-                <option value="7">Séptimo semestre</option>
+            <select
+                name="semestre"
+                required
+                disabled={isPending}
+                onChange={e => setSemester(parseInt(e.currentTarget.value))}
+            >
+                <option value={1} defaultChecked={semester === 1}>
+                    Primer semestre
+                </option>
+                <option value={3} defaultChecked={semester === 3}>
+                    Tercer semestre
+                </option>
+                <option value={5} defaultChecked={semester === 5}>
+                    Quinto semestre
+                </option>
+                <option value={7} defaultChecked={semester === 7}>
+                    Séptimo semestre
+                </option>
             </select>
 
-            <button type="submit">Registrar</button>
+            <button type="submit" disabled={isPending}>
+                Registrar
+            </button>
         </form>
     )
 }
