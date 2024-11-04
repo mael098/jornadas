@@ -12,7 +12,6 @@ import {
     TalleresHorario2,
     TalleresHorario3,
 } from '@/lib/constantes'
-import { sendCode, verifyCode } from '@/server/auth'
 import { use, useEffect, useState, useTransition } from 'react'
 import { useFormStatus } from 'react-dom'
 import { setSession as login } from '@/lib/auth'
@@ -39,7 +38,6 @@ export function TallerForm({}: FormularioTallersProps) {
     const handleInitial = () => {
         // no existe sesion, toca crear un usuario
         startTransition(async () => {
-            await sendCode({ phone }).catch(err => console.log(err))
             setMode('verify')
         })
     }
@@ -52,21 +50,12 @@ export function TallerForm({}: FormularioTallersProps) {
         const code = data.get('code') as string
 
         startTransition(async () => {
-            const r = await verifyCode({ phone, code, nc })
-            if (r.error) {
-                console.log(r)
-                return alert(
-                    'Ha ocurrido un error, intenta refrescar la página',
-                )
-            }
             await registerUser({
                 apellidos: lastname,
                 email,
                 nc,
                 nombre: name,
                 semestre: semester,
-                telefono: phone,
-                verified: true,
             }).catch(err => {
                 console.log(err)
             })
@@ -78,6 +67,10 @@ export function TallerForm({}: FormularioTallersProps) {
                     taller_horario1,
                     taller_horario2,
                     taller_horario3,
+                    apellidos: lastname,
+                    email,
+                    nombre: name,
+                    semestre: semester,
                 })
                 if (request.error) {
                     if (request.error === 'Faltan Datos')
@@ -106,7 +99,6 @@ export function TallerForm({}: FormularioTallersProps) {
     const handleLogin = () => {
         // existe usuario pero no session, requiere OTP
         startTransition(async () => {
-            await sendCode({ phone }).catch(err => console.log(err))
             setMode('verify')
         })
     }
@@ -123,6 +115,10 @@ export function TallerForm({}: FormularioTallersProps) {
                 taller_horario1,
                 taller_horario2,
                 taller_horario3,
+                apellidos: lastname,
+                email,
+                nombre: name,
+                semestre: semester,
             })
             if (request.error) {
                 if (request.error === 'Faltan Datos')
@@ -263,7 +259,6 @@ export function TallerForm({}: FormularioTallersProps) {
                         setName(user.nombre)
                         setEmail(user.email)
                         setSemester(user.semestre)
-                        setPhone(user.telefono)
                         setMode('login')
                     })
                 }}

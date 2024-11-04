@@ -1,34 +1,14 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "Registro_talleres" (
+    "id" SERIAL NOT NULL,
+    "taller_horario1" TEXT NOT NULL,
+    "taller_horario2" TEXT NOT NULL,
+    "taller_horario3" TEXT NOT NULL,
+    "fecha_registro" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "usuario_nc" TEXT NOT NULL,
 
-  - You are about to drop the column `usuario_id` on the `Registro_talleres` table. All the data in the column will be lost.
-  - You are about to drop the `Registro_videojuegos` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Registro_viernes` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Usuario` table. If the table is not empty, all the data it contains will be lost.
-  - Added the required column `usuario_nc` to the `Registro_talleres` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropForeignKey
-ALTER TABLE "Registro_talleres" DROP CONSTRAINT "Registro_talleres_usuario_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Registro_videojuegos" DROP CONSTRAINT "Registro_videojuegos_usuario_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Registro_viernes" DROP CONSTRAINT "Registro_viernes_usuario_id_fkey";
-
--- AlterTable
-ALTER TABLE "Registro_talleres" DROP COLUMN "usuario_id",
-ADD COLUMN     "usuario_nc" TEXT NOT NULL;
-
--- DropTable
-DROP TABLE "Registro_videojuegos";
-
--- DropTable
-DROP TABLE "Registro_viernes";
-
--- DropTable
-DROP TABLE "Usuario";
+    CONSTRAINT "Registro_talleres_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Usuarios" (
@@ -37,8 +17,6 @@ CREATE TABLE "Usuarios" (
     "nc" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "semestre" INTEGER NOT NULL,
-    "telefono" TEXT NOT NULL,
-    "verified" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Usuarios_pkey" PRIMARY KEY ("nc")
 );

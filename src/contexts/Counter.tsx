@@ -22,7 +22,7 @@ export function CounterContexProvider({
     children,
 }: CounterContexProviderProps) {
     const [counterSignal, setCounterSignal] = useState<number>(0)
-    const sendCounterSignal = () => setCounterSignal(Math.random)
+    const sendCounterSignal = () => setCounterSignal(Math.random())
     return (
         <counterContext.Provider value={{ counterSignal, sendCounterSignal }}>
             {children}
