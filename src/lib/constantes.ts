@@ -50,6 +50,7 @@ export const FECHA_DEL_EVENTO: number | string | Date = new Date(
 )
 
 const llave = process.env.SECRET_KEY
-if (!llave && window === undefined) throw new Error('no ay una llave')
+if (!llave && globalThis.window === undefined)
+    throw new Error('no ay una llave')
 
 export const SECRET_KEY = new TextEncoder().encode(llave)
