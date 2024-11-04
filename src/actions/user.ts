@@ -11,8 +11,6 @@ export async function getUser(nc: string) {
             nombre: true,
             nc: true,
             semestre: true,
-            telefono: true,
-            verified: true,
             registro_talleres: true,
             Registro_videojuegos: true,
             Registro_viernes: true,
@@ -32,8 +30,6 @@ export async function registerUser({
     nc,
     nombre,
     semestre,
-    telefono,
-    verified = false,
 }: RegisterUserProps) {
     try {
         return await db.usuarios.create({
@@ -43,8 +39,6 @@ export async function registerUser({
                 nc,
                 nombre,
                 semestre,
-                telefono,
-                verified,
             },
         })
     } catch (error) {

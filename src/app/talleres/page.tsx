@@ -1,19 +1,9 @@
 import { TallerForm } from './FormularioTaller'
 import { Counters } from './Counters'
+import { conteoDeTalleres } from '@/actions/cotadores'
 
-interface Contadores {
-    taller1: number
-    taller2: number
-    taller3: number
-    taller4: number
-    taller5: number
-    taller6: number
-    taller7: number
-    taller8: number
-    taller9: number
-}
-
-export default function Page() {
+export default async function Page() {
+    const counts = await conteoDeTalleres()
     return (
         <div id="talleres" className="tabcontent">
             <h1 className="text-left text-3xl">
@@ -23,7 +13,7 @@ export default function Page() {
             <TallerForm />
 
             {/* Contadores de cada taller */}
-            <Counters />
+            <Counters initialCounters={counts} />
         </div>
     )
 }

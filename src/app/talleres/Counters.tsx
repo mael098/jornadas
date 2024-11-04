@@ -4,8 +4,11 @@ import { conteoDeTalleres } from '@/actions/cotadores'
 import { CounterContexProvider, counterContext } from '@/contexts/Counter'
 import { use, useEffect, useState } from 'react'
 
-export function Counters() {
-    const [conteos, setConteos] = useState(use(conteoDeTalleres()))
+interface CountersProps {
+    initialCounters: Awaited<ReturnType<typeof conteoDeTalleres>>
+}
+export function Counters({ initialCounters }: CountersProps) {
+    const [conteos, setConteos] = useState(initialCounters)
     const { counterSignal } = use(counterContext)
     useEffect(() => {
         ;(async () => setConteos(await conteoDeTalleres()))()
