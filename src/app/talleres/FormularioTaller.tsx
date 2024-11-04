@@ -30,7 +30,7 @@ export function TallerForm() {
         const taller_horario3 = data.get('taller_horario3') as TalleresHorario3
 
         startTransition(async () => {
-            await registerTaller({
+            const request = await registerTaller({
                 apellidos: lastname,
                 email,
                 nc,
@@ -40,7 +40,13 @@ export function TallerForm() {
                 taller_horario2,
                 taller_horario3,
             })
-            sendCounterSignal()
+            if (request.error) {
+                alert('Ha sucedido un error, intente de nuevo')
+                console.log(request)
+            } else {
+                alert(request.message)
+                sendCounterSignal() // Llamar a la función para actualizar los contadores
+            }
         })
     }
 

@@ -3,11 +3,12 @@
 import { db } from '@/lib/db'
 import { Juegos, LIMITE_DE_SUSCRIPCION } from '@/lib/constantes'
 import { TalleresViernes } from '@/lib/constantes'
+import { registerUser } from './user'
 
 export interface RegistrarViernesProps {
     apellidos: string
     nombre: string
-    numero_control: string
+    nc: string
     email: string
     semestre: number
     taller: TalleresViernes
@@ -15,7 +16,7 @@ export interface RegistrarViernesProps {
 
 export async function registrarViernes({
     apellidos,
-    numero_control,
+    nc,
     email,
     nombre,
     semestre,
@@ -30,7 +31,7 @@ export async function registrarViernes({
           message?: string
       }
 > {
-    if (!(apellidos && numero_control && email && nombre && semestre && taller))
+    if (!(apellidos && nc && email && nombre && semestre && taller))
         return {
             error: 'Faltan Datos',
         }
@@ -39,18 +40,16 @@ export async function registrarViernes({
     try {
         const user = await db.usuarios.findFirst({
             where: {
-                nc: numero_control,
+                nc,
             },
         })
         if (!user) {
-            await db.usuarios.create({
-                data: {
-                    apellidos,
-                    nombre,
-                    email,
-                    nc: numero_control,
-                    semestre,
-                },
+            await registerUser({
+                apellidos,
+                nombre,
+                email,
+                nc,
+                semestre,
             })
         }
     } catch (error) {
@@ -65,7 +64,7 @@ export async function registrarViernes({
         const taller = await db.registro_viernes.findFirst({
             where: {
                 usuario: {
-                    nc: numero_control,
+                    nc,
                 },
             },
         })
@@ -106,7 +105,7 @@ export async function registrarViernes({
                 taller,
                 usuario: {
                     connect: {
-                        nc: numero_control,
+                        nc,
                     },
                 },
             },

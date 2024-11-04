@@ -1,31 +1,34 @@
 'use client'
 
 import { registrarViernes } from '@/actions/registrar_viernes'
+import { getUser } from '@/actions/user'
 import Radio from '@/components/Radio'
 import { counterContext } from '@/contexts/Counter'
 import { TALLERES_VIERNES, TalleresViernes } from '@/lib/constantes'
-import { use } from 'react'
+import { use, useState, useTransition } from 'react'
 
 interface FormularioViernesProps {}
 
 export function FridayForm({}: FormularioViernesProps) {
     const { sendCounterSignal } = use(counterContext)
+    const [isPending, startTransition] = useTransition()
+
+    const [nc, setNc] = useState('')
+    const [lastname, setLastname] = useState('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [semester, setSemester] = useState(1)
 
     const handleaction = async (data: FormData) => {
-        const apellidos = data.get('apellidos') as string
-        const nombre = data.get('nombre') as string
-        const numero_control = data.get('control') as string
-        const email = data.get('email') as string
-        const semestre = data.get('semestre') as string
         const taller = data.get('taller') as TalleresViernes
 
         try {
             const request = await registrarViernes({
-                apellidos,
-                nombre,
+                apellidos: lastname,
+                nombre: name,
                 email,
-                numero_control,
-                semestre: parseInt(semestre),
+                nc,
+                semestre: semester,
                 taller,
             })
             if (request.error) {
@@ -68,28 +71,84 @@ export function FridayForm({}: FormularioViernesProps) {
                 value={TALLERES_VIERNES.Taller_3}
             />
 
+            <label htmlFor="control">Número de control:</label>
+            <input
+                type="text"
+                name="control"
+                required
+                value={nc}
+                onChange={e => {
+                    const nnc = e.currentTarget.value
+                    setNc(nnc)
+                    if (!/\d{8}/.test(nnc)) return
+
+                    startTransition(async () => {
+                        const user = await getUser(nnc)
+                        if (!user) return
+                        setNc(user.nc)
+                        setLastname(user.apellidos)
+                        setName(user.nombre)
+                        setEmail(user.email)
+                        setSemester(user.semestre)
+                    })
+                }}
+                disabled={isPending}
+            />
+
             <label htmlFor="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" required />
+            <input
+                type="text"
+                name="apellidos"
+                required
+                value={lastname}
+                onChange={e => setLastname(e.currentTarget.value)}
+                disabled={isPending}
+            />
 
             <label htmlFor="nombre">Nombre (s):</label>
-            <input type="text" id="nombre" name="nombre" required />
-
-            <label htmlFor="control">Número de control:</label>
-            <input type="number" id="control" name="control" required />
+            <input
+                type="text"
+                name="nombre"
+                required
+                value={name}
+                onChange={e => setName(e.currentTarget.value)}
+                disabled={isPending}
+            />
 
             <label htmlFor="email">Correo institucional:</label>
-            <input type="email" id="email" name="email" required />
+            <input
+                type="email"
+                name="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.currentTarget.value)}
+                disabled={isPending}
+            />
 
             <label htmlFor="semestre">Semestre:</label>
-            <select id="semestre" name="semestre" required>
-                <option value="1">Primer semestre</option>
-                <option value="3">Tercer semestre</option>
-                <option value="5">Quinto semestre</option>
-                <option value="7">Séptimo semestre</option>
+            <select
+                name="semestre"
+                required
+                disabled={isPending}
+                onChange={e => setSemester(parseInt(e.currentTarget.value))}
+            >
+                <option value={1} defaultChecked={semester === 1}>
+                    Primer semestre
+                </option>
+                <option value={3} defaultChecked={semester === 3}>
+                    Tercer semestre
+                </option>
+                <option value={5} defaultChecked={semester === 5}>
+                    Quinto semestre
+                </option>
+                <option value={7} defaultChecked={semester === 7}>
+                    Séptimo semestre
+                </option>
             </select>
 
-            <button type="submit">Registrarse en Taller</button>
-            <p id="mensaje_viernes"></p>
+            <button type="submit" disabled={isPending}>
+                Registrarse en Taller
+            </button>
         </form>
     )
 }
