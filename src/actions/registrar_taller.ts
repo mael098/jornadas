@@ -1,6 +1,5 @@
 'use server'
 
-import { setSession } from '@/lib/auth'
 import {
     LIMITE_DE_SUSCRIPCION,
     TalleresHorario1,
@@ -8,6 +7,16 @@ import {
     TalleresHorario3,
 } from '@/lib/constantes'
 import { db } from '@/lib/db'
+import { registerUser } from './user'
+
+export type registerTallerMessageErrors =
+    | 'Faltan Datos'
+    | 'Usuario Registrado'
+    | 'Internal Error'
+    | 'Taller lleno 1'
+    | 'Taller lleno 2'
+    | 'Taller lleno 3'
+
 export interface RegisterTallerProps {
     apellidos: string
     nombre: string
@@ -62,16 +71,13 @@ export async function registerTaller({
             },
         })
         if (!user) {
-            await db.usuarios.create({
-                data: {
-                    apellidos,
-                    nombre,
-                    email,
-                    nc,
-                    semestre,
-                },
+            await registerUser({
+                apellidos,
+                nombre,
+                email,
+                nc,
+                semestre,
             })
-            await setSession({ nc })
         }
     } catch (error) {
         console.log('error el crear el usuario', error)
@@ -163,11 +169,3 @@ export async function registerTaller({
         message: 'Usuario Registrado',
     }
 }
-
-export type registerTallerMessageErrors =
-    | 'Faltan Datos'
-    | 'Usuario Registrado'
-    | 'Internal Error'
-    | 'Taller lleno 1'
-    | 'Taller lleno 2'
-    | 'Taller lleno 3'
