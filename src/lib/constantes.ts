@@ -48,8 +48,3 @@ export const LIMITE_DE_SUSCRIPCION = {
 export const FECHA_DEL_EVENTO: number | string | Date = new Date(
     'November 7, 2024 09:00:00 GMT-0600',
 )
-
-const llave = process.env.SECRET_KEY
-if (!llave && window === undefined) throw new Error('no ay una llave')
-
-export const SECRET_KEY = new TextEncoder().encode(llave)
