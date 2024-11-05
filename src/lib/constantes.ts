@@ -45,7 +45,7 @@ export const COOKIES = {
 }
 
 export const LIMITE_DE_SUSCRIPCION = {
-    TALLER: 36,
+    TALLER: 37,
 }
 
 export const FECHA_DEL_EVENTO: number | string | Date = new Date(
