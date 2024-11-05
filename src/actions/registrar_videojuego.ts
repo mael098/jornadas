@@ -6,7 +6,7 @@ import { Juegos } from '@/lib/constantes'
 export interface RegistrarVideouegoProps {
     apellidos: string
     nombre: string
-    numero_control: string
+    nc: string
     email: string
     semestre: number
     videojuego: Juegos
@@ -14,7 +14,7 @@ export interface RegistrarVideouegoProps {
 
 export async function registrarVideojuego({
     apellidos,
-    numero_control,
+    nc,
     email,
     nombre,
     semestre,
@@ -29,16 +29,7 @@ export async function registrarVideojuego({
           message?: string
       }
 > {
-    if (
-        !(
-            apellidos &&
-            numero_control &&
-            email &&
-            nombre &&
-            semestre &&
-            videojuego
-        )
-    )
+    if (!(apellidos && nc && email && nombre && semestre && videojuego))
         return {
             error: 'Faltan Datos',
         }
@@ -47,7 +38,7 @@ export async function registrarVideojuego({
     try {
         const user = await db.usuarios.findFirst({
             where: {
-                nc: numero_control,
+                nc,
             },
         })
         if (!user) {
@@ -56,7 +47,7 @@ export async function registrarVideojuego({
                     apellidos,
                     nombre,
                     email,
-                    nc: numero_control,
+                    nc,
                     semestre,
                 },
             })
@@ -73,7 +64,7 @@ export async function registrarVideojuego({
         const taller = await db.registro_videojuegos.findFirst({
             where: {
                 usuario: {
-                    nc: numero_control,
+                    nc,
                 },
             },
         })
@@ -95,7 +86,7 @@ export async function registrarVideojuego({
                 videojuego_seleccionado: videojuego,
                 usuario: {
                     connect: {
-                        nc: numero_control,
+                        nc,
                     },
                 },
             },

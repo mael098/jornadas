@@ -18,3 +18,8 @@
         border-color: #007bff;
     }
 }
+
+.sentence {
+    display: block; /* Asegúrate de que cada oración ocupe una línea completa */
+    margin: 5px 0; /* Espacio entre las oraciones */
+}

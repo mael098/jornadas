@@ -4,7 +4,6 @@ import { Footer } from '@/components/Footer'
 import { Nav } from '@/components/Nav'
 import { Contador } from '@/components/Contador'
 import './index.css'
-import { SessionContexProvider } from '@/contexts/session'
 
 export const metadata: Metadata = {
     title: 'Jornadas Sistemas 2024 - ITA',
@@ -20,28 +19,24 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`antialiased`}>
-                <SessionContexProvider>
-                    <>
-                        {/* <!-- Encabezado con logos --> */}
-                        <Header />
+                {/* <!-- Encabezado con logos --> */}
+                <Header />
 
-                        <div className="container">
-                            <h1>XI JORNADAS TECNOLÓGICAS</h1>
-                            <h1>INGENIERÍA EN SISTEMAS COMPUTACIONALES</h1>
-                            {/* <!-- Pestañas de navegación --> */}
-                            <Nav />
-                            {/* <!-- Contador de tiempo y Mensaje de Evento Iniciado --> */}
-                            <Contador />
+                <div className="container">
+                    <h1>XI JORNADAS TECNOLÓGICAS</h1>
+                    <h1>INGENIERÍA EN SISTEMAS COMPUTACIONALES</h1>
+                    {/* <!-- Pestañas de navegación --> */}
+                    <Nav />
+                    {/* <!-- Contador de tiempo y Mensaje de Evento Iniciado --> */}
+                    <Contador />
 
-                            {/* Contenido Principal de la Pagina */}
-                            {children}
-                        </div>
-                        {/* <!-- Contenido existente... --> */}
+                    {/* Contenido Principal de la Pagina */}
+                    {children}
+                </div>
+                {/* <!-- Contenido existente... --> */}
 
-                        {/* <!-- Pie de página --> */}
-                        <Footer />
-                    </>
-                </SessionContexProvider>
+                {/* <!-- Pie de página --> */}
+                <Footer />
             </body>
         </html>
     )

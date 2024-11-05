@@ -38,10 +38,7 @@ export function Footer() {
                         Ivan Asdrubal Villegas Espinosa - Quinto semestre de
                         Ingeniería en Sistemas Computacionales
                     </p>
-                    <Link
-                        href={'https://github.com/Mael-code1'}
-                        target="_blank"
-                    >
+                    <Link href={'https://github.com/mael098'} target="_blank">
                         <Image
                             src={githubLogo}
                             alt="ely"
