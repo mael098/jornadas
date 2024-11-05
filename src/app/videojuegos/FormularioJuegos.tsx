@@ -51,18 +51,21 @@ export function GamesForm({}: FormularioJuegosProps) {
                 name="juego"
                 taller="Juego 1: FIFA"
                 descripcion="Compite en el torneo de FIFA"
+                docente=""
                 value={JUEGOS.Juego_1}
             />
             <Radio
                 name="juego"
                 taller="Juego 2: Super Smash Bros"
                 descripcion="Compite en Super Smash Bros"
+                docente=""
                 value={JUEGOS.Juego_2}
             />
             <Radio
                 name="juego"
                 taller="Juego 3: Mario Kart"
                 descripcion="Compite en Mario Kart"
+                docente=""
                 value={JUEGOS.Juego_3}
             />
 
