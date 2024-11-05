@@ -9,14 +9,17 @@ datasource db {
 }
 
 model Registro_talleres {
-  id              Int      @id @default(autoincrement())
-  taller_horario1 String
-  taller_horario2 String
-  taller_horario3 String
-  fecha_registro  DateTime @default(now())
-  usuario_nc      String
+  id                 Int      @id @default(autoincrement())
+  taller_horario1_id Int
+  taller_horario2_id Int
+  taller_horario3_id Int
+  fecha_registro     DateTime @default(now())
+  usuario_nc         String
 
   usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
+  taller1 Talleres @relation("taller1", fields: [taller_horario1_id], references: [id])
+  taller2 Talleres @relation("taller2", fields: [taller_horario2_id], references: [id])
+  taller3 Talleres @relation("taller3", fields: [taller_horario3_id], references: [id])
 }
 
 model Usuarios {
@@ -38,17 +41,39 @@ model Registro_videojuegos {
   usuario_nc              String
 
   usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
-
-  @@map("RegistroVideojuegos")
 }
 
 model Registro_viernes {
   id             Int      @id @default(autoincrement())
   fecha_registro DateTime @default(now())
-  taller         String
+  taller_id      Int
   usuario_nc     String
 
-  usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
+  usuario  Usuarios @relation(fields: [usuario_nc], references: [nc])
+  talleres Talleres @relation(fields: [taller_id], references: [id])
+}
 
-  @@map("RegistroViernes")
+enum Horario {
+  HORARIO1
+  HORARIO2
+  HORARIO3
+}
+
+enum Dia {
+  JUEVES
+  VIERNES
+}
+
+model Talleres {
+  id          Int    @id @default(autoincrement())
+  nombre      String
+  tallerista  String
+  descripcion String
+
+  horario           Horario
+  dia               Dia
+  Registro_talleres Registro_talleres[]
+  Registro_talleres Registro_talleres[]
+  Registro_talleres Registro_talleres[]
+  Registro_viernes  Registro_viernes[]
 }
