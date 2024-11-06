@@ -1,6 +1,7 @@
 'use client'
 
 import { registrarVideojuego } from '@/actions/registrar_videojuego'
+import { getVideojuegosByUser } from '@/actions/talleres'
 import { getUser } from '@/actions/user'
 import { Radio } from '@/components/Radio'
 import { counterContext } from '@/contexts/Counter'
@@ -18,6 +19,8 @@ export function GamesForm({}: FormularioJuegosProps) {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [semester, setSemester] = useState(1)
+    const [juego, setJuego] = useState('')
+    const [registered, setRegistered] = useState(false)
 
     const handleaction = async (data: FormData) => {
         const juego = data.get('juego') as string
@@ -55,6 +58,9 @@ export function GamesForm({}: FormularioJuegosProps) {
                 descripcion="Compite en el torneo de FIFA"
                 docente=""
                 value={JUEGOS.Juego_1}
+                required
+                onChange={e => setJuego(JUEGOS.Juego_1)}
+                checked={juego === JUEGOS.Juego_1}
             />
             <Radio
                 name="juego"
@@ -62,6 +68,9 @@ export function GamesForm({}: FormularioJuegosProps) {
                 descripcion="Compite en Super Smash Bros"
                 docente=""
                 value={JUEGOS.Juego_2}
+                required
+                onChange={e => setJuego(JUEGOS.Juego_2)}
+                checked={juego === JUEGOS.Juego_2}
             />
             <Radio
                 name="juego"
@@ -69,6 +78,9 @@ export function GamesForm({}: FormularioJuegosProps) {
                 descripcion="Compite en Mario Kart"
                 docente=""
                 value={JUEGOS.Juego_3}
+                required
+                onChange={e => setJuego(JUEGOS.Juego_3)}
+                checked={juego === JUEGOS.Juego_3}
             />
 
             <label htmlFor="control">Número de control:</label>
@@ -90,6 +102,11 @@ export function GamesForm({}: FormularioJuegosProps) {
                         setName(user.nombre)
                         setEmail(user.email)
                         setSemester(user.semestre)
+                        const j = await getVideojuegosByUser(nnc)
+                        if (j) {
+                            setJuego(j.videojuego_seleccionado)
+                            setRegistered(true)
+                        }
                     })
                 }}
                 disabled={isPending}
@@ -130,24 +147,16 @@ export function GamesForm({}: FormularioJuegosProps) {
                 name="semestre"
                 required
                 disabled={isPending}
-                defaultValue={semester}
+                value={semester}
                 onChange={e => setSemester(parseInt(e.currentTarget.value))}
             >
-                <option value={1} defaultChecked={semester === 1}>
-                    Primer semestre
-                </option>
-                <option value={3} defaultChecked={semester === 3}>
-                    Tercer semestre
-                </option>
-                <option value={5} defaultChecked={semester === 5}>
-                    Quinto semestre
-                </option>
-                <option value={7} defaultChecked={semester === 7}>
-                    Séptimo semestre
-                </option>
+                <option value={1}>Primer semestre</option>
+                <option value={3}>Tercer semestre</option>
+                <option value={5}>Quinto semestre</option>
+                <option value={7}>Séptimo semestre</option>
             </select>
 
-            <button type="submit" disabled={isPending}>
+            <button type="submit" disabled={isPending || registered}>
                 Registrar
             </button>
         </form>

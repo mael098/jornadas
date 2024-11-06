@@ -49,3 +49,11 @@ export async function getTalleresViernesByUser(nc: string) {
         },
     })
 }
+
+export async function getVideojuegosByUser(nc: string) {
+    return await db.registro_videojuegos.findFirst({
+        where: {
+            usuario_nc: nc,
+        },
+    })
+}
