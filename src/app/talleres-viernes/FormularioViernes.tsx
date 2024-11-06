@@ -95,7 +95,7 @@ export function FridayForm({ talleres }: FormularioViernesProps) {
                         if (t) {
                             setTaller(t.taller_id)
                             setRegistered(true)
-                        }
+                        } else setRegistered(false)
                     })
                 }}
                 disabled={isPending}

@@ -145,7 +145,7 @@ export function TallerForm({
                             setTallerHorario2(t.taller_horario2_id)
                             setTallerHorario3(t.taller_horario3_id)
                             setRegistered(true)
-                        }
+                        } else setRegistered(false)
                     })
                 }}
                 disabled={isPending}

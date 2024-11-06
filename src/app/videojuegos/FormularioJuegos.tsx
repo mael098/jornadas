@@ -106,7 +106,7 @@ export function GamesForm({}: FormularioJuegosProps) {
                         if (j) {
                             setJuego(j.videojuego_seleccionado)
                             setRegistered(true)
-                        }
+                        } else setRegistered(false)
                     })
                 }}
                 disabled={isPending}
