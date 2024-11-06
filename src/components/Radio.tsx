@@ -7,7 +7,6 @@ interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
     descripcion: string
     docente: string
 }
-
 export function Radio({
     taller,
     descripcion: description,
@@ -17,7 +16,7 @@ export function Radio({
     return (
         <label className="taller">
             <div className="text-2xl">
-                <input type="radio" {...props} />
+                <input type="radio" {...props} className="hidden" />
                 {taller}
             </div>
             <h4>{docente}</h4>

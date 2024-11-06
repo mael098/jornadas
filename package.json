@@ -10,7 +10,8 @@
         "db:migrate": "prisma migrate dev",
         "db:reset": "prisma migrate reset",
         "db:deploy": "prisma migrate deploy",
-        "db:seed": "prisma seed"
+        "db:seed": "prisma seed",
+        "export": "node --experimental-strip-types prisma/export_talleres.ts"
     },
     "prisma": {
         "seed": "node --experimental-strip-types prisma/seed.ts"
