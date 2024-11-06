@@ -1,8 +1,7 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { Juegos, LIMITE_DE_SUSCRIPCION } from '@/lib/constantes'
-import { TalleresViernes } from '@/lib/constantes'
+import { LIMITE_DE_SUSCRIPCION } from '@/lib/constantes'
 import { registerUser } from './user'
 
 export interface RegistrarViernesProps {
@@ -11,7 +10,7 @@ export interface RegistrarViernesProps {
     nc: string
     email: string
     semestre: number
-    taller: TalleresViernes
+    taller: number
 }
 
 export async function registrarViernes({
@@ -83,7 +82,7 @@ export async function registrarViernes({
     try {
         const count = await db.registro_viernes.count({
             where: {
-                taller,
+                taller_id: taller,
             },
         })
         if (count >= LIMITE_DE_SUSCRIPCION.TALLER) {
@@ -102,12 +101,8 @@ export async function registrarViernes({
     try {
         await db.registro_viernes.create({
             data: {
-                taller,
-                usuario: {
-                    connect: {
-                        nc,
-                    },
-                },
+                taller_id: taller,
+                usuario_nc: nc,
             },
         })
     } catch (error) {
