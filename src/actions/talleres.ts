@@ -33,3 +33,27 @@ export async function getTalleresJueves() {
         }),
     ])
 }
+
+export async function getTalleresJuevesByUser(nc: string) {
+    return await db.registro_talleres.findFirst({
+        where: {
+            usuario_nc: nc,
+        },
+    })
+}
+
+export async function getTalleresViernesByUser(nc: string) {
+    return await db.registro_viernes.findFirst({
+        where: {
+            usuario_nc: nc,
+        },
+    })
+}
+
+export async function getVideojuegosByUser(nc: string) {
+    return await db.registro_videojuegos.findFirst({
+        where: {
+            usuario_nc: nc,
+        },
+    })
+}

@@ -12,7 +12,11 @@ export interface RegistrarViernesProps {
     semestre: number
     taller: number
 }
-
+export type registerTallerMessageErrors =
+    | 'Faltan Datos'
+    | 'Usuario Registrado'
+    | 'Internal Error'
+    | 'Taller lleno'
 export async function registrarViernes({
     apellidos,
     nc,
@@ -22,11 +26,11 @@ export async function registrarViernes({
     taller,
 }: RegistrarViernesProps): Promise<
     | {
-          error?: string
+          error?: registerTallerMessageErrors
           message: string
       }
     | {
-          error: string
+          error: registerTallerMessageErrors
           message?: string
       }
 > {
@@ -54,7 +58,7 @@ export async function registrarViernes({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -74,7 +78,7 @@ export async function registrarViernes({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -93,7 +97,7 @@ export async function registrarViernes({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -108,7 +112,7 @@ export async function registrarViernes({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 

@@ -17,9 +17,9 @@ export function Counters({ initialCounters }: CountersProps) {
     return (
         <CounterContexProvider>
             <>
-                <p>Juego 1: Personas registradas: {conteos.juego1} / 36</p>
-                <p>Juego 2: Personas registradas: {conteos.juego2} / 36</p>
-                <p>Juego 3: Personas registradas: {conteos.juego3} / 36</p>
+                <p>Juego 1: Personas registradas: {conteos.juego1}</p>
+                <p>Juego 2: Personas registradas: {conteos.juego2}</p>
+                <p>Juego 3: Personas registradas: {conteos.juego3}</p>
             </>
         </CounterContexProvider>
     )

@@ -1,7 +1,6 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { Juegos } from '@/lib/constantes'
 
 export interface RegistrarVideouegoProps {
     apellidos: string
@@ -9,9 +8,12 @@ export interface RegistrarVideouegoProps {
     nc: string
     email: string
     semestre: number
-    videojuego: Juegos
+    videojuego: string
 }
-
+export type registerTallerMessageErrors =
+    | 'Faltan Datos'
+    | 'Usuario Registrado'
+    | 'Internal Error'
 export async function registrarVideojuego({
     apellidos,
     nc,
@@ -21,11 +23,11 @@ export async function registrarVideojuego({
     videojuego,
 }: RegistrarVideouegoProps): Promise<
     | {
-          error?: string
+          error?: registerTallerMessageErrors
           message: string
       }
     | {
-          error: string
+          error: registerTallerMessageErrors
           message?: string
       }
 > {
@@ -55,7 +57,7 @@ export async function registrarVideojuego({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -75,7 +77,7 @@ export async function registrarVideojuego({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -94,7 +96,7 @@ export async function registrarVideojuego({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 

@@ -1,5 +1,6 @@
 'use client'
 import { registerTaller } from '@/actions/registrar_taller'
+import { getTalleresJuevesByUser } from '@/actions/talleres'
 import { getUser } from '@/actions/user'
 import { Radio } from '@/components/Radio'
 import { counterContext } from '@/contexts/Counter'
@@ -20,13 +21,13 @@ export function TallerForm({
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [semester, setSemester] = useState(1)
+    const [taller_horario1, setTallerHorario1] = useState(0)
+    const [taller_horario2, setTallerHorario2] = useState(0)
+    const [taller_horario3, setTallerHorario3] = useState(0)
+    const [registered, setRegistered] = useState(false)
 
     // Handle submit form
     const handleaction = (data: FormData) => {
-        const taller_horario1 = data.get('taller_horario1') as string
-        const taller_horario2 = data.get('taller_horario2') as string
-        const taller_horario3 = data.get('taller_horario3') as string
-
         startTransition(async () => {
             const request = await registerTaller({
                 apellidos: lastname,
@@ -34,9 +35,9 @@ export function TallerForm({
                 nc,
                 nombre: name,
                 semestre: semester,
-                taller_horario1: parseInt(taller_horario1),
-                taller_horario2: parseInt(taller_horario2),
-                taller_horario3: parseInt(taller_horario3),
+                taller_horario1,
+                taller_horario2,
+                taller_horario3,
             })
             if (request.error) {
                 if (request.error === 'Taller lleno 1')
@@ -50,6 +51,10 @@ export function TallerForm({
                 if (request.error === 'Taller lleno 3')
                     return alert(
                         'El taller del horario 3 está lleno, por favor elige otro',
+                    )
+                if (request.error === 'Usuario Registrado')
+                    return alert(
+                        'Ya estás registrado, no puedes registrarte de nuevo',
                     )
                 alert('Ha sucedido un error, intente de nuevo')
                 console.log(request)
@@ -72,6 +77,11 @@ export function TallerForm({
                         value={t.id}
                         docente={t.tallerista}
                         descripcion={t.descripcion}
+                        checked={t.id === taller_horario1}
+                        required
+                        onChange={e =>
+                            setTallerHorario1(parseInt(e.currentTarget.value))
+                        }
                     />
                 ))}
 
@@ -84,6 +94,11 @@ export function TallerForm({
                         value={t.id}
                         docente={t.tallerista}
                         descripcion={t.descripcion}
+                        checked={t.id === taller_horario2}
+                        required
+                        onChange={e =>
+                            setTallerHorario2(parseInt(e.currentTarget.value))
+                        }
                     />
                 ))}
 
@@ -96,6 +111,11 @@ export function TallerForm({
                         value={t.id}
                         docente={t.tallerista}
                         descripcion={t.descripcion}
+                        checked={t.id === taller_horario3}
+                        required
+                        onChange={e =>
+                            setTallerHorario3(parseInt(e.currentTarget.value))
+                        }
                     />
                 ))}
             </div>
@@ -119,6 +139,13 @@ export function TallerForm({
                         setName(user.nombre)
                         setEmail(user.email)
                         setSemester(user.semestre)
+                        const t = await getTalleresJuevesByUser(nnc)
+                        if (t) {
+                            setTallerHorario1(t.taller_horario1_id)
+                            setTallerHorario2(t.taller_horario2_id)
+                            setTallerHorario3(t.taller_horario3_id)
+                            setRegistered(true)
+                        } else setRegistered(false)
                     })
                 }}
                 disabled={isPending}
@@ -159,23 +186,16 @@ export function TallerForm({
                 name="semestre"
                 required
                 disabled={isPending}
+                value={semester}
                 onChange={e => setSemester(parseInt(e.currentTarget.value))}
             >
-                <option value={1} defaultChecked={semester === 1}>
-                    Primer semestre
-                </option>
-                <option value={3} defaultChecked={semester === 3}>
-                    Tercer semestre
-                </option>
-                <option value={5} defaultChecked={semester === 5}>
-                    Quinto semestre
-                </option>
-                <option value={7} defaultChecked={semester === 7}>
-                    Séptimo semestre
-                </option>
+                <option value={1}>Primer semestre</option>
+                <option value={3}>Tercer semestre</option>
+                <option value={5}>Quinto semestre</option>
+                <option value={7}>Séptimo semestre</option>
             </select>
 
-            <button type="submit" disabled={isPending}>
+            <button type="submit" disabled={isPending || registered}>
                 Registrar
             </button>
         </form>

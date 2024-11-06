@@ -1,6 +1,7 @@
 'use client'
 
 import { registrarViernes } from '@/actions/registrar_viernes'
+import { getTalleresViernesByUser } from '@/actions/talleres'
 import { getUser } from '@/actions/user'
 import { Radio } from '@/components/Radio'
 import { counterContext } from '@/contexts/Counter'
@@ -19,10 +20,10 @@ export function FridayForm({ talleres }: FormularioViernesProps) {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [semester, setSemester] = useState(1)
+    const [taller, setTaller] = useState(0)
+    const [registered, setRegistered] = useState(false)
 
     const handleaction = async (data: FormData) => {
-        const taller = data.get('taller') as string
-
         try {
             const request = await registrarViernes({
                 apellidos: lastname,
@@ -30,13 +31,17 @@ export function FridayForm({ talleres }: FormularioViernesProps) {
                 email,
                 nc,
                 semestre: semester,
-                taller: parseInt(taller),
+                taller,
             })
             if (request.error) {
+                if (request.error === 'Taller lleno')
+                    return alert('El taller seleccionado ya está lleno')
+                if (request.error === 'Usuario Registrado')
+                    return alert('Ya estás registrado en un taller')
                 alert('Ha sucedido un error, intente de nuevo')
                 console.log(request)
             } else {
-                alert(request.message)
+                alert('Registro exitoso')
                 sendCounterSignal() // Llamar a la función para actualizar los contadores
             }
         } catch (error) {
@@ -61,6 +66,9 @@ export function FridayForm({ talleres }: FormularioViernesProps) {
                     value={t.id}
                     docente={t.tallerista}
                     descripcion={t.descripcion}
+                    required
+                    checked={t.id === taller}
+                    onChange={e => setTaller(parseInt(e.currentTarget.value))}
                 />
             ))}
 
@@ -83,6 +91,11 @@ export function FridayForm({ talleres }: FormularioViernesProps) {
                         setName(user.nombre)
                         setEmail(user.email)
                         setSemester(user.semestre)
+                        const t = await getTalleresViernesByUser(nnc)
+                        if (t) {
+                            setTaller(t.taller_id)
+                            setRegistered(true)
+                        } else setRegistered(false)
                     })
                 }}
                 disabled={isPending}
@@ -139,7 +152,7 @@ export function FridayForm({ talleres }: FormularioViernesProps) {
                 </option>
             </select>
 
-            <button type="submit" disabled={isPending}>
+            <button type="submit" disabled={isPending || registered}>
                 Registrarse en Taller
             </button>
         </form>
