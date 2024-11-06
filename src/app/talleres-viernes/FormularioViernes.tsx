@@ -33,10 +33,14 @@ export function FridayForm({ talleres }: FormularioViernesProps) {
                 taller: parseInt(taller),
             })
             if (request.error) {
+                if (request.error === 'Taller lleno')
+                    return alert('El taller seleccionado ya está lleno')
+                if (request.error === 'Usuario Registrado')
+                    return alert('Ya estás registrado en un taller')
                 alert('Ha sucedido un error, intente de nuevo')
                 console.log(request)
             } else {
-                alert(request.message)
+                alert('Registro exitoso')
                 sendCounterSignal() // Llamar a la función para actualizar los contadores
             }
         } catch (error) {
