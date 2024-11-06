@@ -1,11 +1,5 @@
 'use server'
-import {
-    JUEGOS,
-    TALLERES_HORARIO1,
-    TALLERES_HORARIO2,
-    TALLERES_HORARIO3,
-    TALLERES_VIERNES,
-} from '@/lib/constantes'
+import { JUEGOS } from '@/lib/constantes'
 import { db } from '@/lib/db'
 
 export async function conteoDeTalleres() {
@@ -22,47 +16,47 @@ export async function conteoDeTalleres() {
     ] = await Promise.all([
         db.registro_talleres.count({
             where: {
-                taller_horario1: TALLERES_HORARIO1.Taller_1,
+                taller_horario1_id: 1,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario1: TALLERES_HORARIO1.Taller_2,
+                taller_horario1_id: 2,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario1: TALLERES_HORARIO1.Taller_3,
+                taller_horario1_id: 3,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario2: TALLERES_HORARIO2.Taller_4,
+                taller_horario2_id: 4,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario2: TALLERES_HORARIO2.Taller_5,
+                taller_horario2_id: 5,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario2: TALLERES_HORARIO2.Taller_6,
+                taller_horario2_id: 6,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario3: TALLERES_HORARIO3.Taller_7,
+                taller_horario3_id: 7,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario3: TALLERES_HORARIO3.Taller_8,
+                taller_horario3_id: 8,
             },
         }),
         db.registro_talleres.count({
             where: {
-                taller_horario3: TALLERES_HORARIO3.Taller_9,
+                taller_horario3_id: 9,
             },
         }),
     ])
@@ -109,17 +103,17 @@ export async function conteoDeViernes() {
     const [taller1, taller2, taller3] = await Promise.all([
         db.registro_viernes.count({
             where: {
-                taller: TALLERES_VIERNES.Taller_1,
+                taller_id: 10,
             },
         }),
         db.registro_viernes.count({
             where: {
-                taller: TALLERES_VIERNES.Taller_2,
+                taller_id: 11,
             },
         }),
         db.registro_viernes.count({
             where: {
-                taller: TALLERES_VIERNES.Taller_3,
+                taller_id: 12,
             },
         }),
     ])

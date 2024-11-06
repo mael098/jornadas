@@ -29,27 +29,27 @@ export function Counters({ initialCounters }: CountersProps) {
                     / 36
                 </p>
                 <p>
-                    Taller 1 (1:00 PM): Personas registradas: {conteos.taller4}{' '}
+                    Taller 1 (11:00 AM): Personas registradas: {conteos.taller4}{' '}
                     / 36
                 </p>
                 <p>
-                    Taller 2 (1:00 PM): Personas registradas: {conteos.taller5}{' '}
+                    Taller 2 (11:00 AM): Personas registradas: {conteos.taller5}{' '}
                     / 36
                 </p>
                 <p>
-                    Taller 3 (1:00 PM): Personas registradas: {conteos.taller6}{' '}
+                    Taller 3 (11:00 AM): Personas registradas: {conteos.taller6}{' '}
                     / 36
                 </p>
                 <p>
-                    Taller 1 (4:00 PM): Personas registradas: {conteos.taller7}{' '}
+                    Taller 1 (12:30 PM): Personas registradas: {conteos.taller7}{' '}
                     / 36
                 </p>
                 <p>
-                    Taller 2 (4:00 PM): Personas registradas: {conteos.taller8}{' '}
+                    Taller 2 (12:30 PM): Personas registradas: {conteos.taller8}{' '}
                     / 36
                 </p>
                 <p>
-                    Taller 3 (4:00 PM): Personas registradas: {conteos.taller9}{' '}
+                    Taller 3 (12:30 PM): Personas registradas: {conteos.taller9}{' '}
                     / 36
                 </p>
             </>

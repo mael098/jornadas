@@ -42,7 +42,6 @@ export async function registerUser({
             },
         })
     } catch (error) {
-        // TODO: handle error
         console.log(error)
         return null
     }

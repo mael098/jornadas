@@ -1,11 +1,6 @@
 'use server'
 
-import {
-    LIMITE_DE_SUSCRIPCION,
-    TalleresHorario1,
-    TalleresHorario2,
-    TalleresHorario3,
-} from '@/lib/constantes'
+import { LIMITE_DE_SUSCRIPCION } from '@/lib/constantes'
 import { db } from '@/lib/db'
 import { registerUser } from './user'
 
@@ -23,9 +18,9 @@ export interface RegisterTallerProps {
     nc: string
     email: string
     semestre: number
-    taller_horario1: TalleresHorario1
-    taller_horario2: TalleresHorario2
-    taller_horario3: TalleresHorario3
+    taller_horario1: number
+    taller_horario2: number
+    taller_horario3: number
 }
 
 export async function registerTaller({
@@ -111,7 +106,7 @@ export async function registerTaller({
     try {
         const countTalleres1 = await db.registro_talleres.count({
             where: {
-                taller_horario1,
+                taller_horario1_id: taller_horario1,
             },
         })
         if (countTalleres1 >= LIMITE_DE_SUSCRIPCION.TALLER) {
@@ -121,7 +116,7 @@ export async function registerTaller({
         }
         const countTalleres2 = await db.registro_talleres.count({
             where: {
-                taller_horario2,
+                taller_horario2_id: taller_horario2,
             },
         })
         if (countTalleres2 >= LIMITE_DE_SUSCRIPCION.TALLER) {
@@ -131,7 +126,7 @@ export async function registerTaller({
         }
         const countTalleres3 = await db.registro_talleres.count({
             where: {
-                taller_horario3,
+                taller_horario3_id: taller_horario3,
             },
         })
         if (countTalleres3 >= LIMITE_DE_SUSCRIPCION.TALLER) {
@@ -147,14 +142,10 @@ export async function registerTaller({
     try {
         await db.registro_talleres.create({
             data: {
-                taller_horario1,
-                taller_horario2,
-                taller_horario3,
-                usuario: {
-                    connect: {
-                        nc: nc,
-                    },
-                },
+                taller_horario1_id: taller_horario1,
+                taller_horario2_id: taller_horario2,
+                taller_horario3_id: taller_horario3,
+                usuario_nc: nc,
             },
         })
     } catch (error) {
