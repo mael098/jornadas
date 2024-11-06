@@ -33,3 +33,11 @@ export async function getTalleresJueves() {
         }),
     ])
 }
+
+export async function getTalleresJuevesByUser(nc: string) {
+    return await db.registro_talleres.findFirst({
+        where: {
+            usuario_nc: nc,
+        },
+    })
+}
