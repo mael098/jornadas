@@ -36,7 +36,6 @@ export function GamesForm({}: FormularioJuegosProps) {
                 console.log(request.error)
             } else {
                 alert(request.message)
-                // Llamar a onRegistroExitoso para actualizar el conteo
                 sendCounterSignal()
             }
         } catch (error) {
@@ -49,22 +48,22 @@ export function GamesForm({}: FormularioJuegosProps) {
             <h3>Elige tu juego</h3>
             <Radio
                 name="juego"
-                taller="Juego 1: FIFA"
-                descripcion="Compite en el torneo de FIFA"
+                taller="Juego 1: EA FC 24"
+                descripcion="Compite en el torneo de EA FC 24"
                 docente=""
                 value={JUEGOS.Juego_1}
             />
             <Radio
                 name="juego"
                 taller="Juego 2: Super Smash Bros"
-                descripcion="Compite en Super Smash Bros"
+                descripcion="Compite en el torneo de Super Smash Bros"
                 docente=""
                 value={JUEGOS.Juego_2}
             />
             <Radio
                 name="juego"
-                taller="Juego 3: Mario Kart"
-                descripcion="Compite en Mario Kart"
+                taller="Juego 3: The King of Fighters"
+                descripcion="Compite en el torneo de The King of Fughters"
                 docente=""
                 value={JUEGOS.Juego_3}
             />
