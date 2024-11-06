@@ -51,6 +51,10 @@ export function TallerForm({
                     return alert(
                         'El taller del horario 3 está lleno, por favor elige otro',
                     )
+                if (request.error === 'Usuario Registrado')
+                    return alert(
+                        'Ya estás registrado, no puedes registrarte de nuevo',
+                    )
                 alert('Ha sucedido un error, intente de nuevo')
                 console.log(request)
             } else {
