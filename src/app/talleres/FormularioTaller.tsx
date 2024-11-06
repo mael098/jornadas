@@ -39,10 +39,22 @@ export function TallerForm({
                 taller_horario3: parseInt(taller_horario3),
             })
             if (request.error) {
+                if (request.error === 'Taller lleno 1')
+                    return alert(
+                        'El taller del horario 1 está lleno, por favor elige otro',
+                    )
+                if (request.error === 'Taller lleno 2')
+                    return alert(
+                        'El taller del horario 2 está lleno, por favor elige otro',
+                    )
+                if (request.error === 'Taller lleno 3')
+                    return alert(
+                        'El taller del horario 3 está lleno, por favor elige otro',
+                    )
                 alert('Ha sucedido un error, intente de nuevo')
                 console.log(request)
             } else {
-                alert(request.message)
+                alert('Registrado con éxito')
                 sendCounterSignal() // Llamar a la función para actualizar los contadores
             }
         })
@@ -79,7 +91,7 @@ export function TallerForm({
                 {talleres_horario3.map(t => (
                     <Radio
                         key={t.id}
-                        name="taller_horario2"
+                        name="taller_horario3"
                         taller={t.nombre}
                         value={t.id}
                         docente={t.tallerista}
