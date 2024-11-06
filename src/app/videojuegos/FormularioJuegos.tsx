@@ -32,10 +32,12 @@ export function GamesForm({}: FormularioJuegosProps) {
                 videojuego: juego as keyof typeof JUEGOS,
             })
             if (request.error) {
+                if (request.error === 'Usuario Registrado')
+                    return alert('Ya estás registrado en un juego')
                 alert('Ha sucedido un error, intente de nuevo')
                 console.log(request.error)
             } else {
-                alert(request.message)
+                alert('Registro exitoso')
                 // Llamar a onRegistroExitoso para actualizar el conteo
                 sendCounterSignal()
             }
@@ -128,6 +130,7 @@ export function GamesForm({}: FormularioJuegosProps) {
                 name="semestre"
                 required
                 disabled={isPending}
+                defaultValue={semester}
                 onChange={e => setSemester(parseInt(e.currentTarget.value))}
             >
                 <option value={1} defaultChecked={semester === 1}>

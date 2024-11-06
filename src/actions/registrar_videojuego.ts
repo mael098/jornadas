@@ -11,7 +11,10 @@ export interface RegistrarVideouegoProps {
     semestre: number
     videojuego: Juegos
 }
-
+export type registerTallerMessageErrors =
+    | 'Faltan Datos'
+    | 'Usuario Registrado'
+    | 'Internal Error'
 export async function registrarVideojuego({
     apellidos,
     nc,
@@ -21,11 +24,11 @@ export async function registrarVideojuego({
     videojuego,
 }: RegistrarVideouegoProps): Promise<
     | {
-          error?: string
+          error?: registerTallerMessageErrors
           message: string
       }
     | {
-          error: string
+          error: registerTallerMessageErrors
           message?: string
       }
 > {
@@ -55,7 +58,7 @@ export async function registrarVideojuego({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -75,7 +78,7 @@ export async function registrarVideojuego({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
@@ -94,7 +97,7 @@ export async function registrarVideojuego({
     } catch (error) {
         console.log(error)
         return {
-            error: 'Error Interno',
+            error: 'Internal Error',
         }
     }
 
