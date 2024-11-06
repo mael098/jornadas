@@ -17,9 +17,10 @@ model Registro_talleres {
   usuario_nc         String
 
   usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
-  taller1 Talleres @relation("taller1", fields: [taller_horario1_id], references: [id])
-  taller2 Talleres @relation("taller2", fields: [taller_horario2_id], references: [id])
-  taller3 Talleres @relation("taller3", fields: [taller_horario3_id], references: [id])
+
+  taller1 Talleres @relation("TallerHorario1", fields: [taller_horario1_id], references: [id])
+  taller2 Talleres @relation("TallerHorario2", fields: [taller_horario2_id], references: [id])
+  taller3 Talleres @relation("TallerHorario3", fields: [taller_horario3_id], references: [id])
 }
 
 model Usuarios {
@@ -70,10 +71,12 @@ model Talleres {
   tallerista  String
   descripcion String
 
-  horario           Horario
-  dia               Dia
-  Registro_talleres Registro_talleres[]
-  Registro_talleres Registro_talleres[]
-  Registro_talleres Registro_talleres[]
-  Registro_viernes  Registro_viernes[]
+  horario Horario
+  dia     Dia
+
+  registros_taller1 Registro_talleres[] @relation("TallerHorario1")
+  registros_taller2 Registro_talleres[] @relation("TallerHorario2")
+  registros_taller3 Registro_talleres[] @relation("TallerHorario3")
+
+  Registro_viernes Registro_viernes[]
 }
