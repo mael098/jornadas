@@ -78,6 +78,7 @@ export function TallerForm({
                         docente={t.tallerista}
                         descripcion={t.descripcion}
                         checked={t.id === taller_horario1}
+                        required
                         onChange={e =>
                             setTallerHorario1(parseInt(e.currentTarget.value))
                         }
@@ -94,6 +95,7 @@ export function TallerForm({
                         docente={t.tallerista}
                         descripcion={t.descripcion}
                         checked={t.id === taller_horario2}
+                        required
                         onChange={e =>
                             setTallerHorario2(parseInt(e.currentTarget.value))
                         }
@@ -110,6 +112,7 @@ export function TallerForm({
                         docente={t.tallerista}
                         descripcion={t.descripcion}
                         checked={t.id === taller_horario3}
+                        required
                         onChange={e =>
                             setTallerHorario3(parseInt(e.currentTarget.value))
                         }
