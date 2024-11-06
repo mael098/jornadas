@@ -23,8 +23,6 @@ export function GamesForm({}: FormularioJuegosProps) {
     const [registered, setRegistered] = useState(false)
 
     const handleaction = async (data: FormData) => {
-        const juego = data.get('juego') as string
-
         try {
             const request = await registrarVideojuego({
                 apellidos: lastname,
@@ -32,7 +30,7 @@ export function GamesForm({}: FormularioJuegosProps) {
                 nc,
                 nombre: name,
                 semestre: semester,
-                videojuego: juego as keyof typeof JUEGOS,
+                videojuego: juego,
             })
             if (request.error) {
                 if (request.error === 'Usuario Registrado')
