@@ -2,7 +2,7 @@
 
 import { registrarVideojuego } from '@/actions/registrar_videojuego'
 import { getUser } from '@/actions/user'
-import Radio from '@/components/Radio'
+import { Radio } from '@/components/Radio'
 import { counterContext } from '@/contexts/Counter'
 import { JUEGOS } from '@/lib/constantes'
 import { use, useState, useTransition } from 'react'
