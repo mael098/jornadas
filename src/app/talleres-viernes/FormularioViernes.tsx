@@ -2,9 +2,8 @@
 
 import { registrarViernes } from '@/actions/registrar_viernes'
 import { getUser } from '@/actions/user'
-import Radio from '@/components/Radio'
+import { Radio } from '@/components/Radio'
 import { counterContext } from '@/contexts/Counter'
-import { TALLERES_VIERNES, TalleresViernes } from '@/lib/constantes'
 import { Talleres } from '@prisma/client'
 import { use, useState, useTransition } from 'react'
 

@@ -8,7 +8,7 @@ interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
     docente: string
 }
 
-export default function Radio({
+export function Radio({
     taller,
     descripcion: description,
     docente,
