@@ -3,6 +3,9 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { Nav } from '@/components/Nav'
 import { Contador } from '@/components/Contador'
+import { StarField } from '@/components/StarField'
+import { CosmicDust } from '@/components/CosmicDust'
+import { SpaceAmbient } from '@/components/SpaceAmbient'
 import './index.css'
 
 export const metadata: Metadata = {
@@ -18,23 +21,39 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`antialiased`}>
+            <body className={`antialiased space-theme`}>
+                {/* Fondo espacial completo */}
+                <StarField />
+                <SpaceAmbient />
+                <CosmicDust />
+                {/* Efecto de nebulosa */}
+                <div className="nebula-effect"></div>
                 {/* <!-- Encabezado con logos --> */}
-                <Header />
+                <Header />{' '}
+                <main className="flex-1">
+                    <div className="container">
+                        <div className="text-center mb-8">
+                            <h1 className="mb-4">XI JORNADAS TECNOLÓGICAS</h1>
+                            <h1 className="mb-6">
+                                INGENIERÍA EN SISTEMAS COMPUTACIONALES
+                            </h1>
+                        </div>
 
-                <div className="container">
-                    <h1>XI JORNADAS TECNOLÓGICAS</h1>
-                    <h1>INGENIERÍA EN SISTEMAS COMPUTACIONALES</h1>
-                    {/* <!-- Pestañas de navegación --> */}
-                    <Nav />
-                    {/* <!-- Contador de tiempo y Mensaje de Evento Iniciado --> */}
-                    <Contador />
+                        {/* <!-- Pestañas de navegación --> */}
+                        <div className="mb-8">
+                            <Nav />
+                        </div>
 
-                    {/* Contenido Principal de la Pagina */}
-                    {children}
-                </div>
+                        {/* <!-- Contador de tiempo y Mensaje de Evento Iniciado --> */}
+                        <div className="mb-8">
+                            <Contador />
+                        </div>
+
+                        {/* Contenido Principal de la Pagina */}
+                        <div className="content-area">{children}</div>
+                    </div>
+                </main>
                 {/* <!-- Contenido existente... --> */}
-
                 {/* <!-- Pie de página --> */}
                 <Footer />
             </body>

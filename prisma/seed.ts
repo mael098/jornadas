@@ -106,7 +106,7 @@ Requerimientos:
 Requerimientos:
     Equipo de computo
     XAMPP`,
-            dia: Dia.JUEVES,
+            dia: Dia.VIERNES,
             horario: Horario.HORARIO3,
         },
         {

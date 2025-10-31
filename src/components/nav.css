@@ -1,27 +1,16 @@
+@import 'tailwindcss' reference;
+
 nav {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    gap: 10px;
+    @apply flex justify-center items-center mb-8 gap-4 p-4 backdrop-blur-sm rounded-xl shadow-lg border border-blue-200/5012;
 
     a {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 12px 25px;
-        font-size: 1em;
-        cursor: pointer;
-        border-radius: 10px;
-        transition: background-color 0.3s ease;
-        flex-grow: 1;
-        text-align: center;
-
-        &:hover {
-            background-color: #0056b3;
-        }
+        @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium px-6 py-3 rounded-lg 
+               transition-all duration-300 ease-in-out flex-1 text-center no-underline
+               hover:from-blue-700 hover:to-blue-800 hover:shadow-md hover:-translate-y-0.5
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 
         &[data-active='true'] {
-            background-color: #0611a7;
+            @apply from-indigo-600 to-indigo-700 shadow-md ring-2 ring-indigo-500/30;
         }
     }
 }

@@ -3,17 +3,33 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0;
-    background-color: #ffffff4d;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(
+        135deg,
+        rgba(7, 40, 102, 0.356),
+        rgba(1, 20, 37, 0.479)
+    );
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 123, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.15);
+    position: relative;
+    z-index: 10;
+    padding: 10px 20px;
 
     & .logo {
-        max-width: 150px;
+        max-width: 160px;
         height: auto;
+        transition: transform 0.3s ease;
+    }
+
+    & .logo:hover {
+        transform: scale(1.05);
     }
 
     & .logo-center {
         display: flex;
-        gap: 20px;
+        gap: 2rem;
+        align-items: center;
     }
 }
 @media screen and (max-width: 600px) {

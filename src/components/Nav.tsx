@@ -42,13 +42,16 @@ export function Nav() {
             <nav className="tabs">
                 <MenuOption href="/">Página Principal</MenuOption>
                 <MenuOption href="/expositores">Expositores</MenuOption>
-                <MenuOption href="/talleres">Talleres Día Jueves</MenuOption>
+                {/* <MenuOption href="/talleres">Talleres Día Jueves</MenuOption> */}
                 <MenuOption href="/talleres-viernes">
                     Talleres Día Viernes
                 </MenuOption>
                 <MenuOption href="/videojuegos">
                     Concurso de Videojuegos
                 </MenuOption>
+                <MenuOption href="/tarjeta">Tarjetas Digitales</MenuOption>
+                <MenuOption href="/tarjeta-usuario">Mi Pase Digital</MenuOption>
+                <MenuOption href="/tarjeta-3d">Tarjetas 3D</MenuOption>
             </nav>
         </activeContext.Provider>
     )

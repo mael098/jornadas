@@ -1,21 +1,32 @@
 footer {
-    background-color: #ffffff;
-    color: black;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9),
+        rgba(248, 249, 250, 0.85)
+    );
+    color: #495057;
     text-align: center;
-    padding: 15px 0;
-    margin-top: 20px;
+    padding: 2rem 0;
+    margin-top: 3rem;
     font-size: 1em;
     display: flex;
     flex-direction: column;
+    border-top: 1px solid rgba(0, 123, 255, 0.2);
+    box-shadow: 0 -4px 20px rgba(0, 123, 255, 0.15);
+    backdrop-filter: blur(20px);
+    position: relative;
+    z-index: 10;
 
     & > ul {
         display: flex;
         flex-direction: column;
+        gap: 0.5rem;
     }
 
     p {
-        margin: 0;
-        font-weight: bold;
+        margin: 0.5rem 0;
+        font-weight: 600;
+        color: #007bff;
     }
 }
 

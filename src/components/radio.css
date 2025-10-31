@@ -1,25 +1,19 @@
+@import 'tailwindcss' reference;
+
 .taller {
-    background-color: #f9f9f9;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 10px;
-    border: solid 2px transparent;
-    border-left: 5px solid #007bff;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    @apply p-6 my-6 rounded-2xl border-l-4 border-blue-500 
+           flex flex-col items-start
+           transition-all duration-300 ease-out
+           shadow-md shadow-blue-500/5
+           hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-0.5
+           has-checked:border-blue-600 has-checked:bg-linear-to-br has-checked:from-blue-50 has-checked:to-white
+           has-checked:shadow-lg has-checked:shadow-blue-500/15;
 
     & > div {
-        display: flex;
-        flex-direction: row;
-    }
-
-    &:has(input:checked) {
-        border-color: #007bff;
+        @apply flex flex-row items-center gap-4;
     }
 }
 
 .sentence {
-    display: block; /* Asegúrate de que cada oración ocupe una línea completa */
-    margin: 5px 0; /* Espacio entre las oraciones */
+    @apply block my-3 leading-relaxed text-white text-lg;
 }
