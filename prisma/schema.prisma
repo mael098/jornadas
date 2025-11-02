@@ -62,6 +62,13 @@ model Talleres {
   Registro_viernes  Registro_viernes[]
 }
 
+model Targetas {
+  id  Int    @id @default(autoincrement())
+  nc  String
+  tip String
+  url String
+}
+
 enum Horario {
   HORARIO1
   HORARIO2

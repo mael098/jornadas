@@ -227,7 +227,7 @@ function TarjetaEstable(props: Tarjeta3DSimpleProps) {
                 cardRef.current.rotation.x =
                     Math.sin(Date.now() * 0.0006) * 0.03
                 cardRef.current.rotation.z =
-                    Math.sin(Date.now() * 0.0004) * 0.02
+                    Math.sin(Date.now() * 0.0004) * 0.03
                 // Mantener centrada
                 cardRef.current.position.x =
                     Math.sin(Date.now() * 0.0003) * 0.03

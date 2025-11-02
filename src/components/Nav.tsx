@@ -37,6 +37,8 @@ export function MenuOption({ children, href }: MenuOptionProps) {
 
 export function Nav() {
     const [active, setActive] = useState('/')
+    const [displayMenu, setDisplayMenu] = useState(false)
+
     return (
         <activeContext.Provider value={{ active, setActive }}>
             <nav className="tabs">
@@ -49,8 +51,8 @@ export function Nav() {
                 <MenuOption href="/videojuegos">
                     Concurso de Videojuegos
                 </MenuOption>
-                <MenuOption href="/tarjeta">Tarjetas Digitales</MenuOption>
-                <MenuOption href="/tarjeta-usuario">Mi Pase Digital</MenuOption>
+                {/* <MenuOption href="/tarjeta">Tarjetas Digitales</MenuOption> */}
+                {/* <MenuOption href="/tarjeta-usuario">Mi Pase Digital</MenuOption> */}
                 <MenuOption href="/tarjeta-3d">Tarjetas 3D</MenuOption>
             </nav>
         </activeContext.Provider>

@@ -1,6 +1,7 @@
 @import 'tailwindcss' reference;
 
 /* Contenedor principal de la tarjeta */
+
 .tarjeta-container {
     perspective: 1000px;
     width: 100%;
