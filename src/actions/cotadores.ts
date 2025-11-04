@@ -13,7 +13,6 @@ export async function conteoDeTalleres() {
         taller7,
         taller8,
         taller9,
-        taller10
     ] = await Promise.all([
         db.registro_talleres.count({
             where: {
