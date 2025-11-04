@@ -12,6 +12,11 @@ export const metadata: Metadata = {
     title: 'Jornadas Sistemas 2024 - ITA',
     description:
         'Decima primera jornadas de sistemas del Instituto Tecnologico de Altamira',
+    openGraph: {
+        title: 'XI Jornadas Tecnológicas - ISC',
+        description: 'Instituto Tecnológico de Altamira',
+        type: 'website',
+    },
 }
 
 export default function RootLayout({
