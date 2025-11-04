@@ -15,21 +15,18 @@ model Registro_talleres {
   taller_horario3_id Int
   fecha_registro     DateTime @default(now())
   usuario_nc         String
-
-  usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
-
-  taller1 Talleres @relation("TallerHorario1", fields: [taller_horario1_id], references: [id])
-  taller2 Talleres @relation("TallerHorario2", fields: [taller_horario2_id], references: [id])
-  taller3 Talleres @relation("TallerHorario3", fields: [taller_horario3_id], references: [id])
+  taller1            Talleres @relation("TallerHorario1", fields: [taller_horario1_id], references: [id])
+  taller2            Talleres @relation("TallerHorario2", fields: [taller_horario2_id], references: [id])
+  taller3            Talleres @relation("TallerHorario3", fields: [taller_horario3_id], references: [id])
+  usuario            Usuarios @relation(fields: [usuario_nc], references: [nc])
 }
 
 model Usuarios {
-  apellidos String
-  nombre    String
-  nc        String @id
-  email     String @unique
-  semestre  Int
-
+  apellidos            String
+  nombre               String
+  nc                   String                 @id
+  email                String                 @unique
+  semestre             Int
   registro_talleres    Registro_talleres[]
   Registro_videojuegos Registro_videojuegos[]
   Registro_viernes     Registro_viernes[]
@@ -40,8 +37,7 @@ model Registro_videojuegos {
   fecha_registro          DateTime @default(now())
   videojuego_seleccionado String
   usuario_nc              String
-
-  usuario Usuarios @relation(fields: [usuario_nc], references: [nc])
+  usuario                 Usuarios @relation(fields: [usuario_nc], references: [nc])
 }
 
 model Registro_viernes {
@@ -49,9 +45,28 @@ model Registro_viernes {
   fecha_registro DateTime @default(now())
   taller_id      Int
   usuario_nc     String
+  talleres       Talleres @relation(fields: [taller_id], references: [id])
+  usuario        Usuarios @relation(fields: [usuario_nc], references: [nc])
+}
 
-  usuario  Usuarios @relation(fields: [usuario_nc], references: [nc])
-  talleres Talleres @relation(fields: [taller_id], references: [id])
+model Talleres {
+  id                Int                 @id @default(autoincrement())
+  nombre            String
+  tallerista        String
+  descripcion       String
+  horario           Horario
+  dia               Dia
+  registros_taller1 Registro_talleres[] @relation("TallerHorario1")
+  registros_taller2 Registro_talleres[] @relation("TallerHorario2")
+  registros_taller3 Registro_talleres[] @relation("TallerHorario3")
+  Registro_viernes  Registro_viernes[]
+}
+
+model Targetas {
+  id  Int    @id @default(autoincrement())
+  nc  String
+  tip String
+  url String
 }
 
 enum Horario {
@@ -63,20 +78,4 @@ enum Horario {
 enum Dia {
   JUEVES
   VIERNES
-}
-
-model Talleres {
-  id          Int    @id @default(autoincrement())
-  nombre      String
-  tallerista  String
-  descripcion String
-
-  horario Horario
-  dia     Dia
-
-  registros_taller1 Registro_talleres[] @relation("TallerHorario1")
-  registros_taller2 Registro_talleres[] @relation("TallerHorario2")
-  registros_taller3 Registro_talleres[] @relation("TallerHorario3")
-
-  Registro_viernes Registro_viernes[]
 }

@@ -1,0 +1,416 @@
+@import 'tailwindcss' reference;
+
+/* Contenedor principal de la tarjeta */
+
+.tarjeta-container {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 400px;
+    height: 600px;
+    margin: 0 auto;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Tarjeta con efecto flip 3D */
+.tarjeta-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tarjeta-container.flipped .tarjeta-card {
+    transform: rotateY(180deg);
+}
+
+/* Estilos comunes para ambos lados */
+.tarjeta-front,
+.tarjeta-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 20, 40, 0.95) 0%,
+        rgba(0, 40, 80, 0.9) 50%,
+        rgba(20, 60, 120, 0.85) 100%
+    );
+    border: 2px solid rgba(0, 255, 255, 0.4);
+    box-shadow:
+        0 0 40px rgba(0, 255, 255, 0.2),
+        inset 0 0 40px rgba(0, 255, 255, 0.1),
+        0 20px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+}
+
+.tarjeta-back {
+    transform: rotateY(180deg);
+}
+
+/* Header de la tarjeta */
+.tarjeta-header {
+    @apply p-4 text-center relative;
+    background: linear-gradient(
+        90deg,
+        rgba(0, 255, 255, 0.1) 0%,
+        rgba(255, 0, 255, 0.1) 50%,
+        rgba(0, 255, 255, 0.1) 100%
+    );
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.tarjeta-logo {
+    @apply flex items-center justify-center mb-2;
+}
+
+.logo-icon {
+    @apply text-3xl mr-3;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+}
+
+.logo-text h3 {
+    @apply text-lg font-bold mb-1;
+    color: rgba(0, 255, 255, 0.9);
+    font-family: 'Orbitron', monospace;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    letter-spacing: 1px;
+}
+
+.logo-text p {
+    @apply text-xs;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Orbitron', monospace;
+}
+
+.tarjeta-tipo {
+    @apply text-xs font-bold py-2 px-4 rounded-full;
+    background: linear-gradient(
+        45deg,
+        rgba(0, 255, 255, 0.2),
+        rgba(255, 0, 255, 0.2)
+    );
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    color: rgba(0, 255, 255, 0.9);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    font-family: 'Orbitron', monospace;
+    letter-spacing: 1px;
+}
+
+/* Cuerpo principal */
+.tarjeta-body {
+    @apply p-6 space-y-6;
+}
+
+/* Información del usuario */
+.usuario-info {
+    @apply flex items-center space-x-4 p-4 rounded-xl;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 50, 100, 0.3) 0%,
+        rgba(0, 30, 60, 0.4) 100%
+    );
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    box-shadow: inset 0 2px 10px rgba(0, 255, 255, 0.1);
+}
+
+.avatar {
+    @apply w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold;
+    background: linear-gradient(
+        45deg,
+        rgba(0, 255, 255, 0.8),
+        rgba(255, 0, 255, 0.8)
+    );
+    color: rgba(0, 20, 40, 1);
+    box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.5),
+        inset 0 2px 10px rgba(255, 255, 255, 0.3);
+    font-family: 'Orbitron', monospace;
+}
+
+.usuario-datos h2 {
+    @apply text-xl font-bold mb-1;
+    background: linear-gradient(45deg, #00ffff 0%, #ffffff 50%, #ff00ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Orbitron', monospace;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.nc {
+    @apply text-sm font-mono;
+    color: rgba(0, 255, 255, 0.8);
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.semestre {
+    @apply text-sm;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Información del evento */
+.evento-info {
+    @apply p-4 rounded-xl;
+    background: linear-gradient(
+        135deg,
+        rgba(20, 0, 40, 0.4) 0%,
+        rgba(40, 0, 80, 0.3) 100%
+    );
+    border: 1px solid rgba(255, 0, 255, 0.3);
+    box-shadow:
+        0 0 20px rgba(255, 0, 255, 0.1),
+        inset 0 2px 10px rgba(255, 0, 255, 0.05);
+}
+
+.evento-info h3 {
+    @apply text-lg font-bold mb-3 text-center;
+    background: linear-gradient(45deg, #ff00ff 0%, #ffffff 50%, #00ffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Orbitron', monospace;
+    text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+}
+
+.detalles {
+    @apply space-y-2;
+}
+
+.detalles p {
+    @apply flex items-center text-sm;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.icon {
+    @apply mr-2 text-base;
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+}
+
+/* Footer con QR */
+.tarjeta-footer {
+    @apply absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between;
+    background: linear-gradient(
+        90deg,
+        rgba(0, 20, 40, 0.8) 0%,
+        rgba(0, 40, 80, 0.6) 50%,
+        rgba(0, 20, 40, 0.8) 100%
+    );
+    border-top: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.qr-placeholder {
+    @apply text-center;
+}
+
+.qr-code {
+    @apply w-12 h-12 border-2 border-cyan-400 rounded flex items-center justify-center text-xs font-bold mb-1;
+    background: linear-gradient(
+        45deg,
+        rgba(0, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+    );
+    color: rgba(0, 255, 255, 0.9);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.qr-placeholder p {
+    @apply text-xs;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.tech-pattern {
+    @apply w-20 h-8;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 255, 255, 0.1) 0px,
+        rgba(0, 255, 255, 0.1) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+/* Botón de flip */
+.flip-button {
+    @apply absolute top-4 right-4 text-xs px-3 py-1 rounded-full;
+    background: linear-gradient(
+        45deg,
+        rgba(0, 255, 255, 0.2),
+        rgba(255, 0, 255, 0.2)
+    );
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    color: rgba(0, 255, 255, 0.9);
+    font-family: 'Orbitron', monospace;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.flip-button:hover {
+    background: linear-gradient(
+        45deg,
+        rgba(0, 255, 255, 0.4),
+        rgba(255, 0, 255, 0.4)
+    );
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.back-button {
+    @apply top-4 left-4;
+}
+
+/* Estilos del lado trasero */
+.back-header {
+    @apply p-4 text-center;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.back-header h3 {
+    @apply text-lg font-bold;
+    color: rgba(0, 255, 255, 0.9);
+    font-family: 'Orbitron', monospace;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.back-content {
+    @apply p-6 space-y-4 overflow-y-auto;
+    height: calc(100% - 120px);
+}
+
+.info-section {
+    @apply p-3 rounded-lg;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 50, 100, 0.2) 0%,
+        rgba(0, 30, 60, 0.3) 100%
+    );
+    border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.info-section h4 {
+    @apply text-sm font-bold mb-2;
+    color: rgba(0, 255, 255, 0.9);
+    font-family: 'Orbitron', monospace;
+}
+
+.info-section p {
+    @apply text-xs mb-1;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.info-section ul {
+    @apply text-xs space-y-1;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.info-section li {
+    @apply relative pl-4;
+}
+
+.info-section li::before {
+    content: '▶';
+    @apply absolute left-0;
+    color: rgba(0, 255, 255, 0.6);
+}
+
+/* Efectos de partículas */
+.particle-effects {
+    @apply absolute inset-0 pointer-events-none;
+    overflow: hidden;
+}
+
+.particle {
+    @apply absolute w-1 h-1 rounded-full;
+    background: rgba(0, 255, 255, 0.6);
+    animation: float 6s ease-in-out infinite;
+}
+
+.particle-1 {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.particle-2 {
+    top: 20%;
+    right: 15%;
+    animation-delay: 1s;
+}
+
+.particle-3 {
+    bottom: 30%;
+    left: 20%;
+    animation-delay: 2s;
+}
+
+.particle-4 {
+    bottom: 20%;
+    right: 10%;
+    animation-delay: 3s;
+}
+
+.particle-5 {
+    top: 50%;
+    left: 5%;
+    animation-delay: 4s;
+}
+
+.particle-6 {
+    top: 70%;
+    right: 5%;
+    animation-delay: 5s;
+}
+
+/* Animaciones */
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(-20px) scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .tarjeta-container {
+        max-width: 350px;
+        height: 550px;
+    }
+
+    .usuario-info {
+        @apply flex-col text-center space-x-0 space-y-3;
+    }
+
+    .tarjeta-footer {
+        @apply flex-col space-y-2;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .tarjeta-container {
+        max-width: 320px;
+        height: 500px;
+    }
+
+    .tarjeta-body {
+        @apply p-4 space-y-4;
+    }
+
+    .usuario-datos h2 {
+        @apply text-lg;
+    }
+
+    .evento-info h3 {
+        @apply text-base;
+    }
+}

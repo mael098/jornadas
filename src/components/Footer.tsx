@@ -10,17 +10,11 @@ import githubLogo from '@/Logos/github.png'
 export function Footer() {
     return (
         <footer>
-            <span className="text-black">Créditos:</span>
+            <span className="text-whiten">Créditos:</span>
             <ul>
-                <li className="flex justify-center items-center gap-10 ">
-                    <p>
-                        Alan Yahir Arizmendi del Angel - Séptimo semestre de
-                        Ingeniería en Sistemas Computacionales
-                    </p>
-                </li>
                 <li className="flex justify-center items-center gap-10">
                     <p>
-                        Andres Eli Maciel Muñiz - Quinto semestre de Ingeniería
+                        Andres Eli Maciel Muñiz - septimo semestre de Ingeniería
                         en Sistemas Computacionales
                     </p>
                     <Link href={'https://github.com/eliyya'} target="_blank">
@@ -35,7 +29,7 @@ export function Footer() {
                 </li>
                 <li className="flex justify-center items-center gap-10">
                     <p>
-                        Ivan Asdrubal Villegas Espinosa - Quinto semestre de
+                        Ivan Asdrubal Villegas Espinosa - septimo semestre de
                         Ingeniería en Sistemas Computacionales
                     </p>
                     <Link href={'https://github.com/mael098'} target="_blank">

@@ -16,9 +16,20 @@ export function Contador() {
     useEffect(() => {
         const eventoFecha = new Date(FECHA_DEL_EVENTO).getTime()
 
+        // Debug: Mostrar fechas en consola
+        console.log('Fecha del evento:', new Date(FECHA_DEL_EVENTO))
+        console.log('Fecha actual:', new Date())
+
         const intervalo = setInterval(function () {
             const ahora = new Date().getTime()
             const diferencia = eventoFecha - ahora
+
+            // Si el tiempo termina
+            if (diferencia < 0) {
+                clearInterval(intervalo)
+                setIniciado(true)
+                return
+            }
 
             // Calculos de días, horas, minutos y segundos
             const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24))
@@ -40,15 +51,9 @@ export function Contador() {
             if (diferencia < 3600000 && diferencia > 0) {
                 setColorCountdown('red')
             }
-
-            // Si el tiempo termina
-            if (diferencia < 0) {
-                clearInterval(intervalo)
-                setIniciado(true)
-            }
-
-            return () => clearInterval(intervalo)
         }, 1000)
+
+        return () => clearInterval(intervalo)
     }, [])
     return (
         <>
