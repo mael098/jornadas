@@ -6,9 +6,9 @@ footer {
     );
     color: #ffffff;
     text-align: center;
-    padding: 2rem 0;
-    margin-top: 3rem;
-    font-size: 1em;
+    padding: 1rem 0.75rem;
+    margin-top: 1.5rem;
+    font-size: clamp(0.85rem, 2vw, 1rem);
     display: flex;
     flex-direction: column;
     border-top: 1px solid rgba(0, 123, 255, 0.2);
@@ -30,9 +30,23 @@ footer {
     }
 }
 
-/* Hacer el pie de página más pequeño en pantallas móviles */
-@media screen and (max-width: 600px) {
-    footer p {
-        font-size: 0.9em;
+/* Responsive para footer */
+@media (min-width: 640px) {
+    footer {
+        padding: 1.5rem 1rem;
+        margin-top: 2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    footer {
+        padding: 2rem 1.5rem;
+        margin-top: 2.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    footer {
+        margin-top: 3rem;
     }
 }

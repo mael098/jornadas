@@ -7,18 +7,24 @@
 
 /* Botón hamburguesa - visible solo en móvil */
 .hamburger-btn {
-    @apply fixed top-6 right-6 z-50 p-3.5 rounded-xl 
+    @apply fixed top-4 right-4 z-50 p-3 rounded-xl
            bg-linear-to-br from-blue-600 via-blue-700 to-indigo-700
            shadow-2xl border border-blue-300/40
-           md:hidden transition-all duration-300 
+           md:hidden transition-all duration-300
            hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800
            hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]
            hover:scale-110 hover:rotate-90
            active:scale-95;
 }
 
+@media (min-width: 640px) and (max-width: 767px) {
+    .hamburger-btn {
+        @apply top-5 right-5 p-3.5;
+    }
+}
+
 .hamburger-icon {
-    @apply w-7 h-6 flex flex-col justify-between relative;
+    @apply w-6 h-5 flex flex-col justify-between relative;
 }
 
 .hamburger-icon span {

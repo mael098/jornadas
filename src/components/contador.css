@@ -1,7 +1,7 @@
 @import 'tailwindcss' reference;
 /* Contenedor del contador futurista */
 .countdown-container {
-    @apply text-center p-8 text-white relative;
+    @apply text-center p-4 text-white relative;
     background: linear-gradient(
         135deg,
         rgba(0, 12, 36, 0.95) 0%,
@@ -15,7 +15,7 @@
         inset 0 0 30px rgba(52, 77, 77, 0.1),
         0 8px 32px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     position: relative;
     overflow: hidden;
 
@@ -42,7 +42,7 @@
 
     /* Estilo para cada bloque de tiempo futurista */
     & > .countdown-block {
-        @apply inline-block p-4 mx-3 relative;
+        @apply inline-block p-2 mx-1 relative;
         background: linear-gradient(
             145deg,
             rgba(0, 50, 100, 0.8) 0%,
@@ -86,7 +86,7 @@
 
         /* Ajustes para el texto dentro de los bloques */
         & > span {
-            @apply block text-4xl font-bold relative z-10;
+            @apply block text-2xl font-bold relative z-10;
             background: linear-gradient(
                 45deg,
                 #00ffff 0%,
@@ -101,7 +101,7 @@
         }
 
         & > p {
-            @apply m-0 text-sm uppercase tracking-wider relative z-10;
+            @apply m-0 text-xs uppercase tracking-wider relative z-10;
             color: rgba(0, 255, 255, 0.9);
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
             font-family: 'Orbitron', monospace;
@@ -110,9 +110,44 @@
     }
 }
 
+/* Responsive para contador */
+@media (min-width: 640px) {
+    .countdown-container {
+        @apply p-6;
+        margin-bottom: 1.5rem;
+
+        & > .countdown-block {
+            @apply p-3 mx-2;
+
+            & > span {
+                @apply text-3xl;
+            }
+
+            & > p {
+                @apply text-sm;
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .countdown-container {
+        @apply p-8;
+        margin-bottom: 2rem;
+
+        & > .countdown-block {
+            @apply p-4 mx-3;
+
+            & > span {
+                @apply text-4xl;
+            }
+        }
+    }
+}
+
 /* Estilo futurista para el mensaje de "Evento iniciado" */
 .evento-iniciado {
-    @apply text-3xl font-bold text-white p-8 mt-8 relative;
+    @apply text-lg font-bold text-white p-4 mt-4 relative;
     background: linear-gradient(
         135deg,
         rgba(0, 255, 0, 0.2) 0%,
@@ -150,54 +185,21 @@
     }
 }
 
-/* Ajuste del contador futurista para pantallas pequeñas */
-@media screen and (max-width: 768px) {
-    .countdown-container {
-        @apply p-4;
-
-        & > .countdown-block {
-            @apply p-3 mx-2;
-
-            & > span {
-                @apply text-2xl;
-            }
-
-            & > p {
-                @apply text-xs;
-            }
-        }
-    }
-
+@media (min-width: 640px) {
     .evento-iniciado {
-        @apply text-xl p-6;
+        @apply text-2xl p-6 mt-6;
     }
 }
 
-@media screen and (max-width: 480px) {
-    .countdown-container {
-        @apply p-3;
-
-        & > .countdown-block {
-            @apply p-2 mx-1;
-
-            & > span {
-                @apply text-xl;
-            }
-
-            & > p {
-                @apply text-xs;
-            }
-        }
-    }
-
+@media (min-width: 1024px) {
     .evento-iniciado {
-        @apply text-lg p-4;
+        @apply text-3xl p-8 mt-8;
     }
 }
 
 /* Estilo futurista para la palabra "Faltan" */
 .faltan {
-    @apply text-5xl font-bold mb-6 relative;
+    @apply text-2xl font-bold mb-3 relative;
     background: linear-gradient(
         45deg,
         #00ffff 0%,
@@ -213,10 +215,10 @@
     text-shadow:
         0 0 30px rgba(0, 255, 255, 0.8),
         0 0 60px rgba(255, 0, 255, 0.6);
-    padding: 15px 20px;
+    padding: 10px 15px;
     border-radius: 15px;
     font-family: 'Orbitron', monospace;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     animation:
         futuristicPulse 2s ease-in-out infinite,
@@ -240,6 +242,22 @@
         border-radius: 20px;
         z-index: -1;
         animation: auraGlow 2.5s ease-in-out infinite;
+    }
+}
+
+@media (min-width: 640px) {
+    .faltan {
+        @apply text-3xl mb-4;
+        padding: 12px 18px;
+        letter-spacing: 2.5px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .faltan {
+        @apply text-5xl mb-6;
+        padding: 15px 20px;
+        letter-spacing: 3px;
     }
 }
 
