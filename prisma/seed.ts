@@ -2,7 +2,7 @@ import { PrismaClient, Dia, Horario } from '@prisma/client'
 
 const db = new PrismaClient()
 
-db.talleres.deleteMany()
+await db.talleres.deleteMany()
 
 const talleres = await db.talleres.createManyAndReturn({
     data: [
