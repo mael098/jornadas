@@ -3,24 +3,18 @@ import './index.css'
 
 export default function Home() {
     return (
-        <div id="principal" className="tabcontent ">
+        <div id="principal" className="tabcontent">
             <h1 className="text-left">
-                Bienvenido a la Conferencia de Talleres
+                Bienvenido a las Jornadas Tecnológicas 2025
             </h1>
             <p>
-                Las XI Jornadas Tecnológicas de la carrera de Ingeniería en
-                Sistemas Computacionales del Instituto Tecnológico de Altamira
-                están diseñadas para fortalecer la unidad y el desarrollo entre
-                los estudiantes de la carrera. Durante este evento, se
-                impartirán talleres y conferencias que abarcan temas clave en el
-                campo de la tecnología, como ciberseguridad, inteligencia
-                artificial, desarrollo de software, y administración de redes,
-                entre otros. Este espacio permitirá a los estudiantes
-                profundizar en sus conocimientos técnicos y habilidades
-                prácticas, al mismo tiempo que fomenta un ambiente de
-                colaboración y aprendizaje mutuo, contribuyendo al crecimiento y
-                fortalecimiento de la comunidad académica en Ingeniería en
-                Sistemas. ¡No te lo pierdas!
+                Las XII Jornadas Tecnológicas de Ingeniería en Sistemas
+                Computacionales del Instituto Tecnológico de Altamira reúnen a
+                estudiantes, docentes y expertos para compartir innovación y
+                conocimiento. Este año se enfocan en inteligencia artificial,
+                ciberseguridad, desarrollo web y tecnologías emergentes. Un
+                espacio para aprender, conectar y crecer profesionalmente. ¡Te
+                esperamos!
             </p>
         </div>
     )
