@@ -14,11 +14,16 @@ header {
     box-shadow: 0 4px 20px rgba(0, 123, 255, 0.15);
     position: relative;
     z-index: 10;
+    min-height: 80px;
 
     & .logo {
         max-width: 120px;
+        width: 120px;
         height: auto;
+        aspect-ratio: 1/1;
+        object-fit: contain;
         transition: transform 0.3s ease;
+        will-change: transform;
     }
 
     & .logo:hover {
@@ -29,6 +34,10 @@ header {
         display: flex;
         gap: 1rem;
         align-items: center;
+    }
+
+    & .logo-carrera2 {
+        aspect-ratio: 16/9;
     }
 }
 
