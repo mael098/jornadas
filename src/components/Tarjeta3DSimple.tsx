@@ -24,6 +24,16 @@ import * as THREE from 'three'
 // Extender R3F con MeshLine
 extend({ MeshLineGeometry, MeshLineMaterial })
 
+// Declaración de tipos para JSX
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            meshLineGeometry: any
+            meshLineMaterial: any
+        }
+    }
+}
+
 interface Tarjeta3DSimpleProps {
     usuario: {
         nombre: string
@@ -204,34 +214,76 @@ function TarjetaTexture({
     )
 }
 
-// Componente simplificado SIN física - más estable
-function TarjetaEstable(props: Tarjeta3DSimpleProps) {
-    const cardRef = useRef<any>(null)
-    const [dragging, setDragging] = useState(false)
+// Componente CON física de cuerda realista usando Rapier
+function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
+    const band = useRef<any>(null)
+    const fixed = useRef<any>(null)
+    const j1 = useRef<any>(null)
+    const j2 = useRef<any>(null)
+    const j3 = useRef<any>(null)
+    const card = useRef<any>(null)
+
+    const vec = new THREE.Vector3()
+    const ang = new THREE.Vector3()
+    const rot = new THREE.Vector3()
+    const dir = new THREE.Vector3()
+
+    const { width, height } = useThree(state => state.size)
+    const [curve] = useState(
+        () =>
+            new THREE.CatmullRomCurve3([
+                new THREE.Vector3(),
+                new THREE.Vector3(),
+                new THREE.Vector3(),
+                new THREE.Vector3(),
+            ]),
+    )
+    const [dragged, drag] = useState<THREE.Vector3 | false>(false)
     const [hovered, setHovered] = useState(false)
 
-    useFrame(({ mouse, viewport }) => {
-        if (cardRef.current) {
-            if (dragging) {
-                // Seguir el mouse cuando se arrastra
-                const x = (mouse.x * viewport.width) / 6
-                const y = (mouse.y * viewport.height) / 6
-                cardRef.current.position.x = x
-                cardRef.current.position.y = y
-                cardRef.current.rotation.x = mouse.y * 0.2
-                cardRef.current.rotation.y = mouse.x * 0.2
-            } else {
-                // Animación suave de flotación - MÁS SUTIL para evitar que "se apague"
-                cardRef.current.position.y =
-                    Math.sin(Date.now() * 0.0008) * 0.1 - 0.5
-                cardRef.current.rotation.x =
-                    Math.sin(Date.now() * 0.0006) * 0.03
-                cardRef.current.rotation.z =
-                    Math.sin(Date.now() * 0.0004) * 0.03
-                // Mantener centrada
-                cardRef.current.position.x =
-                    Math.sin(Date.now() * 0.0003) * 0.03
-            }
+    // Joints de física con Rapier
+    useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1])
+    useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1])
+    useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1])
+    useSphericalJoint(j3, card, [
+        [0, 0, 0],
+        [0, 1.45, 0],
+    ])
+
+    useFrame(state => {
+        if (dragged) {
+            vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(
+                state.camera,
+            )
+            dir.copy(vec).sub(state.camera.position).normalize()
+            vec.add(dir.multiplyScalar(state.camera.position.length()))
+
+            // Despertar todos los RigidBodies
+            ;[card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp())
+
+            card.current?.setNextKinematicTranslation({
+                x: vec.x - dragged.x,
+                y: vec.y - dragged.y,
+                z: vec.z - dragged.z,
+            })
+        }
+
+        if (fixed.current && band.current) {
+            // Calcular curva catmull-rom para el cordón
+            curve.points[0].copy(j3.current.translation())
+            curve.points[1].copy(j2.current.translation())
+            curve.points[2].copy(j1.current.translation())
+            curve.points[3].copy(fixed.current.translation())
+            band.current.geometry.setPoints(curve.getPoints(32))
+
+            // Inclinar hacia la pantalla
+            ang.copy(card.current.angvel())
+            rot.copy(card.current.rotation())
+            card.current.setAngvel({
+                x: ang.x,
+                y: ang.y - rot.y * 0.25,
+                z: ang.z,
+            })
         }
     })
 
@@ -239,83 +291,147 @@ function TarjetaEstable(props: Tarjeta3DSimpleProps) {
     useEffect(() => {
         document.body.style.cursor =
             hovered ?
-                dragging ? 'grabbing'
+                dragged ? 'grabbing'
                 :   'grab'
             :   'auto'
         return () => {
             document.body.style.cursor = 'auto'
         }
-    }, [hovered, dragging])
+    }, [hovered, dragged])
 
     return (
         <>
-            {/* Collar visual simple */}
-            <group>
-                {/* Punto de anclaje */}
-                <mesh position={[0, 2, 0]}>
-                    <sphereGeometry args={[0.08]} />
-                    <meshBasicMaterial color="#00ffff" />
-                </mesh>
+            <group position={[0, 4, 0]}>
+                {/* Punto fijo de anclaje */}
+                <RigidBody
+                    ref={fixed}
+                    angularDamping={2}
+                    linearDamping={2}
+                    type="fixed"
+                />
 
-                {/* Cordón visual */}
-                <mesh position={[0, 0.5, 0]} rotation={[0, 0, 0.1]}>
-                    <cylinderGeometry args={[0.02, 0.02, 3]} />
-                    <meshBasicMaterial
-                        color="#00ffff"
-                        transparent
-                        opacity={0.8}
-                    />
-                </mesh>
-            </group>
+                {/* Joint 1 */}
+                <RigidBody
+                    position={[0.5, 0, 0]}
+                    ref={j1}
+                    angularDamping={2}
+                    linearDamping={2}
+                >
+                    <BallCollider args={[0.1]} />
+                </RigidBody>
 
-            {/* Tarjeta flotante */}
-            <group
-                ref={cardRef}
-                position={[0, -1, 0]}
-                onPointerOver={() => setHovered(true)}
-                onPointerOut={() => setHovered(false)}
-                onPointerDown={() => setDragging(true)}
-                onPointerUp={() => setDragging(false)}
-            >
-                {/* Cara frontal de la tarjeta */}
-                <mesh>
-                    <boxGeometry args={[1.6, 2.25, 0.05]} />
-                    <meshStandardMaterial
-                        roughness={0.3}
-                        metalness={0.2}
-                        emissive="#001133"
-                        emissiveIntensity={0.1}
+                {/* Joint 2 */}
+                <RigidBody
+                    position={[1, 0, 0]}
+                    ref={j2}
+                    angularDamping={2}
+                    linearDamping={2}
+                >
+                    <BallCollider args={[0.1]} />
+                </RigidBody>
+
+                {/* Joint 3 */}
+                <RigidBody
+                    position={[1.5, 0, 0]}
+                    ref={j3}
+                    angularDamping={2}
+                    linearDamping={2}
+                >
+                    <BallCollider args={[0.1]} />
+                </RigidBody>
+
+                {/* Tarjeta física */}
+                <RigidBody
+                    position={[2, 0, 0]}
+                    ref={card}
+                    angularDamping={2}
+                    linearDamping={2}
+                    type={dragged ? 'kinematicPosition' : 'dynamic'}
+                >
+                    <CuboidCollider args={[0.8, 1.125, 0.01]} />
+
+                    {/* Cara frontal de la tarjeta */}
+                    <mesh
+                        onPointerOver={() => setHovered(true)}
+                        onPointerOut={() => setHovered(false)}
+                        onPointerUp={e => {
+                            const target = e.target as HTMLElement
+                            target?.releasePointerCapture(e.pointerId)
+                            drag(false)
+                        }}
+                        onPointerDown={e => {
+                            const target = e.target as HTMLElement
+                            target?.setPointerCapture(e.pointerId)
+                            if (card.current) {
+                                drag(
+                                    new THREE.Vector3()
+                                        .copy(e.point)
+                                        .sub(
+                                            vec.copy(
+                                                card.current.translation(),
+                                            ),
+                                        ),
+                                )
+                            }
+                        }}
                     >
-                        <RenderTexture attach="map" width={512} height={512}>
-                            <TarjetaTexture {...props} />
-                        </RenderTexture>
-                    </meshStandardMaterial>
-                </mesh>
+                        <boxGeometry args={[1.6, 2.25, 0.05]} />
+                        <meshStandardMaterial
+                            roughness={0.3}
+                            metalness={0.2}
+                            emissive="#001133"
+                            emissiveIntensity={0.1}
+                        >
+                            <RenderTexture
+                                attach="map"
+                                width={512}
+                                height={512}
+                            >
+                                <TarjetaTexture {...props} />
+                            </RenderTexture>
+                        </meshStandardMaterial>
+                    </mesh>
 
-                {/* Cara trasera */}
-                <mesh position={[0, 0, -0.025]} rotation={[0, Math.PI, 0]}>
-                    <boxGeometry args={[1.58, 2.23, 0.02]} />
-                    <meshStandardMaterial
-                        color="#1a1a2e"
-                        roughness={0.4}
-                        metalness={0.3}
-                        emissive="#000811"
-                        emissiveIntensity={0.1}
-                    />
-                </mesh>
-
-                {/* Brillo de hover */}
-                {hovered && (
-                    <mesh position={[0, 0, 0.03]}>
-                        <boxGeometry args={[1.65, 2.3, 0.01]} />
-                        <meshBasicMaterial
-                            color="#00ffff"
-                            transparent
-                            opacity={0.3}
+                    {/* Cara trasera */}
+                    <mesh position={[0, 0, -0.025]} rotation={[0, Math.PI, 0]}>
+                        <boxGeometry args={[1.58, 2.23, 0.02]} />
+                        <meshStandardMaterial
+                            color="#1a1a2e"
+                            roughness={0.4}
+                            metalness={0.3}
+                            emissive="#000811"
+                            emissiveIntensity={0.1}
                         />
                     </mesh>
-                )}
+
+                    {/* Brillo de hover */}
+                    {hovered && (
+                        <mesh position={[0, 0, 0.03]}>
+                            <boxGeometry args={[1.65, 2.3, 0.01]} />
+                            <meshBasicMaterial
+                                color="#00ffff"
+                                transparent
+                                opacity={0.3}
+                            />
+                        </mesh>
+                    )}
+                </RigidBody>
             </group>
+
+            {/* Cordón renderizado con MeshLine */}
+            <mesh ref={band}>
+                {/* @ts-ignore - MeshLine extended types */}
+                <meshLineGeometry />
+                {/* @ts-ignore - MeshLine extended types */}
+                <meshLineMaterial
+                    transparent
+                    opacity={0.6}
+                    color="#00ffff"
+                    depthTest={false}
+                    resolution={[width, height]}
+                    lineWidth={2}
+                />
+            </mesh>
         </>
     )
 }
@@ -428,8 +544,8 @@ export default function Tarjeta3DSimple(props: Tarjeta3DSimpleProps) {
         <div className="w-full h-[600px] rounded-xl overflow-hidden bg-linear-to-br from-gray-900 via-blue-900 to-purple-900 relative">
             <Canvas
                 camera={{
-                    position: [0, 1, 12],
-                    fov: 30,
+                    position: [0, 0, 13],
+                    fov: 25,
                     near: 0.1,
                     far: 1000,
                 }}
@@ -451,19 +567,20 @@ export default function Tarjeta3DSimple(props: Tarjeta3DSimpleProps) {
                     )
                 }}
             >
-                {/* Iluminación simplificada para evitar pérdida de contexto */}
-                <ambientLight intensity={2.5} />
-                <pointLight position={[0, 5, 5]} intensity={1.5} />
-                <directionalLight position={[0, 0, 5]} intensity={1} />
+                {/* Iluminación */}
+                <ambientLight intensity={2} />
+                <pointLight position={[10, 10, 10]} intensity={1.5} />
+                <directionalLight position={[-5, 5, 5]} intensity={1} />
 
-                {/* Tarjeta sin física - más estable */}
-                <TarjetaEstable {...props} />
+                {/* Física con gravedad y tarjeta con cuerda */}
+                <Physics gravity={[0, -40, 0]} timeStep={1 / 60} interpolate>
+                    <TarjetaConFisica {...props} />
+                </Physics>
             </Canvas>
 
             {/* Instrucciones */}
             <div className="absolute bottom-4 left-4 right-4 text-center text-white/70 text-sm">
-                🎯 Haz clic y arrastra la tarjeta | 🎮 Física realista
-                simplificada
+                🎯 Arrastra la tarjeta | 🎮 Física de cuerda realista con Rapier
             </div>
         </div>
     )

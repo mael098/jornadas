@@ -6,6 +6,7 @@ import { Contador } from '@/components/Contador'
 import { StarField } from '@/components/StarField'
 import { CosmicDust } from '@/components/CosmicDust'
 import { SpaceAmbient } from '@/components/SpaceAmbient'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './index.css'
 
 export const metadata: Metadata = {
@@ -60,7 +61,10 @@ export default function RootLayout({
                         </div>
 
                         {/* Contenido Principal de la Pagina */}
-                        <div className="content-area">{children}</div>
+                        <div className="content-area">
+                            <SpeedInsights />
+                            {children}
+                        </div>
                     </div>
                 </main>
 
