@@ -18,7 +18,7 @@
         "export": "node --experimental-strip-types prisma/export_talleres.ts"
     },
     "dependencies": {
-        "@prisma/client": "^6.18.0",
+        "@prisma/client": "^6.19.0",
         "@prisma/extension-accelerate": "^2.0.2",
         "@react-three/drei": "^10.7.6",
         "@react-three/fiber": "^9.4.0",
@@ -40,7 +40,7 @@
         "eslint-config-prettier": "^10.1.8",
         "postcss": "^8.5.6",
         "prettier": "^3.6.2",
-        "prisma": "^6.18.0",
+        "prisma": "^6.19.0",
         "tailwindcss": "^4.1.16",
         "typescript": "^5.9.3"
     }

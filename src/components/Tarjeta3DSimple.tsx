@@ -84,6 +84,17 @@ function TarjetaTexture({
         }
     }
 
+    // Contenido estilo “conferencia” inspirado en el diseño adjunto
+    const metaLeft = (() => {
+        if (tipo === 'taller' && taller)
+            return `${taller.dia} • ${formatHorario(taller.horario)}`
+        if (tipo === 'videojuego' && videojuego)
+            return `TORNEO • ${videojuego.toUpperCase()}`
+        return 'JORNADAS 2025'
+    })()
+
+    const locationRight = 'ALTAMIRA'
+
     return (
         <>
             <PerspectiveCamera
@@ -94,122 +105,117 @@ function TarjetaTexture({
             />
             <ambientLight intensity={2} />
 
-            {/* Fondo con gradiente */}
+            {/* Fondo */}
             <mesh position={[0, 0, -0.1]}>
                 <planeGeometry args={[1.6, 2.25]} />
-                <meshBasicMaterial color="#1a1a2e" />
+                <meshBasicMaterial color="#0b0d12" />
             </mesh>
 
-            {/* Título del evento */}
-            <Center position={[0, 0.8, 0.01]}>
-                <Text
-                    fontSize={0.08}
-                    color={getTipoColor()}
-                    anchorX="center"
-                    anchorY="middle"
-                >
-                    JORNADAS TECNOLÓGICAS 2025
-                </Text>
-            </Center>
+            {/* Fila superior: meta izquierda / ciudad derecha */}
+            <Text
+                position={[-0.75, 1.0, 0.01]}
+                fontSize={0.035}
+                color="#9aa0a6"
+                anchorX="left"
+                anchorY="top"
+            >
+                {metaLeft}
+            </Text>
+            <Text
+                position={[0.75, 1.0, 0.01]}
+                fontSize={0.035}
+                color="#9aa0a6"
+                anchorX="right"
+                anchorY="top"
+            >
+                {locationRight}
+            </Text>
 
-            {/* Nombre del usuario */}
-            <Center position={[0, 0.4, 0.01]}>
-                <Text
-                    fontSize={0.12}
-                    color="#ffffff"
-                    anchorX="center"
-                    anchorY="middle"
-                    maxWidth={1.4}
-                >
-                    {usuario.nombre.toUpperCase()}
-                </Text>
-            </Center>
+            {/* Nombre grande */}
+            <Text
+                position={[-0.75, 0.78, 0.01]}
+                fontSize={0.14}
+                color="#e6e6e6"
+                anchorX="left"
+                anchorY="top"
+                maxWidth={1.4}
+            >
+                {usuario.nombre}
+            </Text>
+            <Text
+                position={[-0.75, 0.62, 0.01]}
+                fontSize={0.14}
+                color="#e6e6e6"
+                anchorX="left"
+                anchorY="top"
+                maxWidth={1.4}
+            >
+                {usuario.apellidos}
+            </Text>
 
-            <Center position={[0, 0.25, 0.01]}>
-                <Text
-                    fontSize={0.12}
-                    color="#ffffff"
-                    anchorX="center"
-                    anchorY="middle"
-                    maxWidth={1.4}
-                >
-                    {usuario.apellidos.toUpperCase()}
-                </Text>
-            </Center>
+            {/* Rol */}
+            <Text
+                position={[-0.75, 0.5, 0.01]}
+                fontSize={0.045}
+                color="#9aa0a6"
+                anchorX="left"
+                anchorY="top"
+                letterSpacing={0.02}
+            >
+                STUDENT
+            </Text>
 
-            {/* Información del evento */}
-            {tipo === 'taller' && taller && (
-                <>
-                    <Center position={[0, -0.1, 0.01]}>
-                        <Text
-                            fontSize={0.06}
-                            color="#cccccc"
-                            anchorX="center"
-                            anchorY="middle"
-                            maxWidth={1.4}
-                        >
-                            {taller.nombre.toUpperCase()}
-                        </Text>
-                    </Center>
-                    <Center position={[0, -0.3, 0.01]}>
-                        <Text
-                            fontSize={0.05}
-                            color={getTipoColor()}
-                            anchorX="center"
-                            anchorY="middle"
-                        >
-                            {formatHorario(taller.horario)}
-                        </Text>
-                    </Center>
-                </>
-            )}
-
-            {tipo === 'videojuego' && videojuego && (
-                <>
-                    <Center position={[0, -0.1, 0.01]}>
-                        <Text
-                            fontSize={0.06}
-                            color="#cccccc"
-                            anchorX="center"
-                            anchorY="middle"
-                        >
-                            TORNEO DE VIDEOJUEGOS
-                        </Text>
-                    </Center>
-                    <Center position={[0, -0.3, 0.01]}>
-                        <Text
-                            fontSize={0.05}
-                            color={getTipoColor()}
-                            anchorX="center"
-                            anchorY="middle"
-                        >
-                            {videojuego.toUpperCase()}
-                        </Text>
-                    </Center>
-                </>
-            )}
-
-            {/* NC y Semestre */}
-            <Center position={[0, -0.6, 0.01]}>
-                <Text
-                    fontSize={0.05}
-                    color="#888888"
-                    anchorX="center"
-                    anchorY="middle"
-                >
-                    NC: {usuario.nc} | {usuario.semestre}° SEM
-                </Text>
-            </Center>
-
-            {/* Marco decorativo */}
-            <mesh position={[0, 0, 0.005]}>
-                <ringGeometry args={[0.7, 0.75, 32]} />
-                <meshBasicMaterial
-                    transparent
-                    opacity={0.5}
-                    color={getTipoColor()}
-                />
+            {/* Separador */}
+            <mesh position={[0, 0.12, 0.01]}>
+                <boxGeometry args={[1.2, 0.005, 0.005]} />
+                <meshBasicMaterial color="#222831" />
             </mesh>
+
+            {/* Título del taller o sección */}
+            <Text
+                position={[-0.75, 0.05, 0.01]}
+                fontSize={0.065}
+                color="#ffffff"
+                anchorX="left"
+                anchorY="top"
+                maxWidth={1.4}
+            >
+                {tipo === 'taller' && taller ?
+                    taller.nombre.toUpperCase()
+                :   'JORNADAS TECNOLÓGICAS'}
+            </Text>
+
+            {/* Dirección y datos secundarios */}
+            <Text
+                position={[-0.75, -0.08, 0.01]}
+                fontSize={0.035}
+                color="#9aa0a6"
+                anchorX="left"
+                anchorY="top"
+                maxWidth={1.4}
+            >
+                INSTITUTO TECNOLÓGICO DE ALTAMIRA
+            </Text>
+            <Text
+                position={[-0.75, -0.16, 0.01]}
+                fontSize={0.032}
+                color="#6b7280"
+                anchorX="left"
+                anchorY="top"
+            >
+                AV REFORMA 476
+            </Text>
+
+            {/* Identificador del alumno */}
+            <Text
+                position={[-0.75, -0.35, 0.01]}
+                fontSize={0.032}
+                color="#6b7280"
+                anchorX="left"
+                anchorY="top"
+            >
+                NC: {usuario.nc} • {usuario.semestre}° SEMESTRE
+            </Text>
         </>
     )
 }
@@ -274,7 +280,8 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
             curve.points[1].copy(j2.current.translation())
             curve.points[2].copy(j1.current.translation())
             curve.points[3].copy(fixed.current.translation())
-            band.current.geometry.setPoints(curve.getPoints(32))
+            // Más puntos para una línea más suave
+            band.current.geometry.setPoints(curve.getPoints(64))
 
             // Inclinar hacia la pantalla
             ang.copy(card.current.angvel())
@@ -342,13 +349,13 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
 
                 {/* Tarjeta física */}
                 <RigidBody
-                    position={[2, 0, 0]}
+                    position={[2, 0, 20]}
                     ref={card}
                     angularDamping={2}
                     linearDamping={2}
                     type={dragged ? 'kinematicPosition' : 'dynamic'}
                 >
-                    <CuboidCollider args={[0.8, 1.125, 0.01]} />
+                    <CuboidCollider args={[0.8, 1.05, 0.01]} />
 
                     {/* Cara frontal de la tarjeta */}
                     <mesh
@@ -384,8 +391,9 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                         >
                             <RenderTexture
                                 attach="map"
-                                width={512}
-                                height={512}
+                                // Aumenta resolución y respeta relación 1.6 x 2.25 (≈1.40625)
+                                width={1024}
+                                height={1440}
                             >
                                 <TarjetaTexture {...props} />
                             </RenderTexture>
@@ -412,6 +420,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                                 color="#00ffff"
                                 transparent
                                 opacity={0.3}
+                                // blendColor="#1c4d9b"
                             />
                         </mesh>
                     )}
@@ -426,8 +435,8 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                 <meshLineMaterial
                     transparent
                     opacity={0.6}
-                    color="#00ffff"
-                    depthTest={false}
+                    color="#000000"
+                    depthTest={true}
                     resolution={[width, height]}
                     lineWidth={2}
                 />
@@ -543,6 +552,8 @@ export default function Tarjeta3DSimple(props: Tarjeta3DSimpleProps) {
     return (
         <div className="w-full h-[600px] rounded-xl overflow-hidden bg-linear-to-br from-gray-900 via-blue-900 to-purple-900 relative">
             <Canvas
+                // Mejora nitidez en pantallas HiDPI sin exceder en móviles
+                dpr={[1, 2]}
                 camera={{
                     position: [0, 0, 13],
                     fov: 25,
