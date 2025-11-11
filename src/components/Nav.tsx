@@ -107,6 +107,7 @@ export function Nav() {
                     <MenuOption href="/videojuegos">
                         Concurso de Videojuegos
                     </MenuOption>
+                    <MenuOption href="/mi-tarjeta">Mi Tarjeta</MenuOption>
                     {/* <MenuOption href="/tarjeta">Tarjetas Digitales</MenuOption> */}
                     {/* <MenuOption href="/tarjeta-usuario">Mi Pase Digital</MenuOption> */}
                     <MenuOption href="/tarjeta-3d">Tarjetas 3D</MenuOption>

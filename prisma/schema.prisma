@@ -30,6 +30,8 @@ model Usuarios {
   registro_talleres    Registro_talleres[]
   Registro_videojuegos Registro_videojuegos[]
   Registro_viernes     Registro_viernes[]
+
+  targetas Targetas[]
 }
 
 model Registro_videojuegos {
@@ -63,10 +65,12 @@ model Talleres {
 }
 
 model Targetas {
-  id  Int    @id @default(autoincrement())
-  nc  String
-  tip String
-  url String
+  id    Int    @id @default(autoincrement())
+  user  Usuarios @relation(fields: [userId], references: [nc])
+  userId String
+  nc    String
+  tip   String
+  url   String
 }
 
 enum Horario {

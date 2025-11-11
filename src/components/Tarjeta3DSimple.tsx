@@ -101,21 +101,17 @@ function TarjetaTexture({
                 makeDefault
                 manual
                 aspect={1}
-                position={[0, 0, 2]}
+                position={[0, 0, 1.9]}
             />
             <ambientLight intensity={2} />
 
             {/* Fondo */}
-            <mesh position={[0, 0, -0.1]}>
-                <planeGeometry args={[1.6, 2.25]} />
-                <meshBasicMaterial color="#0b0d12" />
-            </mesh>
 
             {/* Fila superior: meta izquierda / ciudad derecha */}
             <Text
                 position={[-0.75, 1.0, 0.01]}
-                fontSize={0.035}
-                color="#9aa0a6"
+                fontSize={0.055}
+                color="#ffffff"
                 anchorX="left"
                 anchorY="top"
             >
@@ -123,8 +119,8 @@ function TarjetaTexture({
             </Text>
             <Text
                 position={[0.75, 1.0, 0.01]}
-                fontSize={0.035}
-                color="#9aa0a6"
+                fontSize={0.055}
+                color="#ffffff"
                 anchorX="right"
                 anchorY="top"
             >
@@ -134,8 +130,8 @@ function TarjetaTexture({
             {/* Nombre grande */}
             <Text
                 position={[-0.75, 0.78, 0.01]}
-                fontSize={0.14}
-                color="#e6e6e6"
+                fontSize={0.2}
+                color="#ffffff"
                 anchorX="left"
                 anchorY="top"
                 maxWidth={1.4}
@@ -143,9 +139,9 @@ function TarjetaTexture({
                 {usuario.nombre}
             </Text>
             <Text
-                position={[-0.75, 0.62, 0.01]}
-                fontSize={0.14}
-                color="#e6e6e6"
+                position={[-0.75, 0.52, 0.01]}
+                fontSize={0.2}
+                color="#ffffff"
                 anchorX="left"
                 anchorY="top"
                 maxWidth={1.4}
@@ -155,26 +151,26 @@ function TarjetaTexture({
 
             {/* Rol */}
             <Text
-                position={[-0.75, 0.5, 0.01]}
-                fontSize={0.045}
-                color="#9aa0a6"
+                position={[-0.75, 0.34, 0.01]}
+                fontSize={0.07}
+                color="#00ffff"
                 anchorX="left"
                 anchorY="top"
-                letterSpacing={0.02}
+                letterSpacing={0.05}
             >
                 STUDENT
             </Text>
 
             {/* Separador */}
-            <mesh position={[0, 0.12, 0.01]}>
-                <boxGeometry args={[1.2, 0.005, 0.005]} />
-                <meshBasicMaterial color="#222831" />
+            <mesh position={[0, 0.05, 0.01]}>
+                <boxGeometry args={[1.3, 0.01, 0.005]} />
+                <meshBasicMaterial color="#ffffff" />
             </mesh>
 
             {/* Título del taller o sección */}
             <Text
-                position={[-0.75, 0.05, 0.01]}
-                fontSize={0.065}
+                position={[-0.75, -0.08, 0.01]}
+                fontSize={0.095}
                 color="#ffffff"
                 anchorX="left"
                 anchorY="top"
@@ -187,9 +183,9 @@ function TarjetaTexture({
 
             {/* Dirección y datos secundarios */}
             <Text
-                position={[-0.75, -0.08, 0.01]}
-                fontSize={0.035}
-                color="#9aa0a6"
+                position={[-0.75, -0.28, 0.01]}
+                fontSize={0.055}
+                color="#cccccc"
                 anchorX="left"
                 anchorY="top"
                 maxWidth={1.4}
@@ -197,9 +193,9 @@ function TarjetaTexture({
                 INSTITUTO TECNOLÓGICO DE ALTAMIRA
             </Text>
             <Text
-                position={[-0.75, -0.16, 0.01]}
-                fontSize={0.032}
-                color="#6b7280"
+                position={[-0.75, -0.4, 0.01]}
+                fontSize={0.05}
+                color="#aaaaaa"
                 anchorX="left"
                 anchorY="top"
             >
@@ -208,9 +204,9 @@ function TarjetaTexture({
 
             {/* Identificador del alumno */}
             <Text
-                position={[-0.75, -0.35, 0.01]}
-                fontSize={0.032}
-                color="#6b7280"
+                position={[-0.75, -0.6, 0.01]}
+                fontSize={0.05}
+                color="#aaaaaa"
                 anchorX="left"
                 anchorY="top"
             >
@@ -253,7 +249,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
     useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1])
     useSphericalJoint(j3, card, [
         [0, 0, 0],
-        [0, 1.45, 0],
+        [0, 2.175, 0], // Ajustado al nuevo tamaño: 3.375/2 + 0.5 = 2.175
     ])
 
     useFrame(state => {
@@ -355,7 +351,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                     linearDamping={2}
                     type={dragged ? 'kinematicPosition' : 'dynamic'}
                 >
-                    <CuboidCollider args={[0.8, 1.05, 0.01]} />
+                    <CuboidCollider args={[1.2, 1.575, 0.01]} />
 
                     {/* Cara frontal de la tarjeta */}
                     <mesh
@@ -382,18 +378,19 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                             }
                         }}
                     >
-                        <boxGeometry args={[1.6, 2.25, 0.05]} />
+                        <boxGeometry args={[2.4, 3.375, 0.05]} />
                         <meshStandardMaterial
-                            roughness={0.3}
-                            metalness={0.2}
+                            roughness={0.2}
+                            metalness={0.1}
                             emissive="#001133"
-                            emissiveIntensity={0.1}
+                            emissiveIntensity={0.05}
                         >
                             <RenderTexture
                                 attach="map"
-                                // Aumenta resolución y respeta relación 1.6 x 2.25 (≈1.40625)
-                                width={1024}
-                                height={1440}
+                                // Resolución alta para texto nítido (2048x2880 = relación 1.6:2.25)
+                                width={2048}
+                                height={2880}
+                                anisotropy={16}
                             >
                                 <TarjetaTexture {...props} />
                             </RenderTexture>
@@ -402,7 +399,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
 
                     {/* Cara trasera */}
                     <mesh position={[0, 0, -0.025]} rotation={[0, Math.PI, 0]}>
-                        <boxGeometry args={[1.58, 2.23, 0.02]} />
+                        <boxGeometry args={[2.37, 3.345, 0.02]} />
                         <meshStandardMaterial
                             color="#1a1a2e"
                             roughness={0.4}
@@ -415,7 +412,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                     {/* Brillo de hover */}
                     {hovered && (
                         <mesh position={[0, 0, 0.03]}>
-                            <boxGeometry args={[1.65, 2.3, 0.01]} />
+                            <boxGeometry args={[2.475, 3.45, 0.01]} />
                             <meshBasicMaterial
                                 color="#00ffff"
                                 transparent
@@ -552,8 +549,8 @@ export default function Tarjeta3DSimple(props: Tarjeta3DSimpleProps) {
     return (
         <div className="w-full h-[600px] rounded-xl overflow-hidden bg-linear-to-br from-gray-900 via-blue-900 to-purple-900 relative">
             <Canvas
-                // Mejora nitidez en pantallas HiDPI sin exceder en móviles
-                dpr={[1, 2]}
+                // Máxima nitidez para texto
+                dpr={[1.5, 2.5]}
                 camera={{
                     position: [0, 0, 13],
                     fov: 25,
@@ -565,9 +562,15 @@ export default function Tarjeta3DSimple(props: Tarjeta3DSimpleProps) {
                     alpha: true,
                     preserveDrawingBuffer: true,
                     failIfMajorPerformanceCaveat: false,
-                    powerPreference: 'default',
+                    powerPreference: 'high-performance',
                 }}
                 onCreated={({ gl }) => {
+                    // Activar filtrado anisotrópico para mejor calidad de texturas
+                    const glContext = gl.getContext()
+                    if (glContext) {
+                        glContext.getExtension('EXT_texture_filter_anisotropic')
+                    }
+
                     gl.domElement.addEventListener(
                         'webglcontextlost',
                         handleWebGLContextLost.current,
