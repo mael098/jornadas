@@ -39,6 +39,8 @@ export default function RootLayout({
                 <Header />
 
                 <main className="flex-1 flex flex-col py-6 px-4 sm:px-6 lg:px-8">
+                    {/* aser un usefect para que tener informacion del ususario si esta el el movil si
+                    en el movil eliminar al cargar la web el div container*/}
                     <div className="container">
                         {/* Títulos principales */}
                         <div className="text-center mb-4 sm:mb-6 lg:mb-8 px-4">
