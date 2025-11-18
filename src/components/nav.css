@@ -7,7 +7,7 @@
 
 /* Botón hamburguesa - visible solo en móvil */
 .hamburger-btn {
-    @apply fixed top-4 right-4 z-50 p-3 rounded-xl
+    @apply top-4 right-4 z-50 p-3 rounded-xl
            bg-linear-to-br from-blue-600 via-blue-700 to-indigo-700
            shadow-2xl border border-blue-300/40
            md:hidden transition-all duration-300
