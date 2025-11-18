@@ -39,32 +39,32 @@ export default function RootLayout({
                 <Header />
 
                 <main className="flex-1 flex flex-col py-6 px-4 sm:px-6 lg:px-8">
-                    <div className="container">
-                        {/* Títulos principales */}
-                        <div className="text-center mb-4 sm:mb-6 lg:mb-8 px-4">
-                            <h1 className="mb-2 sm:mb-3 lg:mb-4">
-                                XI JORNADAS TECNOLÓGICAS
-                            </h1>
-                            <h1 className="mb-3 sm:mb-4 lg:mb-6">
-                                INGENIERÍA EN SISTEMAS COMPUTACIONALES
-                            </h1>
-                        </div>
+                    {/* aser un usefect para que tener informacion del ususario si esta el el movil si
+                    en el movil eliminar al cargar la web el div container*/}
+                    {/* Títulos principales */}
+                    <div className="text-center mb-4 sm:mb-6 lg:mb-8 px-4">
+                        <h1 className="mb-2 sm:mb-3 lg:mb-4">
+                            XI JORNADAS TECNOLÓGICAS
+                        </h1>
+                        <h1 className="mb-3 sm:mb-4 lg:mb-6">
+                            INGENIERÍA EN SISTEMAS COMPUTACIONALES
+                        </h1>
+                    </div>
 
-                        {/* <!-- Navegación --> */}
-                        <div className="mb-4 sm:mb-6 lg:mb-8">
-                            <Nav />
-                        </div>
+                    {/* <!-- Navegación --> */}
+                    <div className="mb-4 sm:mb-6 lg:mb-8">
+                        <Nav />
+                    </div>
 
-                        {/* <!-- Contador de tiempo --> */}
-                        <div className="mb-4 sm:mb-6 lg:mb-8">
-                            <Contador />
-                        </div>
+                    {/* <!-- Contador de tiempo --> */}
+                    <div className="mb-4 sm:mb-6 lg:mb-8">
+                        <Contador />
+                    </div>
 
-                        {/* Contenido Principal de la Pagina */}
-                        <div className="content-area">
-                            <SpeedInsights />
-                            {children}
-                        </div>
+                    {/* Contenido Principal de la Pagina */}
+                    <div className="content-area">
+                        <SpeedInsights />
+                        {children}
                     </div>
                 </main>
 

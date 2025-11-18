@@ -13,6 +13,23 @@
     filter: brightness(1.1) contrast(1.2);
 }
 
+/* CSS Star Animation */
+@keyframes twinkle {
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.css-star {
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
 @keyframes galaxyShift {
     0%,
     100% {

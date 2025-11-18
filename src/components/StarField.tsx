@@ -1,124 +1,65 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import './starfield.css'
 
-interface Star {
+interface StarData {
     x: number
     y: number
-    z: number
-    prevX: number
-    prevY: number
+    size: number
+    opacity: number
+    delay: number
+    duration: number
 }
 
 export const StarField = () => {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const [mounted, setMounted] = useState(false)
 
+    // Solo montar en el cliente para evitar hydration mismatch
     useEffect(() => {
-        const canvas = canvasRef.current
-        if (!canvas) return
-
-        const ctx = canvas.getContext('2d')
-        if (!ctx) return
-
-        const stars: Star[] = []
-        const numStars = 800
-        const speed = 0.5
-
-        // Configurar el tamaño del canvas
-        const resizeCanvas = () => {
-            canvas.width = window.innerWidth
-            canvas.height = window.innerHeight
-        }
-
-        // Inicializar estrellas
-        const initStars = () => {
-            stars.length = 0
-            for (let i = 0; i < numStars; i++) {
-                stars.push({
-                    x: (Math.random() - 0.5) * 2000,
-                    y: (Math.random() - 0.5) * 2000,
-                    z: Math.random() * 1000,
-                    prevX: 0,
-                    prevY: 0,
-                })
-            }
-        }
-
-        // Animar estrellas
-        const animate = () => {
-            ctx.fillStyle = 'rgba(0, 10, 30, 0.1)'
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-            const centerX = canvas.width / 2
-            const centerY = canvas.height / 2
-
-            stars.forEach(star => {
-                star.prevX = (star.x / star.z) * 100 + centerX
-                star.prevY = (star.y / star.z) * 100 + centerY
-
-                star.z -= speed
-                if (star.z <= 0) {
-                    star.x = (Math.random() - 0.5) * 2000
-                    star.y = (Math.random() - 0.5) * 2000
-                    star.z = 1000
-                    star.prevX = (star.x / star.z) * 100 + centerX
-                    star.prevY = (star.y / star.z) * 100 + centerY
-                }
-
-                const x = (star.x / star.z) * 100 + centerX
-                const y = (star.y / star.z) * 100 + centerY
-
-                const opacity = 1 - star.z / 1000
-                const size = (1 - star.z / 1000) * 2
-
-                // Dibujar la estela de la estrella
-                ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`
-                ctx.lineWidth = size
-                ctx.beginPath()
-                ctx.moveTo(star.prevX, star.prevY)
-                ctx.lineTo(x, y)
-                ctx.stroke()
-
-                // Dibujar la estrella
-                ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
-                ctx.beginPath()
-                ctx.arc(x, y, size, 0, Math.PI * 2)
-                ctx.fill()
-
-                // Agregar algunas estrellas de colores
-                if (Math.random() > 0.98) {
-                    const colors = ['#007bff', '#00bcd4', '#ff4081', '#ffeb3b']
-                    const color =
-                        colors[Math.floor(Math.random() * colors.length)]
-                    ctx.fillStyle = `${color}${Math.floor(opacity * 255)
-                        .toString(16)
-                        .padStart(2, '0')}`
-                    ctx.beginPath()
-                    ctx.arc(x, y, size * 1.5, 0, Math.PI * 2)
-                    ctx.fill()
-                }
-            })
-
-            requestAnimationFrame(animate)
-        }
-
-        // Inicializar
-        resizeCanvas()
-        initStars()
-        animate()
-
-        // Manejar redimensionamiento
-        window.addEventListener('resize', resizeCanvas)
-
-        return () => {
-            window.removeEventListener('resize', resizeCanvas)
-        }
+        setMounted(true)
     }, [])
 
+    // Generar estrellas una sola vez con useMemo
+    const stars = useMemo<StarData[]>(() => {
+        const starArray: StarData[] = []
+        const numStars = 150 // Mucho menos que 300 porque son estáticas
+
+        for (let i = 0; i < numStars; i++) {
+            starArray.push({
+                x: Math.random() * 100, // Porcentaje
+                y: Math.random() * 100, // Porcentaje
+                size: Math.random() * 2 + 0.5, // 0.5px a 2.5px
+                opacity: Math.random() * 0.5 + 0.3, // 0.3 a 0.8
+                delay: Math.random() * 3, // 0 a 3 segundos
+                duration: Math.random() * 2 + 2, // 2 a 4 segundos
+            })
+        }
+
+        return starArray
+    }, [mounted])
+
+    // No renderizar nada hasta que esté montado en el cliente
+    if (!mounted) {
+        return (
+            <div
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: -1,
+                    pointerEvents: 'none',
+                    overflow: 'hidden',
+                    background:
+                        'radial-gradient(ellipse at bottom, #0d1d31 0%, #000a1a 100%)',
+                }}
+            />
+        )
+    }
+
     return (
-        <canvas
-            ref={canvasRef}
-            className="star-field"
+        <div
             style={{
                 position: 'fixed',
                 top: 0,
@@ -127,7 +68,29 @@ export const StarField = () => {
                 height: '100%',
                 zIndex: -1,
                 pointerEvents: 'none',
+                overflow: 'hidden',
+                background:
+                    'radial-gradient(ellipse at bottom, #0d1d31 0%, #000a1a 100%)',
             }}
-        />
+        >
+            {stars.map((star, i) => (
+                <div
+                    key={i}
+                    className="css-star"
+                    style={{
+                        position: 'absolute',
+                        left: `${star.x}%`,
+                        top: `${star.y}%`,
+                        width: `${star.size}px`,
+                        height: `${star.size}px`,
+                        backgroundColor: 'white',
+                        borderRadius: '50%',
+                        opacity: star.opacity,
+                        animation: `twinkle ${star.duration}s ease-in-out ${star.delay}s infinite`,
+                        willChange: 'opacity',
+                    }}
+                />
+            ))}
+        </div>
     )
 }
