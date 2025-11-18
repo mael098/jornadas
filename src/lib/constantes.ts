@@ -22,7 +22,7 @@ export const FECHA_DEL_EVENTO: number | string | Date = new Date(
     2025,
     10,
     25,
-    0,
-    0,
-    0, // Año, Mes (0-indexado, por eso 10 = noviembre), Día, Hora, Minuto, Segundo
+    33,
+    59,
+    36, // Año, Mes (0-indexado, por eso 10 = noviembre), Día, Hora, Minuto, Segundo
 )
