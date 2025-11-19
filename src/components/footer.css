@@ -1,52 +1,5 @@
+/* Footer base styles - resto manejado por Tailwind en el componente */
 footer {
-    background: linear-gradient(
-        135deg,
-        rgba(7, 40, 102, 0.356),
-        rgba(1, 20, 37, 0.479)
-    );
-    color: #ffffff;
-    text-align: center;
-    padding: 1rem 0.75rem;
-    margin-top: 1.5rem;
-    font-size: clamp(0.85rem, 2vw, 1rem);
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid rgba(0, 123, 255, 0.2);
-    box-shadow: 0 -4px 20px rgba(0, 123, 255, 0.15);
-    backdrop-filter: blur(20px);
     position: relative;
     z-index: 10;
-
-    & > ul {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    p {
-        margin: 0.5rem 0;
-        font-weight: 600;
-        color: #007bff;
-    }
-}
-
-/* Responsive para footer */
-@media (min-width: 640px) {
-    footer {
-        padding: 1.5rem 1rem;
-        margin-top: 2rem;
-    }
-}
-
-@media (min-width: 768px) {
-    footer {
-        padding: 2rem 1.5rem;
-        margin-top: 2.5rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    footer {
-        margin-top: 3rem;
-    }
 }
