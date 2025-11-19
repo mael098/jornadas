@@ -1,7 +1,7 @@
 @import 'tailwindcss' reference;
 
 .taller {
-    @apply relative p-5 my-3 rounded-xl
+    @apply relative p-4 md:p-5 my-3 rounded-xl
            bg-white/5 backdrop-blur-sm
            border border-white/10
            flex flex-col items-start
@@ -22,6 +22,27 @@
     }
 }
 
+.description {
+    @apply text-white/70 leading-relaxed;
+}
+
 .sentence {
-    @apply block my-1.5 leading-relaxed text-white/80 text-sm;
+    @apply block my-2 leading-7 text-white/80 text-sm md:text-base;
+    text-indent: 0;
+    padding-left: 0;
+}
+
+/* Mejora para móvil */
+@media (max-width: 768px) {
+    .taller {
+        @apply p-4;
+    }
+
+    .description {
+        @apply ml-0 pl-0;
+    }
+
+    .sentence {
+        @apply my-2.5 text-sm leading-6;
+    }
 }

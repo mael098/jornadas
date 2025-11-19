@@ -1,13 +1,13 @@
 'use client'
 import Image from 'next/image'
-import expositor2 from '@/expositores/expositor2.webp'
+// import expositor2 from '@/expositores/expositor2.webp'
 import expositor5 from '@/expositores/LogoSistemasSinFondo-_1_.webp'
 
 export default function page() {
     return (
         <div id="expositores" className="tabcontent">
             <h1 className="text-3xl text-left">Expositores</h1>
-            <div className="expositor">
+            {/* <div className="expositor">
                 <Image
                     src={expositor5}
                     width={100}
@@ -39,37 +39,36 @@ export default function page() {
                         ámbito educativo.
                     </p>
                 </div>
-            </div>
+            </div> */}
             <div className="expositor">
-                <Image
+                {/* <Image
                     src={expositor2}
                     width={100}
                     height={100}
                     alt="Expositor 2"
                     className="expositor-img"
-                />
+                /> */}
                 <div className="expositor-info">
-                    <h3>Lic. Elizabeth González Hernández</h3>
+                    <h3>Victor Manuel García Gutiérrez</h3>
                     <h4 className="text-xl">
-                        Ciberseguridad vs Seguridad de la información ¿cual es
-                        tu camino?
+                        Conferencia "La IA no te reemplaza, te reemplaza la
+                        resistencia al cambio"
                     </h4>
                     <p>
-                        La ciberseguridad y la seguridad de la información son
-                        dos disciplinas cruciales en el mundo digital actual,
-                        cada una con su enfoque y objetivos específicos. La
-                        ciberseguridad se centra en proteger sistemas y redes
-                        contra amenazas y ataques cibernéticos, garantizando la
-                        integridad y disponibilidad de la información en
-                        entornos digitales. Por otro lado, la seguridad de la
-                        información abarca un espectro más amplio, protegiendo
-                        todos los tipos de datos, tanto digitales como físicos,
-                        y asegurando su confidencialidad y uso adecuado. En un
-                        contexto donde las brechas de seguridad son cada vez más
-                        comunes, la comprensión de estas áreas y la elección de
-                        un camino profesional en alguna de ellas es fundamental
-                        para quienes deseen contribuir a un entorno seguro y
-                        protegido.
+                        En esta conferencia se explorará cómo la inteligencia
+                        artificial está transformando el panorama laboral y
+                        profesional actual. Lejos de ser una amenaza que busca
+                        reemplazar a las personas, la IA representa una
+                        herramienta poderosa que puede potenciar nuestras
+                        capacidades y agilizar nuestros procesos. El verdadero
+                        desafío no radica en la tecnología misma, sino en
+                        nuestra disposición a adaptarnos y evolucionar con ella.
+                        La resistencia al cambio es el principal obstáculo que
+                        enfrentan los profesionales hoy en día. Esta charla
+                        busca motivar a los asistentes a abrazar la innovación,
+                        desarrollar nuevas habilidades y aprovechar las
+                        oportunidades que la IA ofrece para crecer tanto
+                        personal como profesionalmente en la era digital.
                     </p>
                 </div>
             </div>
