@@ -13,7 +13,6 @@ export async function getUser(nc: string) {
             semestre: true,
             registro_talleres: true,
             Registro_videojuegos: true,
-            Registro_viernes: true,
         },
         where: {
             nc: nc,

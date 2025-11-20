@@ -1,0 +1,33 @@
+/* Evitar que el navegador cambie el color del texto en autofill */
+#registroViernes input:-webkit-autofill,
+#registroViernes input:-webkit-autofill:hover,
+#registroViernes input:-webkit-autofill:focus,
+#registroViernes input:-webkit-autofill:active,
+#registroTalleres input:-webkit-autofill,
+#registroTalleres input:-webkit-autofill:hover,
+#registroTalleres input:-webkit-autofill:focus,
+#registroTalleres input:-webkit-autofill:active {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.05) inset !important;
+    box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.05) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+#registroViernes select,
+#registroTalleres select {
+    color: white !important;
+}
+
+#registroViernes select option,
+#registroTalleres select option {
+    background-color: rgb(15, 23, 42);
+    color: white;
+}
+
+/* Asegurar que el texto siempre sea blanco */
+#registroViernes input,
+#registroViernes select,
+#registroTalleres input,
+#registroTalleres select {
+    color: white !important;
+}

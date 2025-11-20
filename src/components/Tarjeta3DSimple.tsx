@@ -45,10 +45,9 @@ interface Tarjeta3DSimpleProps {
         nombre: string
         tallerista: string
         horario: string
-        dia: string
     }
     videojuego?: string
-    tipo: 'taller' | 'videojuego' | 'viernes'
+    tipo: 'taller' | 'videojuego'
 }
 
 // Componente para renderizar la textura de la tarjeta
@@ -58,36 +57,20 @@ function TarjetaTexture({
     videojuego,
     tipo,
 }: Tarjeta3DSimpleProps) {
-    const formatHorario = (horario: string) => {
-        switch (horario) {
-            case 'HORARIO1':
-                return '9:00 - 10:30 AM'
-            case 'HORARIO2':
-                return '10:30 - 12:00 PM'
-            case 'HORARIO3':
-                return '1:30 - 3:00 PM'
-            default:
-                return horario
-        }
-    }
-
     const getTipoColor = () => {
         switch (tipo) {
             case 'taller':
                 return '#00ffff'
             case 'videojuego':
                 return '#ff00ff'
-            case 'viernes':
-                return '#00ff00'
             default:
                 return '#ffffff'
         }
     }
 
-    // Contenido estilo “conferencia” inspirado en el diseño adjunto
+    // Contenido estilo "conferencia" inspirado en el diseño adjunto
     const metaLeft = (() => {
-        if (tipo === 'taller' && taller)
-            return `${taller.dia} • ${formatHorario(taller.horario)}`
+        if (tipo === 'taller' && taller) return `VIERNES 26 • ${taller.horario}`
         if (tipo === 'videojuego' && videojuego)
             return `TORNEO • ${videojuego.toUpperCase()}`
         return 'JORNADAS 2025'
@@ -101,7 +84,7 @@ function TarjetaTexture({
                 makeDefault
                 manual
                 aspect={1}
-                position={[0, 0, 1.9]}
+                position={[0, 0, 1.8]}
             />
             <ambientLight intensity={2} />
 
@@ -109,16 +92,16 @@ function TarjetaTexture({
 
             {/* Fila superior: meta izquierda / ciudad derecha */}
             <Text
-                position={[-0.75, 1.0, 0.01]}
-                fontSize={0.055}
-                color="#ffffff"
+                position={[-0.6, 1.0, 0.01]}
+                fontSize={0.043}
+                color="#6e80eb"
                 anchorX="left"
                 anchorY="top"
             >
                 {metaLeft}
             </Text>
             <Text
-                position={[0.75, 1.0, 0.01]}
+                position={[0.6, 1.0, 0.01]}
                 fontSize={0.055}
                 color="#ffffff"
                 anchorX="right"
@@ -129,32 +112,32 @@ function TarjetaTexture({
 
             {/* Nombre grande */}
             <Text
-                position={[-0.75, 0.78, 0.01]}
+                position={[0, 0.78, 0.01]}
                 fontSize={0.2}
                 color="#ffffff"
-                anchorX="left"
+                anchorX="center"
                 anchorY="top"
-                maxWidth={1.4}
+                maxWidth={1.6}
             >
                 {usuario.nombre}
             </Text>
             <Text
-                position={[-0.75, 0.52, 0.01]}
+                position={[0, 0.52, 0.01]}
                 fontSize={0.2}
                 color="#ffffff"
-                anchorX="left"
+                anchorX="center"
                 anchorY="top"
-                maxWidth={1.4}
+                maxWidth={1.6}
             >
                 {usuario.apellidos}
             </Text>
 
             {/* Rol */}
             <Text
-                position={[-0.75, 0.34, 0.01]}
-                fontSize={0.07}
+                position={[0, 0.2, 0.01]}
+                fontSize={0.1}
                 color="#00ffff"
-                anchorX="left"
+                anchorX="center"
                 anchorY="top"
                 letterSpacing={0.05}
             >
@@ -169,12 +152,12 @@ function TarjetaTexture({
 
             {/* Título del taller o sección */}
             <Text
-                position={[-0.75, -0.08, 0.01]}
-                fontSize={0.095}
+                position={[0, -0.08, 0.01]}
+                fontSize={0.099}
                 color="#ffffff"
-                anchorX="left"
+                anchorX="center"
                 anchorY="top"
-                maxWidth={1.4}
+                maxWidth={1.6}
             >
                 {tipo === 'taller' && taller ?
                     taller.nombre.toUpperCase()
@@ -183,31 +166,22 @@ function TarjetaTexture({
 
             {/* Dirección y datos secundarios */}
             <Text
-                position={[-0.75, -0.28, 0.01]}
-                fontSize={0.055}
+                position={[0, -0.28, 0.01]}
+                fontSize={0.075}
                 color="#cccccc"
-                anchorX="left"
+                anchorX="center"
                 anchorY="top"
-                maxWidth={1.4}
+                maxWidth={1.6}
             >
                 INSTITUTO TECNOLÓGICO DE ALTAMIRA
-            </Text>
-            <Text
-                position={[-0.75, -0.4, 0.01]}
-                fontSize={0.05}
-                color="#aaaaaa"
-                anchorX="left"
-                anchorY="top"
-            >
-                AV REFORMA 476
             </Text>
 
             {/* Identificador del alumno */}
             <Text
-                position={[-0.75, -0.6, 0.01]}
-                fontSize={0.05}
+                position={[0, -0.6, 0.01]}
+                fontSize={0.07}
                 color="#aaaaaa"
-                anchorX="left"
+                anchorX="center"
                 anchorY="top"
             >
                 NC: {usuario.nc} • {usuario.semestre}° SEMESTRE
@@ -242,6 +216,95 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
     )
     const [dragged, drag] = useState<THREE.Vector3 | false>(false)
     const [hovered, setHovered] = useState(false)
+
+    // Sensor de movimiento del dispositivo
+    useEffect(() => {
+        let lastShakeTime = 0
+        const shakeThreshold = 15 // Sensibilidad del shake
+        const shakeDelay = 500 // Tiempo mínimo entre shakes (ms)
+
+        const handleDeviceMotion = (event: DeviceMotionEvent) => {
+            const acceleration = event.accelerationIncludingGravity
+            if (!acceleration) return
+
+            const { x, y, z } = acceleration
+            const now = Date.now()
+
+            // Detectar movimiento brusco en cualquier eje
+            const totalAcceleration =
+                Math.abs(x || 0) + Math.abs(y || 0) + Math.abs(z || 0)
+
+            if (
+                totalAcceleration > shakeThreshold &&
+                now - lastShakeTime > shakeDelay
+            ) {
+                lastShakeTime = now
+
+                // Aplicar fuerza a la tarjeta
+                if (card.current) {
+                    card.current.wakeUp()
+                    card.current.applyImpulse(
+                        {
+                            x: (Math.random() - 0.5) * 8,
+                            y: Math.random() * 3,
+                            z: (Math.random() - 0.5) * 4,
+                        },
+                        true,
+                    )
+                }
+
+                // Sacudir también las articulaciones
+                ;[j1, j2, j3].forEach(joint => {
+                    if (joint.current) {
+                        joint.current.wakeUp()
+                        joint.current.applyImpulse(
+                            {
+                                x: (Math.random() - 0.5) * 4,
+                                y: Math.random() * 2,
+                                z: (Math.random() - 0.5) * 2,
+                            },
+                            true,
+                        )
+                    }
+                })
+            }
+        }
+
+        // Pedir permiso en iOS 13+
+        const requestPermission = async () => {
+            if (
+                typeof DeviceMotionEvent !== 'undefined' &&
+                typeof (DeviceMotionEvent as any).requestPermission ===
+                    'function'
+            ) {
+                try {
+                    const permission = await (
+                        DeviceMotionEvent as any
+                    ).requestPermission()
+                    if (permission === 'granted') {
+                        window.addEventListener(
+                            'devicemotion',
+                            handleDeviceMotion,
+                        )
+                    }
+                } catch (error) {
+                    console.error(
+                        'Error requesting device motion permission:',
+                        error,
+                    )
+                }
+            } else {
+                // Android y navegadores que no requieren permiso
+                window.addEventListener('devicemotion', handleDeviceMotion)
+            }
+        }
+
+        requestPermission()
+
+        return () => {
+            window.removeEventListener('devicemotion', handleDeviceMotion)
+        }
+    }, [])
 
     // Joints de física con Rapier
     useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1])
@@ -351,7 +414,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                     linearDamping={2}
                     type={dragged ? 'kinematicPosition' : 'dynamic'}
                 >
-                    <CuboidCollider args={[1.2, 1.575, 0.01]} />
+                    <CuboidCollider args={[0.9, 1.18, 0.01]} />
 
                     {/* Cara frontal de la tarjeta */}
                     <mesh
@@ -378,7 +441,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                             }
                         }}
                     >
-                        <boxGeometry args={[2.4, 3.375, 0.05]} />
+                        <boxGeometry args={[1.8, 2.53, 0.05]} />
                         <meshStandardMaterial
                             roughness={0.2}
                             metalness={0.1}
@@ -388,8 +451,8 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                             <RenderTexture
                                 attach="map"
                                 // Resolución alta para texto nítido (2048x2880 = relación 1.6:2.25)
-                                width={2048}
-                                height={2880}
+                                width={1536}
+                                height={2160}
                                 anisotropy={16}
                             >
                                 <TarjetaTexture {...props} />
@@ -399,7 +462,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
 
                     {/* Cara trasera */}
                     <mesh position={[0, 0, -0.025]} rotation={[0, Math.PI, 0]}>
-                        <boxGeometry args={[2.37, 3.345, 0.02]} />
+                        <boxGeometry args={[1.78, 2.51, 0.02]} />
                         <meshStandardMaterial
                             color="#1a1a2e"
                             roughness={0.4}
@@ -412,7 +475,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                     {/* Brillo de hover */}
                     {hovered && (
                         <mesh position={[0, 0, 0.03]}>
-                            <boxGeometry args={[2.475, 3.45, 0.01]} />
+                            <boxGeometry args={[1.86, 2.59, 0.01]} />
                             <meshBasicMaterial
                                 color="#00ffff"
                                 transparent
@@ -446,7 +509,37 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
 export default function Tarjeta3DSimple(props: Tarjeta3DSimpleProps) {
     const [webglLost, setWebglLost] = useState(false)
     const [recoveryAttempts, setRecoveryAttempts] = useState(0)
+    const [motionPermissionGranted, setMotionPermissionGranted] =
+        useState(false)
     const recoveryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+    // Función para solicitar permiso de motion en iOS
+    const requestMotionPermission = async () => {
+        if (
+            typeof DeviceMotionEvent !== 'undefined' &&
+            typeof (DeviceMotionEvent as any).requestPermission === 'function'
+        ) {
+            try {
+                const permission = await (
+                    DeviceMotionEvent as any
+                ).requestPermission()
+                if (permission === 'granted') {
+                    setMotionPermissionGranted(true)
+                    alert(
+                        '¡Perfecto! Ahora puedes agitar tu dispositivo para mover la tarjeta 📱✨',
+                    )
+                }
+            } catch (error) {
+                console.error(
+                    'Error requesting device motion permission:',
+                    error,
+                )
+            }
+        } else {
+            // No se requiere permiso (Android, etc)
+            setMotionPermissionGranted(true)
+        }
+    }
 
     const handleWebGLContextLost = useRef((event: Event) => {
         event.preventDefault()
@@ -592,9 +685,23 @@ export default function Tarjeta3DSimple(props: Tarjeta3DSimpleProps) {
                 </Physics>
             </Canvas>
 
-            {/* Instrucciones */}
-            <div className="absolute bottom-4 left-4 right-4 text-center text-white/70 text-sm">
-                🎯 Arrastra la tarjeta | 🎮 Física de cuerda realista con Rapier
+            {/* Instrucciones y botón de activación de sensor */}
+            <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+                {!motionPermissionGranted &&
+                    typeof DeviceMotionEvent !== 'undefined' &&
+                    typeof (DeviceMotionEvent as any).requestPermission ===
+                        'function' && (
+                        <button
+                            onClick={requestMotionPermission}
+                            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors text-white font-semibold shadow-lg"
+                        >
+                            📱 Activar sensor de movimiento
+                        </button>
+                    )}
+                <div className="text-center text-white/70 text-sm">
+                    🎯 Arrastra la tarjeta | 📱 Agita tu teléfono | 🎮 Física
+                    realista
+                </div>
             </div>
         </div>
     )

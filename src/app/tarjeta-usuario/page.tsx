@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useTransition } from 'react'
 import TarjetaDigital from '@/components/TarjetaDigital'
-import { obtenerTodasLasTarjetas, TarjetaData } from '@/actions/tarjetas'
+import { obtenerTodasLasTarjetas, type TarjetaData } from '@/actions/tarjetas'
 
 const GeneradorTarjetas: React.FC = () => {
     const [nc, setNc] = useState('')
     const [tarjetas, setTarjetas] = useState<TarjetaData[]>([])
-    const [loading, setLoading] = useState(false)
+    const [isPending, startTransition] = useTransition()
     const [error, setError] = useState('')
     const [searched, setSearched] = useState(false)
 
@@ -17,26 +17,27 @@ const GeneradorTarjetas: React.FC = () => {
             return
         }
 
-        setLoading(true)
         setError('')
         setSearched(false)
 
-        try {
-            const tarjetasEncontradas = await obtenerTodasLasTarjetas(nc.trim())
-            setTarjetas(tarjetasEncontradas)
-            setSearched(true)
-
-            if (tarjetasEncontradas.length === 0) {
-                setError(
-                    'No se encontraron registros para este número de control',
+        startTransition(async () => {
+            try {
+                const tarjetasEncontradas = await obtenerTodasLasTarjetas(
+                    nc.trim(),
                 )
+                setTarjetas(tarjetasEncontradas)
+                setSearched(true)
+
+                if (tarjetasEncontradas.length === 0) {
+                    setError(
+                        'No se encontraron registros para este número de control',
+                    )
+                }
+            } catch (err) {
+                setError('Error al buscar las tarjetas. Intenta nuevamente.')
+                console.error('Error:', err)
             }
-        } catch (err) {
-            setError('Error al buscar las tarjetas. Intenta nuevamente.')
-            console.error('Error:', err)
-        } finally {
-            setLoading(false)
-        }
+        })
     }
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -55,11 +56,9 @@ const GeneradorTarjetas: React.FC = () => {
     const getTipoNombre = (tipo: string) => {
         switch (tipo) {
             case 'taller':
-                return 'Talleres Jueves'
+                return 'Taller'
             case 'videojuego':
                 return 'Torneo de Videojuegos'
-            case 'viernes':
-                return 'Talleres Viernes'
             default:
                 return tipo
         }
@@ -97,15 +96,15 @@ const GeneradorTarjetas: React.FC = () => {
                                     onChange={e => setNc(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="Ej: 22210456"
-                                    className="flex-1 px-4 py-3 bg-gray-800/50 border border-cyan-500/30 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
-                                    disabled={loading}
+                                    className="flex-1 px-4 py-3 bg-gray-800/50 border border-cyan-500/30 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all"
+                                    disabled={isPending}
                                 />
                                 <button
                                     onClick={buscarTarjetas}
-                                    disabled={loading}
-                                    className="px-8 py-3 bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105"
+                                    disabled={isPending}
+                                    className="px-8 py-3 bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 active:scale-95"
                                 >
-                                    {loading ?
+                                    {isPending ?
                                         <div className="flex items-center space-x-2">
                                             <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
                                             <span>Buscando...</span>
@@ -156,7 +155,10 @@ const GeneradorTarjetas: React.FC = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                         {tarjetas.map((tarjeta, index) => (
-                            <div key={index} className="space-y-4">
+                            <div
+                                key={`${tarjeta.tipo}-${tarjeta.usuario.nc}-${index}`}
+                                className="space-y-4"
+                            >
                                 <h3 className="text-xl font-semibold text-center text-cyan-300">
                                     {getTipoNombre(tarjeta.tipo)}
                                 </h3>
@@ -168,16 +170,15 @@ const GeneradorTarjetas: React.FC = () => {
                                 />
                                 <div className="text-center text-sm text-gray-400">
                                     Registrado:{' '}
-                                    {tarjeta.fechaRegistro.toLocaleDateString(
-                                        'es-MX',
-                                        {
-                                            day: 'numeric',
-                                            month: 'long',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                        },
-                                    )}
+                                    {new Date(
+                                        tarjeta.fechaRegistro,
+                                    ).toLocaleDateString('es-MX', {
+                                        day: 'numeric',
+                                        month: 'long',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })}
                                 </div>
                             </div>
                         ))}
@@ -199,13 +200,13 @@ const GeneradorTarjetas: React.FC = () => {
                             </h4>
                             <ul className="space-y-2 text-gray-300 text-sm">
                                 <li>
-                                    • Presenta tu tarjeta digital al ingresar
+                                    • Presenta tu tarjeta digital al ingresar al
+                                    evento
                                 </li>
                                 <li>
-                                    • Guarda la imagen o toma captura de
-                                    pantalla
+                                    • Guarda la imagen o captura de pantalla
                                 </li>
-                                <li>• Llega 15 minutos antes del evento</li>
+                                <li>• Llega 15 minutos antes del inicio</li>
                                 <li>• Mantén tu dispositivo cargado</li>
                             </ul>
                         </div>
@@ -222,7 +223,9 @@ const GeneradorTarjetas: React.FC = () => {
                                 <li>
                                     • Verifica que tu información sea correcta
                                 </li>
-                                <li>• Contacta soporte si hay errores</li>
+                                <li>
+                                    • Contacta a soporte si encuentras errores
+                                </li>
                                 <li>
                                     • Cada registro genera una tarjeta única
                                 </li>
@@ -234,7 +237,7 @@ const GeneradorTarjetas: React.FC = () => {
                         <p className="text-center text-gray-300">
                             <span className="text-cyan-400 font-semibold">
                                 💡 Tip:
-                            </span>
+                            </span>{' '}
                             Puedes guardar o imprimir tus tarjetas como respaldo
                         </p>
                     </div>

@@ -9,11 +9,10 @@
 .hamburger-btn {
     @apply top-4 right-4 z-50 p-3 rounded-xl
            bg-linear-to-br from-blue-600 via-blue-700 to-indigo-700
-           shadow-2xl border border-blue-300/40
-           md:hidden transition-all duration-300
+           shadow-xl border border-blue-300/40
+           md:hidden transition-transform duration-200
            hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800
-           hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]
-           hover:scale-110 hover:rotate-90
+           hover:scale-110
            active:scale-95;
 }
 
@@ -29,8 +28,7 @@
 
 .hamburger-icon span {
     @apply block w-full h-0.5 bg-white rounded-full 
-           shadow-[0_0_8px_rgba(255,255,255,0.5)]
-           transition-all duration-300 ease-in-out;
+           transition-all duration-200 ease-out;
 }
 
 /* Animación del icono hamburguesa cuando está abierto */
@@ -48,9 +46,9 @@
 
 /* Overlay oscuro en móvil */
 .menu-overlay {
-    @apply fixed inset-0 bg-black/70 backdrop-blur-md z-40 
+    @apply fixed inset-0 bg-black/70 z-40 
            md:hidden;
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.2s ease-out;
 }
 
 /* Navegación principal */
@@ -58,11 +56,10 @@ nav.tabs {
     /* Mobile: menú lateral deslizante (oculto por defecto) */
     @apply fixed top-0 right-0 h-full w-80 
            bg-linear-to-b from-slate-900 via-blue-900/95 to-indigo-950
-           backdrop-blur-xl
-           transform translate-x-full transition-all duration-400 ease-out
+           transform translate-x-full transition-transform duration-300 ease-out
            z-40 pt-24 px-6 pb-6
            flex flex-col gap-4
-           shadow-[0_0_60px_rgba(59,130,246,0.4)]
+           shadow-2xl
            border-l-2 border-blue-400/30;
 
     /* Desktop: menú horizontal normal (siempre visible) */
@@ -79,44 +76,31 @@ nav.tabs {
         @apply relative overflow-hidden
                bg-linear-to-br from-blue-600 via-blue-700 to-indigo-700
                text-white font-bold px-6 py-4 rounded-xl 
-               transition-all duration-300 ease-out
+               transition-all duration-200 ease-out
                w-full text-center no-underline
-               shadow-[0_4px_20px_rgba(59,130,246,0.3)]
+               shadow-lg
                border border-blue-400/20
                hover:from-blue-500 hover:via-indigo-600 hover:to-purple-700
-               hover:shadow-[0_8px_30px_rgba(99,102,241,0.5),0_0_20px_rgba(139,92,246,0.3)]
-               hover:scale-105 hover:-translate-y-1
-               hover:border-blue-300/40
-               active:scale-95 active:translate-y-0
+               hover:shadow-xl
+               active:scale-95
                focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent
-               md:flex-1 md:py-3.5 md:px-5;
+               md:flex-1 md:py-3.5 md:px-5
+               md:hover:scale-105 md:hover:-translate-y-1
+               md:hover:border-blue-300/40
+               md:hover:shadow-[0_8px_30px_rgba(99,102,241,0.5),0_0_20px_rgba(139,92,246,0.3)];
 
-        /* Efecto de brillo al hover */
-        &::before {
-            content: '';
-            @apply absolute inset-0 
-                   bg-linear-to-r from-transparent via-white/20 to-transparent
-                   translate-x-[-200%]
-                   transition-transform duration-700 ease-out;
-        }
-
-        &:hover::before {
-            @apply translate-x-[200%];
-        }
-
-        /* Estado activo con animación pulsante */
+        /* Estado activo */
         &[data-active='true'] {
             @apply from-indigo-600 via-purple-600 to-pink-600
-                   shadow-[0_0_40px_rgba(139,92,246,0.6),0_0_20px_rgba(236,72,153,0.4)]
+                   shadow-[0_0_30px_rgba(139,92,246,0.5)]
                    ring-2 ring-purple-400/60
-                   scale-105;
-            animation: pulse-glow 2s ease-in-out infinite;
+                   md:scale-105;
         }
 
         /* Icono opcional en los enlaces */
         &::after {
             content: '→';
-            @apply ml-2 inline-block transition-transform duration-300;
+            @apply ml-2 inline-block transition-transform duration-200;
             @apply md:hidden;
         }
 
@@ -134,32 +118,32 @@ nav.tabs.menu-open {
 /* Animaciones adicionales para enlaces en móvil */
 @media (max-width: 768px) {
     nav.tabs.menu-open a {
-        animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        animation: slideInRight 0.3s ease-out forwards;
         opacity: 0;
     }
 
     nav.tabs.menu-open a:nth-child(1) {
-        animation-delay: 0.1s;
+        animation-delay: 0.05s;
     }
 
     nav.tabs.menu-open a:nth-child(2) {
-        animation-delay: 0.15s;
+        animation-delay: 0.08s;
     }
 
     nav.tabs.menu-open a:nth-child(3) {
-        animation-delay: 0.2s;
+        animation-delay: 0.11s;
     }
 
     nav.tabs.menu-open a:nth-child(4) {
-        animation-delay: 0.25s;
+        animation-delay: 0.14s;
     }
 
     nav.tabs.menu-open a:nth-child(5) {
-        animation-delay: 0.3s;
+        animation-delay: 0.17s;
     }
 
     nav.tabs.menu-open a:nth-child(6) {
-        animation-delay: 0.35s;
+        animation-delay: 0.2s;
     }
 }
 
@@ -167,11 +151,11 @@ nav.tabs.menu-open {
 @keyframes slideInRight {
     from {
         opacity: 0;
-        transform: translateX(30px) scale(0.9);
+        transform: translateX(20px);
     }
     to {
         opacity: 1;
-        transform: translateX(0) scale(1);
+        transform: translateX(0);
     }
 }
 
@@ -181,19 +165,5 @@ nav.tabs.menu-open {
     }
     to {
         opacity: 1;
-    }
-}
-
-@keyframes pulse-glow {
-    0%,
-    100% {
-        box-shadow:
-            0 0 40px rgba(139, 92, 246, 0.6),
-            0 0 20px rgba(236, 72, 153, 0.4);
-    }
-    50% {
-        box-shadow:
-            0 0 60px rgba(139, 92, 246, 0.8),
-            0 0 30px rgba(236, 72, 153, 0.6);
     }
 }

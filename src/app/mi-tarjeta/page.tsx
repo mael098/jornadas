@@ -7,9 +7,7 @@ import { generarTarjeta } from '@/actions/generar_tarjeta'
 export default function MiTarjetaPage() {
     const router = useRouter()
     const [nc, setNc] = useState('')
-    const [tipo, setTipo] = useState<'taller' | 'videojuego' | 'viernes'>(
-        'taller',
-    )
+    const [tipo, setTipo] = useState<'taller' | 'videojuego'>('taller')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
@@ -73,20 +71,14 @@ export default function MiTarjetaPage() {
                                     setTipo(
                                         e.target.value as
                                             | 'taller'
-                                            | 'videojuego'
-                                            | 'viernes',
+                                            | 'videojuego',
                                     )
                                 }
                                 className="w-full px-4 py-3 bg-gray-800/50 text-white rounded-lg border border-gray-600 focus:border-cyan-500 focus:outline-none"
                             >
-                                <option value="taller">
-                                    Talleres (Jueves)
-                                </option>
+                                <option value="taller">Taller</option>
                                 <option value="videojuego">
                                     Torneo de Videojuegos
-                                </option>
-                                <option value="viernes">
-                                    Taller (Viernes)
                                 </option>
                             </select>
                         </div>

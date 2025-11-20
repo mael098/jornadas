@@ -1,4 +1,4 @@
-import { PrismaClient, Dia, Horario } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()
 
@@ -16,8 +16,7 @@ Requerimientos:
     Python instalado
     IDE (PyCharm, VS Code o similar)
     Internet`,
-            dia: Dia.VIERNES,
-            horario: Horario.HORARIO1,
+            horario: '11:30 AM - 1:30 PM',
         },
         {
             id: 2,
@@ -29,8 +28,7 @@ Requerimientos:
     Python instalado
     Cuenta en OpenAI o similar
     Internet`,
-            dia: Dia.VIERNES,
-            horario: Horario.HORARIO2,
+            horario: '11:30 AM - 1:30 PM',
         },
         {
             id: 3,
@@ -41,8 +39,7 @@ Requerimientos:
     Equipo de cómputo
     Cuenta en plataforma de generación de imágenes (Midjourney, DALL-E, etc.)
     Internet`,
-            dia: Dia.VIERNES,
-            horario: Horario.HORARIO3,
+            horario: '11:30 AM - 1:30 PM',
         },
     ],
 })

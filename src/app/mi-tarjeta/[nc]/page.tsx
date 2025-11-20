@@ -21,7 +21,6 @@ export default function VisualizarTarjetaPage() {
     const tipo = (searchParams.get('tipo') || 'taller') as
         | 'taller'
         | 'videojuego'
-        | 'viernes'
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
@@ -79,21 +78,12 @@ export default function VisualizarTarjetaPage() {
     const usuario = tarjetaData.user
     let tallerData = null
 
-    if (tipo === 'taller' && usuario.registro_talleres.length > 0) {
-        const registro = usuario.registro_talleres[0]
+    // Para talleres: ahora el usuario tiene un solo registro_talleres (no es array)
+    if (tipo === 'taller' && usuario.registro_talleres) {
         tallerData = {
-            nombre: registro.taller1.nombre,
-            tallerista: registro.taller1.tallerista,
-            horario: registro.taller1.horario,
-            dia: registro.taller1.dia,
-        }
-    } else if (tipo === 'viernes' && usuario.Registro_viernes.length > 0) {
-        const registro = usuario.Registro_viernes[0]
-        tallerData = {
-            nombre: registro.talleres.nombre,
-            tallerista: registro.talleres.tallerista,
-            horario: registro.talleres.horario,
-            dia: registro.talleres.dia,
+            nombre: usuario.registro_talleres.taller.nombre,
+            tallerista: usuario.registro_talleres.taller.tallerista,
+            horario: usuario.registro_talleres.taller.horario,
         }
     }
 

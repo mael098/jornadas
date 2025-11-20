@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 
 export interface GenerarTarjetaProps {
     nc: string
-    tipo: 'taller' | 'videojuego' | 'viernes'
+    tipo: 'taller' | 'videojuego'
 }
 
 export async function generarTarjeta({ nc, tipo }: GenerarTarjetaProps) {
@@ -17,17 +17,10 @@ export async function generarTarjeta({ nc, tipo }: GenerarTarjetaProps) {
             include: {
                 registro_talleres: {
                     include: {
-                        taller1: true,
-                        taller2: true,
-                        taller3: true,
+                        taller: true,
                     },
                 },
                 Registro_videojuegos: true,
-                Registro_viernes: {
-                    include: {
-                        talleres: true,
-                    },
-                },
             },
         })
 
@@ -55,16 +48,13 @@ export async function generarTarjeta({ nc, tipo }: GenerarTarjetaProps) {
 
         // Obtener información según el tipo
         let info = ''
-        if (tipo === 'taller' && usuario.registro_talleres.length > 0) {
-            const registro = usuario.registro_talleres[0]
-            info = `${registro.taller1.nombre} | ${registro.taller2.nombre} | ${registro.taller3.nombre}`
+        if (tipo === 'taller' && usuario.registro_talleres) {
+            info = usuario.registro_talleres.taller.nombre
         } else if (
             tipo === 'videojuego' &&
             usuario.Registro_videojuegos.length > 0
         ) {
             info = usuario.Registro_videojuegos[0].videojuego_seleccionado
-        } else if (tipo === 'viernes' && usuario.Registro_viernes.length > 0) {
-            info = usuario.Registro_viernes[0].talleres.nombre
         }
 
         // Por ahora guardamos una URL placeholder
@@ -108,17 +98,10 @@ async function obtenerTarjetaDB(nc: string, tipo: string) {
                 include: {
                     registro_talleres: {
                         include: {
-                            taller1: true,
-                            taller2: true,
-                            taller3: true,
+                            taller: true,
                         },
                     },
                     Registro_videojuegos: true,
-                    Registro_viernes: {
-                        include: {
-                            talleres: true,
-                        },
-                    },
                 },
             },
         },

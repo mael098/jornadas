@@ -15,10 +15,9 @@ interface TarjetaDigitalProps {
         nombre: string
         tallerista: string
         horario: string
-        dia: string
     }
     videojuego?: string
-    tipo: 'taller' | 'videojuego' | 'viernes'
+    tipo: 'taller' | 'videojuego'
 }
 
 const TarjetaDigital: React.FC<TarjetaDigitalProps> = ({
@@ -29,38 +28,12 @@ const TarjetaDigital: React.FC<TarjetaDigitalProps> = ({
 }) => {
     const [isFlipped, setIsFlipped] = useState(false)
 
-    const formatHorario = (horario: string) => {
-        switch (horario) {
-            case 'HORARIO1':
-                return '9:00 - 10:30 AM'
-            case 'HORARIO2':
-                return '10:30 - 12:00 PM'
-            case 'HORARIO3':
-                return '1:30 - 3:00 PM'
-            default:
-                return horario
-        }
-    }
-
-    const formatDia = (dia: string) => {
-        switch (dia) {
-            case 'JUEVES':
-                return 'Jueves 25 de Noviembre'
-            case 'VIERNES':
-                return 'Viernes 26 de Noviembre'
-            default:
-                return dia
-        }
-    }
-
     const getTipoIcon = () => {
         switch (tipo) {
             case 'taller':
                 return '🛠️'
             case 'videojuego':
                 return '🎮'
-            case 'viernes':
-                return '📚'
             default:
                 return '⭐'
         }
@@ -72,8 +45,6 @@ const TarjetaDigital: React.FC<TarjetaDigitalProps> = ({
                 return 'PASE DE ACCESO - TALLER'
             case 'videojuego':
                 return 'PASE DE ACCESO - VIDEOJUEGO'
-            case 'viernes':
-                return 'PASE DE ACCESO - VIERNES'
             default:
                 return 'PASE DE ACCESO'
         }
@@ -123,12 +94,12 @@ const TarjetaDigital: React.FC<TarjetaDigitalProps> = ({
                                         Instructor: {taller.tallerista}
                                     </p>
                                     <p>
-                                        <span className="icon">📅</span>{' '}
-                                        {formatDia(taller.dia)}
+                                        <span className="icon">📅</span> Viernes
+                                        26 de Noviembre
                                     </p>
                                     <p>
                                         <span className="icon">⏰</span>{' '}
-                                        {formatHorario(taller.horario)}
+                                        {taller.horario}
                                     </p>
                                 </div>
                             </div>
@@ -149,26 +120,6 @@ const TarjetaDigital: React.FC<TarjetaDigitalProps> = ({
                                     <p>
                                         <span className="icon">⏰</span> 2:00 -
                                         4:00 PM
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
-                        {tipo === 'viernes' && taller && (
-                            <div className="evento-info">
-                                <h3>{taller.nombre}</h3>
-                                <div className="detalles">
-                                    <p>
-                                        <span className="icon">👨‍💼</span>{' '}
-                                        Instructor: {taller.tallerista}
-                                    </p>
-                                    <p>
-                                        <span className="icon">📅</span> Viernes
-                                        26 de Noviembre
-                                    </p>
-                                    <p>
-                                        <span className="icon">⏰</span> Horario
-                                        Especial
                                     </p>
                                 </div>
                             </div>

@@ -14,17 +14,16 @@ export interface TarjetaData {
         nombre: string
         tallerista: string
         horario: string
-        dia: string
     }
     videojuego?: string
-    tipo: 'taller' | 'videojuego' | 'viernes'
+    tipo: 'taller' | 'videojuego'
     fechaRegistro: Date
 }
 
 // Obtener tarjeta por NC de usuario y tipo de registro
 export async function obtenerTarjetaUsuario(
     nc: string,
-    tipo: 'taller' | 'videojuego' | 'viernes',
+    tipo: 'taller' | 'videojuego',
 ): Promise<TarjetaData | null> {
     try {
         const usuario = await db.usuarios.findUnique({
@@ -37,19 +36,14 @@ export async function obtenerTarjetaUsuario(
 
         switch (tipo) {
             case 'taller': {
-                const registro = await db.registro_talleres.findFirst({
+                const registro = await db.registro_talleres.findUnique({
                     where: { usuario_nc: nc },
                     include: {
-                        taller1: true,
-                        taller2: true,
-                        taller3: true,
+                        taller: true,
                     },
                 })
 
                 if (!registro) return null
-
-                // Por ahora retornamos el primer taller, pero podrías implementar lógica para seleccionar cuál
-                const taller = registro.taller1
 
                 return {
                     usuario: {
@@ -60,10 +54,9 @@ export async function obtenerTarjetaUsuario(
                         semestre: usuario.semestre,
                     },
                     taller: {
-                        nombre: taller.nombre,
-                        tallerista: taller.tallerista,
-                        horario: taller.horario,
-                        dia: taller.dia,
+                        nombre: registro.taller.nombre,
+                        tallerista: registro.taller.tallerista,
+                        horario: registro.taller.horario,
                     },
                     tipo: 'taller',
                     fechaRegistro: registro.fecha_registro,
@@ -91,35 +84,6 @@ export async function obtenerTarjetaUsuario(
                 }
             }
 
-            case 'viernes': {
-                const registro = await db.registro_viernes.findFirst({
-                    where: { usuario_nc: nc },
-                    include: {
-                        talleres: true,
-                    },
-                })
-
-                if (!registro) return null
-
-                return {
-                    usuario: {
-                        nombre: usuario.nombre,
-                        apellidos: usuario.apellidos,
-                        nc: usuario.nc,
-                        email: usuario.email,
-                        semestre: usuario.semestre,
-                    },
-                    taller: {
-                        nombre: registro.talleres.nombre,
-                        tallerista: registro.talleres.tallerista,
-                        horario: registro.talleres.horario,
-                        dia: registro.talleres.dia,
-                    },
-                    tipo: 'viernes',
-                    fechaRegistro: registro.fecha_registro,
-                }
-            }
-
             default:
                 return null
         }
@@ -136,17 +100,13 @@ export async function obtenerTodasLasTarjetas(
     const tarjetas: TarjetaData[] = []
 
     try {
-        // Tarjeta de talleres regulares
+        // Tarjeta de talleres
         const tarjetaTaller = await obtenerTarjetaUsuario(nc, 'taller')
         if (tarjetaTaller) tarjetas.push(tarjetaTaller)
 
         // Tarjeta de videojuegos
         const tarjetaVideojuego = await obtenerTarjetaUsuario(nc, 'videojuego')
         if (tarjetaVideojuego) tarjetas.push(tarjetaVideojuego)
-
-        // Tarjeta de viernes
-        const tarjetaViernes = await obtenerTarjetaUsuario(nc, 'viernes')
-        if (tarjetaViernes) tarjetas.push(tarjetaViernes)
 
         return tarjetas
     } catch (error) {
@@ -158,24 +118,21 @@ export async function obtenerTodasLasTarjetas(
 // Obtener estadísticas de tarjetas generadas
 export async function obtenerEstadisticasTarjetas() {
     try {
-        const [talleres, videojuegos, viernes] = await Promise.all([
+        const [talleres, videojuegos] = await Promise.all([
             db.registro_talleres.count(),
             db.registro_videojuegos.count(),
-            db.registro_viernes.count(),
         ])
 
         return {
             totalTalleres: talleres,
             totalVideojuegos: videojuegos,
-            totalViernes: viernes,
-            totalGeneral: talleres + videojuegos + viernes,
+            totalGeneral: talleres + videojuegos,
         }
     } catch (error) {
         console.error('Error al obtener estadísticas:', error)
         return {
             totalTalleres: 0,
             totalVideojuegos: 0,
-            totalViernes: 0,
             totalGeneral: 0,
         }
     }
@@ -189,17 +146,10 @@ export async function buscarUsuarioParaTarjeta(nc: string) {
             include: {
                 registro_talleres: {
                     include: {
-                        taller1: true,
-                        taller2: true,
-                        taller3: true,
+                        taller: true,
                     },
                 },
                 Registro_videojuegos: true,
-                Registro_viernes: {
-                    include: {
-                        talleres: true,
-                    },
-                },
             },
         })
 

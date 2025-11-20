@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 input {
+    color: #333;
     color-scheme: #007bff;
 }
 
@@ -467,4 +468,9 @@ body.space-theme .container::before {
     100% {
         transform: rotate(360deg);
     }
+}
+
+option {
+    background-color: rgb(15, 23, 42);
+    color: white;
 }
