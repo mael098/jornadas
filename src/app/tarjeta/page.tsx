@@ -82,7 +82,7 @@ const TarjetaPage: React.FC = () => {
                             nc: '22210321',
                         }}
                         taller={tallerViernes}
-                        tipo="viernes"
+                        tipo="taller"
                     />
                 </div>
             </div>

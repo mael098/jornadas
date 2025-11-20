@@ -1,11 +1,11 @@
 import { TallerForm } from './FormularioTaller'
 import { Counters } from './Counters'
-import { conteoDeTalleres } from '@/actions/cotadores'
-import { getTalleresJueves } from '@/actions/talleres'
+import { conteoDeViernes } from '@/actions/cotadores'
+import { getTalleresViernes } from '@/actions/talleres'
 
 export default async function Page() {
-    const counts = await conteoDeTalleres()
-    const talleres = await getTalleresJueves()
+    const counts = await conteoDeViernes()
+    const talleres = await getTalleresViernes()
     return (
         <div id="talleres" className="tabcontent">
             <h1 className="text-left text-3xl">

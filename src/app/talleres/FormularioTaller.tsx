@@ -1,19 +1,18 @@
 'use client'
-import { registerTaller } from '@/actions/registrar_taller'
-import { getTalleresJuevesByUser } from '@/actions/talleres'
+
+import { registrarViernes } from '@/actions/registrar_viernes'
+import { getTalleresViernesByUser } from '@/actions/talleres'
 import { getUser } from '@/actions/user'
 import { Radio } from '@/components/Radio'
 import { counterContext } from '@/contexts/Counter'
 import { Talleres } from '@prisma/client'
 import { use, useState, useTransition } from 'react'
-import '../talleres-viernes/formulario.css'
 
 interface TallerFormProps {
-    talleres: [Talleres[], Talleres[], Talleres[]]
+    talleres: Talleres[]
 }
-export function TallerForm({
-    talleres: [talleres_horario1, talleres_horario2, talleres_horario3],
-}: TallerFormProps) {
+
+export function TallerForm({ talleres }: TallerFormProps) {
     const { sendCounterSignal } = use(counterContext)
     const [isPending, startTransition] = useTransition()
 
@@ -22,128 +21,65 @@ export function TallerForm({
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [semester, setSemester] = useState(1)
-    const [taller_horario1, setTallerHorario1] = useState(0)
-    const [taller_horario2, setTallerHorario2] = useState(0)
-    const [taller_horario3, setTallerHorario3] = useState(0)
+    const [taller, setTaller] = useState(0)
     const [registered, setRegistered] = useState(false)
 
-    // Handle submit form
-    const handleaction = (data: FormData) => {
-        startTransition(async () => {
-            const request = await registerTaller({
+    const handleaction = async (data: FormData) => {
+        try {
+            const request = await registrarViernes({
                 apellidos: lastname,
+                nombre: name,
                 email,
                 nc,
-                nombre: name,
                 semestre: semester,
-                taller_horario1,
-                taller_horario2,
-                taller_horario3,
+                taller,
             })
             if (request.error) {
-                if (request.error === 'Taller lleno 1')
-                    return alert(
-                        'El taller del horario 1 está lleno, por favor elige otro',
-                    )
-                if (request.error === 'Taller lleno 2')
-                    return alert(
-                        'El taller del horario 2 está lleno, por favor elige otro',
-                    )
-                if (request.error === 'Taller lleno 3')
-                    return alert(
-                        'El taller del horario 3 está lleno, por favor elige otro',
-                    )
+                if (request.error === 'Taller lleno')
+                    return alert('El taller seleccionado ya está lleno')
                 if (request.error === 'Usuario Registrado')
-                    return alert(
-                        'Ya estás registrado, no puedes registrarte de nuevo',
-                    )
+                    return alert('Ya estás registrado en un taller')
                 alert('Ha sucedido un error, intente de nuevo')
                 console.log(request)
             } else {
-                alert('Registrado con éxito')
-                sendCounterSignal() // Llamar a la función para actualizar los contadores
+                alert('Registro exitoso')
+                sendCounterSignal()
             }
-        })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+        handleaction(formData)
     }
 
     return (
         <form
-            action={handleaction}
-            id="registroTalleres"
+            id="registroTaller"
+            onSubmit={handleSubmit}
             className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 shadow-2xl"
         >
-            <div className="space-y-8">
-                <div>
-                    <h3 className="text-2xl font-bold bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
-                        Horario 1: 9:00 AM - 10:30 AM
-                    </h3>
-                    {talleres_horario1.map(t => (
-                        <Radio
-                            key={t.id}
-                            name="taller_horario1"
-                            taller={t.nombre}
-                            value={t.id}
-                            docente={t.tallerista}
-                            descripcion={t.descripcion}
-                            checked={t.id === taller_horario1}
-                            required
-                            onChange={e =>
-                                setTallerHorario1(
-                                    parseInt(e.currentTarget.value),
-                                )
-                            }
-                        />
-                    ))}
-                </div>
+            <h3 className="text-2xl font-bold bg-linear-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent mb-6">
+                Horario Único: 11:30 AM - 1:30 PM
+            </h3>
+            {talleres.map(t => (
+                <Radio
+                    key={t.id}
+                    name="taller"
+                    taller={t.nombre}
+                    value={t.id}
+                    docente={t.tallerista}
+                    descripcion={t.descripcion}
+                    required
+                    checked={t.id === taller}
+                    onChange={e => setTaller(parseInt(e.currentTarget.value))}
+                />
+            ))}
 
-                <div>
-                    <h3 className="text-2xl font-bold bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
-                        Horario 2: 11:00 AM - 12:30 PM
-                    </h3>
-                    {talleres_horario2.map(t => (
-                        <Radio
-                            key={t.id}
-                            name="taller_horario2"
-                            taller={t.nombre}
-                            value={t.id}
-                            docente={t.tallerista}
-                            descripcion={t.descripcion}
-                            checked={t.id === taller_horario2}
-                            required
-                            onChange={e =>
-                                setTallerHorario2(
-                                    parseInt(e.currentTarget.value),
-                                )
-                            }
-                        />
-                    ))}
-                </div>
-
-                <div>
-                    <h3 className="text-2xl font-bold bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
-                        Horario 3: 12:30 PM - 2:00 PM
-                    </h3>
-                    {talleres_horario3.map(t => (
-                        <Radio
-                            key={t.id}
-                            name="taller_horario3"
-                            taller={t.nombre}
-                            value={t.id}
-                            docente={t.tallerista}
-                            descripcion={t.descripcion}
-                            checked={t.id === taller_horario3}
-                            required
-                            onChange={e =>
-                                setTallerHorario3(
-                                    parseInt(e.currentTarget.value),
-                                )
-                            }
-                        />
-                    ))}
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <div>
                     <label
                         htmlFor="control"
@@ -169,18 +105,16 @@ export function TallerForm({
                                 setName(user.nombre)
                                 setEmail(user.email)
                                 setSemester(user.semestre)
-                                const t = await getTalleresJuevesByUser(nnc)
+                                const t = await getTalleresViernesByUser(nnc)
                                 if (t) {
-                                    setTallerHorario1(t.taller_horario1_id)
-                                    setTallerHorario2(t.taller_horario2_id)
-                                    setTallerHorario3(t.taller_horario3_id)
+                                    setTaller(t.taller_id)
                                     setRegistered(true)
                                 } else setRegistered(false)
                             })
                         }}
                         disabled={isPending}
                         placeholder="12345678"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                     />
                 </div>
 
@@ -199,7 +133,7 @@ export function TallerForm({
                         onChange={e => setLastname(e.currentTarget.value)}
                         disabled={isPending}
                         placeholder="Apellido Paterno Materno"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                     />
                 </div>
 
@@ -218,7 +152,7 @@ export function TallerForm({
                         onChange={e => setName(e.currentTarget.value)}
                         disabled={isPending}
                         placeholder="Nombre(s)"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                     />
                 </div>
 
@@ -237,7 +171,7 @@ export function TallerForm({
                         onChange={e => setEmail(e.currentTarget.value)}
                         disabled={isPending}
                         placeholder="correo@acapulco.tecnm.mx"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                     />
                 </div>
             </div>
@@ -253,14 +187,21 @@ export function TallerForm({
                     name="semestre"
                     required
                     disabled={isPending}
-                    value={semester}
                     onChange={e => setSemester(parseInt(e.currentTarget.value))}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                 >
-                    <option value={1}>Primer semestre</option>
-                    <option value={3}>Tercer semestre</option>
-                    <option value={5}>Quinto semestre</option>
-                    <option value={7}>Séptimo semestre</option>
+                    <option value={1} defaultChecked={semester === 1}>
+                        Primer semestre
+                    </option>
+                    <option value={3} defaultChecked={semester === 3}>
+                        Tercer semestre
+                    </option>
+                    <option value={5} defaultChecked={semester === 5}>
+                        Quinto semestre
+                    </option>
+                    <option value={7} defaultChecked={semester === 7}>
+                        Séptimo semestre
+                    </option>
                 </select>
             </div>
 
@@ -270,7 +211,7 @@ export function TallerForm({
                 className={`w-full mt-8 px-6 py-4 rounded-lg font-bold text-lg transition-all ${
                     isPending || registered ?
                         'bg-gray-500/50 cursor-not-allowed text-gray-300'
-                    :   'bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-blue-500/50 hover:scale-105'
+                    :   'bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-purple-500/50 hover:scale-105'
                 }`}
             >
                 {isPending ?
@@ -301,7 +242,7 @@ export function TallerForm({
                     <span className="flex items-center justify-center gap-2">
                         ✓ Ya estás registrado
                     </span>
-                :   'Registrar en Talleres'}
+                :   'Registrarse en Taller'}
             </button>
         </form>
     )
