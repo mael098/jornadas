@@ -86,78 +86,197 @@ function TarjetaTexture({
                 aspect={1}
                 position={[0, 0, 1.8]}
             />
-            <ambientLight intensity={2} />
+            <ambientLight intensity={2.5} />
+            <pointLight position={[0, 0, 2]} intensity={1} color="#00ffff" />
 
-            {/* Fondo */}
+            {/* Fondo con gradiente decorativo */}
+            <mesh position={[0, 0, -0.005]}>
+                <planeGeometry args={[1.75, 2.48]} />
+                <meshBasicMaterial>
+                    <RenderTexture attach="map" width={1024} height={1024}>
+                        <PerspectiveCamera makeDefault position={[0, 0, 2]} />
+                        <ambientLight intensity={1} />
+                        {/* Gradiente de fondo */}
+                        <mesh>
+                            <planeGeometry args={[4, 4]} />
+                            <meshBasicMaterial>
+                                <primitive
+                                    attach="map"
+                                    object={(() => {
+                                        const canvas =
+                                            document.createElement('canvas')
+                                        canvas.width = 512
+                                        canvas.height = 512
+                                        const ctx = canvas.getContext('2d')!
+                                        const gradient =
+                                            ctx.createLinearGradient(
+                                                0,
+                                                0,
+                                                0,
+                                                512,
+                                            )
+                                        gradient.addColorStop(0, '#1a1a2e')
+                                        gradient.addColorStop(0.5, '#16213e')
+                                        gradient.addColorStop(1, '#0f3460')
+                                        ctx.fillStyle = gradient
+                                        ctx.fillRect(0, 0, 512, 512)
+                                        const texture = new THREE.CanvasTexture(
+                                            canvas,
+                                        )
+                                        return texture
+                                    })()}
+                                />
+                            </meshBasicMaterial>
+                        </mesh>
+                    </RenderTexture>
+                </meshBasicMaterial>
+            </mesh>
+
+            {/* Elementos decorativos - círculos de fondo */}
+            <mesh position={[-0.6, 0.9, -0.003]}>
+                <circleGeometry args={[0.15, 32]} />
+                <meshBasicMaterial color="#00ffff" transparent opacity={0.1} />
+            </mesh>
+            <mesh position={[0.6, -0.8, -0.003]}>
+                <circleGeometry args={[0.2, 32]} />
+                <meshBasicMaterial color="#ff00ff" transparent opacity={0.1} />
+            </mesh>
+
+            {/* Líneas decorativas superiores */}
+            <mesh position={[0, 1.05, 0.005]}>
+                <boxGeometry args={[1.7, 0.003, 0.001]} />
+                <meshBasicMaterial color="#00ffff" transparent opacity={0.6} />
+            </mesh>
 
             {/* Fila superior: meta izquierda / ciudad derecha */}
             <Text
                 position={[-0.6, 1.0, 0.01]}
-                fontSize={0.043}
-                color="#6e80eb"
+                fontSize={0.045}
+                color="#00d9ff"
                 anchorX="left"
                 anchorY="top"
+                letterSpacing={0.02}
             >
                 {metaLeft}
             </Text>
             <Text
                 position={[0.6, 1.0, 0.01]}
-                fontSize={0.055}
+                fontSize={0.06}
                 color="#ffffff"
                 anchorX="right"
                 anchorY="top"
+                letterSpacing={0.05}
             >
                 {locationRight}
             </Text>
 
-            {/* Nombre grande */}
+            {/* Badge decorativo */}
+            <mesh position={[-0.7, 0.85, 0.008]}>
+                <boxGeometry args={[0.08, 0.08, 0.001]} />
+                <meshBasicMaterial color={getTipoColor()} />
+            </mesh>
+
+            {/* Nombre grande con efecto de brillo */}
             <Text
                 position={[0, 0.78, 0.01]}
-                fontSize={0.2}
+                fontSize={0.21}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="top"
                 maxWidth={1.6}
+                letterSpacing={0.02}
+                outlineWidth={0.01}
+                outlineColor="#00ffff"
             >
                 {usuario.nombre}
             </Text>
             <Text
                 position={[0, 0.52, 0.01]}
-                fontSize={0.2}
+                fontSize={0.21}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="top"
                 maxWidth={1.6}
+                letterSpacing={0.02}
+                outlineWidth={0.01}
+                outlineColor="#00ffff"
             >
                 {usuario.apellidos}
             </Text>
 
-            {/* Rol */}
+            {/* Efecto de resplandor detrás del nombre */}
+            <mesh position={[0, 0.65, 0.005]}>
+                <planeGeometry args={[1.5, 0.4]} />
+                <meshBasicMaterial
+                    color={getTipoColor()}
+                    transparent
+                    opacity={0.15}
+                />
+            </mesh>
+
+            {/* Rol con fondo */}
+            <mesh position={[0, 0.2, 0.008]}>
+                <planeGeometry args={[0.7, 0.12]} />
+                <meshBasicMaterial color="#00ffff" transparent opacity={0.2} />
+            </mesh>
             <Text
                 position={[0, 0.2, 0.01]}
-                fontSize={0.1}
+                fontSize={0.095}
                 color="#00ffff"
                 anchorX="center"
-                anchorY="top"
-                letterSpacing={0.05}
+                anchorY="middle"
+                letterSpacing={0.08}
             >
                 STUDENT
             </Text>
 
-            {/* Separador */}
+            {/* Separador con gradiente */}
             <mesh position={[0, 0.05, 0.01]}>
-                <boxGeometry args={[1.3, 0.01, 0.005]} />
-                <meshBasicMaterial color="#ffffff" />
+                <boxGeometry args={[1.3, 0.015, 0.005]} />
+                <meshBasicMaterial>
+                    <primitive
+                        attach="map"
+                        object={(() => {
+                            const canvas = document.createElement('canvas')
+                            canvas.width = 256
+                            canvas.height = 16
+                            const ctx = canvas.getContext('2d')!
+                            const gradient = ctx.createLinearGradient(
+                                0,
+                                0,
+                                256,
+                                0,
+                            )
+                            gradient.addColorStop(0, '#00000000')
+                            gradient.addColorStop(0.5, '#00ffff')
+                            gradient.addColorStop(1, '#00000000')
+                            ctx.fillStyle = gradient
+                            ctx.fillRect(0, 0, 256, 16)
+                            const texture = new THREE.CanvasTexture(canvas)
+                            return texture
+                        })()}
+                    />
+                </meshBasicMaterial>
+            </mesh>
+            {/* Línea de acento superior */}
+            <mesh position={[0, 0.058, 0.011]}>
+                <boxGeometry args={[0.4, 0.003, 0.001]} />
+                <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
             </mesh>
 
-            {/* Título del taller o sección */}
+            {/* Título del taller o sección con fondo */}
+            <mesh position={[0, -0.15, 0.008]}>
+                <planeGeometry args={[1.65, 0.25]} />
+                <meshBasicMaterial color="#000000" transparent opacity={0.3} />
+            </mesh>
             <Text
                 position={[0, -0.08, 0.01]}
-                fontSize={0.099}
+                fontSize={0.085}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="top"
-                maxWidth={1.6}
+                maxWidth={1.55}
+                letterSpacing={0.01}
             >
                 {tipo === 'taller' && taller ?
                     taller.nombre.toUpperCase()
@@ -167,25 +286,55 @@ function TarjetaTexture({
             {/* Dirección y datos secundarios */}
             <Text
                 position={[0, -0.28, 0.01]}
-                fontSize={0.075}
-                color="#cccccc"
+                fontSize={0.07}
+                color="#b8c5d6"
                 anchorX="center"
                 anchorY="top"
                 maxWidth={1.6}
+                letterSpacing={0.02}
             >
                 INSTITUTO TECNOLÓGICO DE ALTAMIRA
             </Text>
 
-            {/* Identificador del alumno */}
+            {/* Iconos decorativos en las esquinas inferiores */}
+            <mesh position={[-0.75, -0.5, 0.009]}>
+                <circleGeometry args={[0.03, 16]} />
+                <meshBasicMaterial color="#00ffff" />
+            </mesh>
+            <mesh position={[0.75, -0.5, 0.009]}>
+                <circleGeometry args={[0.03, 16]} />
+                <meshBasicMaterial color="#00ffff" />
+            </mesh>
+
+            {/* Identificador del alumno con borde */}
+            <mesh position={[0, -0.62, 0.008]}>
+                <planeGeometry args={[1.4, 0.1]} />
+                <meshBasicMaterial color="#ffffff" transparent opacity={0.05} />
+            </mesh>
+            <mesh position={[0, -0.62, 0.009]}>
+                <boxGeometry args={[1.38, 0.001, 0.001]} />
+                <meshBasicMaterial color="#00ffff" transparent opacity={0.5} />
+            </mesh>
             <Text
                 position={[0, -0.6, 0.01]}
-                fontSize={0.07}
-                color="#aaaaaa"
+                fontSize={0.065}
+                color="#9ba8b8"
                 anchorX="center"
                 anchorY="top"
+                letterSpacing={0.03}
             >
                 NC: {usuario.nc} • {usuario.semestre}° SEMESTRE
             </Text>
+
+            {/* Línea inferior decorativa */}
+            <mesh position={[0, -0.98, 0.01]}>
+                <boxGeometry args={[1.5, 0.003, 0.001]} />
+                <meshBasicMaterial
+                    color={getTipoColor()}
+                    transparent
+                    opacity={0.6}
+                />
+            </mesh>
         </>
     )
 }
@@ -443,10 +592,10 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                     >
                         <boxGeometry args={[1.8, 2.53, 0.05]} />
                         <meshStandardMaterial
-                            roughness={0.2}
-                            metalness={0.1}
-                            emissive="#001133"
-                            emissiveIntensity={0.05}
+                            roughness={0.15}
+                            metalness={0.2}
+                            emissive="#002244"
+                            emissiveIntensity={0.08}
                         >
                             <RenderTexture
                                 attach="map"
@@ -460,29 +609,47 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                         </meshStandardMaterial>
                     </mesh>
 
-                    {/* Cara trasera */}
+                    {/* Cara trasera con patrón */}
                     <mesh position={[0, 0, -0.025]} rotation={[0, Math.PI, 0]}>
                         <boxGeometry args={[1.78, 2.51, 0.02]} />
                         <meshStandardMaterial
                             color="#1a1a2e"
-                            roughness={0.4}
-                            metalness={0.3}
-                            emissive="#000811"
-                            emissiveIntensity={0.1}
+                            roughness={0.3}
+                            metalness={0.4}
+                            emissive="#001122"
+                            emissiveIntensity={0.15}
+                        />
+                    </mesh>
+                    {/* Borde dorado en la tarjeta */}
+                    <mesh position={[0, 0, 0]}>
+                        <boxGeometry args={[1.82, 2.55, 0.048]} />
+                        <meshStandardMaterial
+                            color="#FFD700"
+                            metalness={0.9}
+                            roughness={0.1}
+                            transparent
+                            opacity={0.3}
                         />
                     </mesh>
 
-                    {/* Brillo de hover */}
+                    {/* Brillo de hover con efecto pulsante */}
                     {hovered && (
-                        <mesh position={[0, 0, 0.03]}>
-                            <boxGeometry args={[1.86, 2.59, 0.01]} />
-                            <meshBasicMaterial
+                        <>
+                            <mesh position={[0, 0, 0.03]}>
+                                <boxGeometry args={[1.86, 2.59, 0.01]} />
+                                <meshBasicMaterial
+                                    color="#00ffff"
+                                    transparent
+                                    opacity={0.4}
+                                />
+                            </mesh>
+                            <pointLight
+                                position={[0, 0, 0.5]}
+                                intensity={2}
                                 color="#00ffff"
-                                transparent
-                                opacity={0.3}
-                                // blendColor="#1c4d9b"
+                                distance={3}
                             />
-                        </mesh>
+                        </>
                     )}
                 </RigidBody>
             </group>
