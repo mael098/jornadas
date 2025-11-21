@@ -19,10 +19,11 @@ export const LIMITE_DE_SUSCRIPCION = {
 
 export const FECHA_DEL_EVENTO: number | string | Date = new Date(
     // la fecha es el 25 de noviembre de 2025 a las 8:00 am horas (CST)
+    // CST es UTC-6, así que 8:00 AM CST = 14:00 UTC
     2025,
     10,
     25,
-    8,
+    14,
     0,
-    0, // Año, Mes (0-indexado, por eso 10 = noviembre), Día, Hora, Minuto, Segundo
+    0, // Año, Mes (0-indexado, por eso 10 = noviembre), Día, Hora (UTC), Minuto, Segundo
 )
