@@ -82,7 +82,7 @@ export function Footer() {
                 <div className="mt-6 pt-4 border-t border-white/10 text-center">
                     <p className="text-white/50 text-xs">
                         © {new Date().getFullYear()} Jornadas TecNM - Instituto
-                        Tecnológico de Acapulco
+                        Tecnológico de Altamira
                     </p>
                 </div>
             </div>

@@ -150,8 +150,8 @@ function TarjetaTexture({
 
             {/* Fila superior: meta izquierda / ciudad derecha */}
             <Text
-                position={[-0.6, 1.0, 0.01]}
-                fontSize={0.045}
+                position={[-0.65, 1.08, 0.01]}
+                fontSize={0.042}
                 color="#00d9ff"
                 anchorX="left"
                 anchorY="top"
@@ -160,8 +160,8 @@ function TarjetaTexture({
                 {metaLeft}
             </Text>
             <Text
-                position={[0.6, 1.0, 0.01]}
-                fontSize={0.06}
+                position={[0.65, 1.08, 0.01]}
+                fontSize={0.055}
                 color="#ffffff"
                 anchorX="right"
                 anchorY="top"
@@ -178,34 +178,34 @@ function TarjetaTexture({
 
             {/* Nombre grande con efecto de brillo */}
             <Text
-                position={[0, 0.78, 0.01]}
-                fontSize={0.21}
+                position={[0, 0.75, 0.01]}
+                fontSize={0.19}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="top"
                 maxWidth={1.6}
                 letterSpacing={0.02}
-                outlineWidth={0.01}
+                outlineWidth={0.008}
                 outlineColor="#00ffff"
             >
                 {usuario.nombre}
             </Text>
             <Text
                 position={[0, 0.52, 0.01]}
-                fontSize={0.21}
+                fontSize={0.19}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="top"
                 maxWidth={1.6}
                 letterSpacing={0.02}
-                outlineWidth={0.01}
+                outlineWidth={0.008}
                 outlineColor="#00ffff"
             >
                 {usuario.apellidos}
             </Text>
 
             {/* Efecto de resplandor detrás del nombre */}
-            <mesh position={[0, 0.65, 0.005]}>
+            <mesh position={[0, 0.63, 0.005]}>
                 <planeGeometry args={[1.5, 0.4]} />
                 <meshBasicMaterial
                     color={getTipoColor()}
@@ -215,13 +215,13 @@ function TarjetaTexture({
             </mesh>
 
             {/* Rol con fondo */}
-            <mesh position={[0, 0.2, 0.008]}>
+            <mesh position={[0, 0.16, 0.008]}>
                 <planeGeometry args={[0.7, 0.12]} />
                 <meshBasicMaterial color="#00ffff" transparent opacity={0.2} />
             </mesh>
             <Text
-                position={[0, 0.2, 0.01]}
-                fontSize={0.095}
+                position={[0, 0.16, 0.01]}
+                fontSize={0.09}
                 color="#00ffff"
                 anchorX="center"
                 anchorY="middle"
@@ -231,7 +231,7 @@ function TarjetaTexture({
             </Text>
 
             {/* Separador con gradiente */}
-            <mesh position={[0, 0.05, 0.01]}>
+            <mesh position={[0, 0.0, 0.01]}>
                 <boxGeometry args={[1.3, 0.015, 0.005]} />
                 <meshBasicMaterial>
                     <primitive
@@ -259,24 +259,25 @@ function TarjetaTexture({
                 </meshBasicMaterial>
             </mesh>
             {/* Línea de acento superior */}
-            <mesh position={[0, 0.058, 0.011]}>
+            <mesh position={[0, 0.008, 0.011]}>
                 <boxGeometry args={[0.4, 0.003, 0.001]} />
                 <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
             </mesh>
 
             {/* Título del taller o sección con fondo */}
-            <mesh position={[0, -0.15, 0.008]}>
-                <planeGeometry args={[1.65, 0.25]} />
+            <mesh position={[0, -0.22, 0.008]}>
+                <planeGeometry args={[1.65, 0.28]} />
                 <meshBasicMaterial color="#000000" transparent opacity={0.3} />
             </mesh>
             <Text
-                position={[0, -0.08, 0.01]}
-                fontSize={0.085}
+                position={[0, -0.14, 0.01]}
+                fontSize={0.08}
                 color="#ffffff"
                 anchorX="center"
                 anchorY="top"
-                maxWidth={1.55}
-                letterSpacing={0.01}
+                maxWidth={1.58}
+                letterSpacing={0.015}
+                lineHeight={1.15}
             >
                 {tipo === 'taller' && taller ?
                     taller.nombre.toUpperCase()
@@ -285,49 +286,49 @@ function TarjetaTexture({
 
             {/* Dirección y datos secundarios */}
             <Text
-                position={[0, -0.28, 0.01]}
-                fontSize={0.07}
+                position={[0, -0.42, 0.01]}
+                fontSize={0.068}
                 color="#b8c5d6"
                 anchorX="center"
                 anchorY="top"
                 maxWidth={1.6}
-                letterSpacing={0.02}
+                letterSpacing={0.025}
             >
                 INSTITUTO TECNOLÓGICO DE ALTAMIRA
             </Text>
 
             {/* Iconos decorativos en las esquinas inferiores */}
-            <mesh position={[-0.75, -0.5, 0.009]}>
+            <mesh position={[-0.75, -0.58, 0.009]}>
                 <circleGeometry args={[0.03, 16]} />
                 <meshBasicMaterial color="#00ffff" />
             </mesh>
-            <mesh position={[0.75, -0.5, 0.009]}>
+            <mesh position={[0.75, -0.58, 0.009]}>
                 <circleGeometry args={[0.03, 16]} />
                 <meshBasicMaterial color="#00ffff" />
             </mesh>
 
             {/* Identificador del alumno con borde */}
-            <mesh position={[0, -0.62, 0.008]}>
-                <planeGeometry args={[1.4, 0.1]} />
+            <mesh position={[0, -0.72, 0.008]}>
+                <planeGeometry args={[1.4, 0.11]} />
                 <meshBasicMaterial color="#ffffff" transparent opacity={0.05} />
             </mesh>
-            <mesh position={[0, -0.62, 0.009]}>
+            <mesh position={[0, -0.72, 0.009]}>
                 <boxGeometry args={[1.38, 0.001, 0.001]} />
                 <meshBasicMaterial color="#00ffff" transparent opacity={0.5} />
             </mesh>
             <Text
-                position={[0, -0.6, 0.01]}
-                fontSize={0.065}
+                position={[0, -0.69, 0.01]}
+                fontSize={0.062}
                 color="#9ba8b8"
                 anchorX="center"
                 anchorY="top"
-                letterSpacing={0.03}
+                letterSpacing={0.035}
             >
                 NC: {usuario.nc} • {usuario.semestre}° SEMESTRE
             </Text>
 
             {/* Línea inferior decorativa */}
-            <mesh position={[0, -0.98, 0.01]}>
+            <mesh position={[0, -1.02, 0.01]}>
                 <boxGeometry args={[1.5, 0.003, 0.001]} />
                 <meshBasicMaterial
                     color={getTipoColor()}
