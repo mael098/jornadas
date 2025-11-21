@@ -155,7 +155,7 @@ function TarjetaTexture({
             </Text>
             <Text
                 position={[0.65, 1.08, 0.01]}
-                fontSize={0.055}
+                fontSize={0.042}
                 color="#ffffff"
                 anchorX="right"
                 anchorY="top"
@@ -556,7 +556,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         drawCenteredText(
             usuario.nombre.toUpperCase(),
             120,
-            64,
+            80,
             '#ffffff',
             'bold',
         )
@@ -565,7 +565,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         drawCenteredText(
             usuario.apellidos.toUpperCase(),
             210,
-            64,
+            60,
             '#ffffff',
             'bold',
         )
@@ -574,7 +574,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         drawCenteredText(
             usuario.semestre ? `STUDENT` : 'GUEST',
             380,
-            32,
+            50,
             '#00ffff',
             'bold',
         )
@@ -584,7 +584,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
             drawCenteredText(
                 taller.nombre.toUpperCase(),
                 480,
-                28,
+                34,
                 '#ffffff',
                 'normal',
             )
@@ -592,7 +592,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
             drawCenteredText(
                 'JORNADAS TECNOLÓGICAS',
                 480,
-                28,
+                34,
                 '#ffffff',
                 'normal',
             )
@@ -602,7 +602,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         drawCenteredText(
             'INSTITUTO TECNOLÓGICO DE ALTAMIRA',
             580,
-            20,
+            30,
             '#b8c5d6',
             'normal',
         )
@@ -611,7 +611,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         drawCenteredText(
             `NC: ${usuario.nc} • ${usuario.semestre}° SEMESTRE`,
             680,
-            18,
+            40,
             '#9ba8b8',
             'normal',
         )
