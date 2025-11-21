@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useMemo } from 'react'
 import { Canvas, extend, useThree, useFrame } from '@react-three/fiber'
 import {
     BallCollider,
@@ -486,6 +486,12 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         }
     }, [hovered, dragged])
 
+    // Memoizar la textura para evitar crear una nueva en cada render
+    const cardTexture = useMemo(
+        () => createCardTexture(props.usuario, props.taller, props.tipo),
+        [props.usuario, props.taller, props.tipo],
+    )
+
     function createCardTexture(
         usuario: {
             nombre: string
@@ -497,8 +503,120 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
             | { nombre: string; tallerista: string; horario: string }
             | undefined,
         tipo: string,
-    ): any {
-        throw new Error('Function not implemented.')
+    ): THREE.CanvasTexture {
+        // Crear canvas con resolución adecuada para la tarjeta
+        const canvas = document.createElement('canvas')
+        const scale = 2 // Para mejor resolución
+        canvas.width = 512 * scale
+        canvas.height = 724 * scale
+        const ctx = canvas.getContext('2d')!
+
+        // Fondo con gradiente
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        gradient.addColorStop(0, '#1a1a2e')
+        gradient.addColorStop(0.5, '#16213e')
+        gradient.addColorStop(1, '#0f3460')
+        ctx.fillStyle = gradient
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+        // Función helper para dibujar texto centrado
+        const drawCenteredText = (
+            text: string,
+            y: number,
+            fontSize: number,
+            color: string = '#ffffff',
+            fontWeight: string = 'normal',
+        ) => {
+            ctx.font = `${fontWeight} ${fontSize}px 'Inter', sans-serif`
+            ctx.fillStyle = color
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'top'
+            ctx.fillText(text, canvas.width / 2, y)
+        }
+
+        // Meta izquierda / Ubicación derecha
+        const metaLeft = (() => {
+            if (tipo === 'taller' && taller)
+                return `VIERNES 26 • ${taller.horario}`
+            if (tipo === 'videojuego') return 'TORNEO'
+            return 'JORNADAS 2025'
+        })()
+
+        ctx.font = `12px 'Inter', sans-serif`
+        ctx.fillStyle = '#00d9ff'
+        ctx.textAlign = 'left'
+        ctx.fillText(metaLeft, 40, 40)
+
+        ctx.font = `18px 'Inter', sans-serif`
+        ctx.fillStyle = '#ffffff'
+        ctx.textAlign = 'right'
+        ctx.fillText('ALTAMIRA', canvas.width - 40, 35)
+
+        // Nombre (grande)
+        drawCenteredText(
+            usuario.nombre.toUpperCase(),
+            120,
+            64,
+            '#ffffff',
+            'bold',
+        )
+
+        // Apellidos
+        drawCenteredText(
+            usuario.apellidos.toUpperCase(),
+            210,
+            64,
+            '#ffffff',
+            'bold',
+        )
+
+        // STUDENT
+        drawCenteredText(
+            usuario.semestre ? `STUDENT` : 'GUEST',
+            380,
+            32,
+            '#00ffff',
+            'bold',
+        )
+
+        // Título del taller
+        if (tipo === 'taller' && taller) {
+            drawCenteredText(
+                taller.nombre.toUpperCase(),
+                480,
+                28,
+                '#ffffff',
+                'normal',
+            )
+        } else {
+            drawCenteredText(
+                'JORNADAS TECNOLÓGICAS',
+                480,
+                28,
+                '#ffffff',
+                'normal',
+            )
+        }
+
+        // Instituto
+        drawCenteredText(
+            'INSTITUTO TECNOLÓGICO DE ALTAMIRA',
+            580,
+            20,
+            '#b8c5d6',
+            'normal',
+        )
+
+        // NC y semestre
+        drawCenteredText(
+            `NC: ${usuario.nc} • ${usuario.semestre}° SEMESTRE`,
+            680,
+            18,
+            '#9ba8b8',
+            'normal',
+        )
+
+        return new THREE.CanvasTexture(canvas)
     }
 
     return (
@@ -583,15 +701,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                             metalness={0.2}
                             emissive="#002244"
                             emissiveIntensity={0.08}
-                            map={
-                                useRef(
-                                    createCardTexture(
-                                        props.usuario,
-                                        props.taller,
-                                        props.tipo,
-                                    ),
-                                ).current || undefined
-                            }
+                            map={cardTexture}
                         />
                     </mesh>
 
