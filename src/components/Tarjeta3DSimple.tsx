@@ -16,7 +16,6 @@ import {
     Environment,
     Lightformer,
     PerspectiveCamera,
-    RenderTexture,
 } from '@react-three/drei'
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline'
 import * as THREE from 'three'
@@ -50,6 +49,36 @@ interface Tarjeta3DSimpleProps {
     tipo: 'taller' | 'videojuego'
 }
 
+// Crear texture pre-renderizada para el fondo (compatible con móvil)
+function createBackgroundTexture() {
+    const canvas = document.createElement('canvas')
+    canvas.width = 512
+    canvas.height = 512
+    const ctx = canvas.getContext('2d')!
+    const gradient = ctx.createLinearGradient(0, 0, 0, 512)
+    gradient.addColorStop(0, '#1a1a2e')
+    gradient.addColorStop(0.5, '#16213e')
+    gradient.addColorStop(1, '#0f3460')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, 512, 512)
+    return new THREE.CanvasTexture(canvas)
+}
+
+// Crear texture para separador (compatible con móvil)
+function createSeparatorTexture() {
+    const canvas = document.createElement('canvas')
+    canvas.width = 256
+    canvas.height = 16
+    const ctx = canvas.getContext('2d')!
+    const gradient = ctx.createLinearGradient(0, 0, 256, 0)
+    gradient.addColorStop(0, '#00000000')
+    gradient.addColorStop(0.5, '#00ffff')
+    gradient.addColorStop(1, '#00000000')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, 256, 16)
+    return new THREE.CanvasTexture(canvas)
+}
+
 // Componente para renderizar la textura de la tarjeta
 function TarjetaTexture({
     usuario,
@@ -77,6 +106,8 @@ function TarjetaTexture({
     })()
 
     const locationRight = 'ALTAMIRA'
+    const [bgTexture] = useState(() => createBackgroundTexture())
+    const [sepTexture] = useState(() => createSeparatorTexture())
 
     return (
         <>
@@ -89,47 +120,10 @@ function TarjetaTexture({
             <ambientLight intensity={2.5} />
             <pointLight position={[0, 0, 2]} intensity={1} color="#00ffff" />
 
-            {/* Fondo con gradiente decorativo */}
+            {/* Fondo con gradiente decorativo - usando textura pre-renderizada */}
             <mesh position={[0, 0, -0.005]}>
                 <planeGeometry args={[1.75, 2.48]} />
-                <meshBasicMaterial>
-                    <RenderTexture attach="map" width={1024} height={1024}>
-                        <PerspectiveCamera makeDefault position={[0, 0, 2]} />
-                        <ambientLight intensity={1} />
-                        {/* Gradiente de fondo */}
-                        <mesh>
-                            <planeGeometry args={[4, 4]} />
-                            <meshBasicMaterial>
-                                <primitive
-                                    attach="map"
-                                    object={(() => {
-                                        const canvas =
-                                            document.createElement('canvas')
-                                        canvas.width = 512
-                                        canvas.height = 512
-                                        const ctx = canvas.getContext('2d')!
-                                        const gradient =
-                                            ctx.createLinearGradient(
-                                                0,
-                                                0,
-                                                0,
-                                                512,
-                                            )
-                                        gradient.addColorStop(0, '#1a1a2e')
-                                        gradient.addColorStop(0.5, '#16213e')
-                                        gradient.addColorStop(1, '#0f3460')
-                                        ctx.fillStyle = gradient
-                                        ctx.fillRect(0, 0, 512, 512)
-                                        const texture = new THREE.CanvasTexture(
-                                            canvas,
-                                        )
-                                        return texture
-                                    })()}
-                                />
-                            </meshBasicMaterial>
-                        </mesh>
-                    </RenderTexture>
-                </meshBasicMaterial>
+                <meshBasicMaterial map={bgTexture} />
             </mesh>
 
             {/* Elementos decorativos - círculos de fondo */}
@@ -230,33 +224,10 @@ function TarjetaTexture({
                 STUDENT
             </Text>
 
-            {/* Separador con gradiente */}
+            {/* Separador con gradiente - usando textura pre-renderizada */}
             <mesh position={[0, 0.0, 0.01]}>
                 <boxGeometry args={[1.3, 0.015, 0.005]} />
-                <meshBasicMaterial>
-                    <primitive
-                        attach="map"
-                        object={(() => {
-                            const canvas = document.createElement('canvas')
-                            canvas.width = 256
-                            canvas.height = 16
-                            const ctx = canvas.getContext('2d')!
-                            const gradient = ctx.createLinearGradient(
-                                0,
-                                0,
-                                256,
-                                0,
-                            )
-                            gradient.addColorStop(0, '#00000000')
-                            gradient.addColorStop(0.5, '#00ffff')
-                            gradient.addColorStop(1, '#00000000')
-                            ctx.fillStyle = gradient
-                            ctx.fillRect(0, 0, 256, 16)
-                            const texture = new THREE.CanvasTexture(canvas)
-                            return texture
-                        })()}
-                    />
-                </meshBasicMaterial>
+                <meshBasicMaterial map={sepTexture} />
             </mesh>
             {/* Línea de acento superior */}
             <mesh position={[0, 0.008, 0.011]}>
@@ -515,6 +486,21 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         }
     }, [hovered, dragged])
 
+    function createCardTexture(
+        usuario: {
+            nombre: string
+            apellidos: string
+            nc: string
+            semestre: number
+        },
+        taller:
+            | { nombre: string; tallerista: string; horario: string }
+            | undefined,
+        tipo: string,
+    ): any {
+        throw new Error('Function not implemented.')
+    }
+
     return (
         <>
             <group position={[0, 4, 0]}>
@@ -597,17 +583,16 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                             metalness={0.2}
                             emissive="#002244"
                             emissiveIntensity={0.08}
-                        >
-                            <RenderTexture
-                                attach="map"
-                                // Resolución alta para texto nítido (2048x2880 = relación 1.6:2.25)
-                                width={1536}
-                                height={2160}
-                                anisotropy={16}
-                            >
-                                <TarjetaTexture {...props} />
-                            </RenderTexture>
-                        </meshStandardMaterial>
+                            map={
+                                useRef(
+                                    createCardTexture(
+                                        props.usuario,
+                                        props.taller,
+                                        props.tipo,
+                                    ),
+                                ).current || undefined
+                            }
+                        />
                     </mesh>
 
                     {/* Cara trasera con patrón */}
