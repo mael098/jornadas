@@ -337,8 +337,29 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
     )
     const [dragged, drag] = useState<THREE.Vector3 | false>(false)
     const [hovered, setHovered] = useState(false)
+
+    // Crear textura placeholder inicial
+    const placeholderTexture = useMemo(() => {
+        const canvas = document.createElement('canvas')
+        canvas.width = 512
+        canvas.height = 1200
+        const ctx = canvas.getContext('2d')!
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        gradient.addColorStop(0, '#0a0e27')
+        gradient.addColorStop(0.3, '#1a1f3a')
+        gradient.addColorStop(0.6, '#162d4a')
+        gradient.addColorStop(1, '#0f1f2e')
+        ctx.fillStyle = gradient
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = '#00d9ff'
+        ctx.font = 'bold 80px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText('JORNADAS', canvas.width / 2, canvas.height / 2)
+        return new THREE.CanvasTexture(canvas)
+    }, [])
+
     const [cardTexture, setCardTexture] = useState<THREE.CanvasTexture | null>(
-        null,
+        placeholderTexture,
     )
 
     // Sensor de movimiento del dispositivo
@@ -491,35 +512,89 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
 
     // Cargar la textura de forma asincrónica con logos
     useEffect(() => {
+        let isMounted = true
+
         const loadCardTexture = async () => {
             try {
-                const texture = await createCardTexture(
+                // Crear un timeout de 5 segundos para la operación completa
+                const texturePromise = createCardTexture(
                     props.usuario,
                     props.taller,
                     props.tipo,
                 )
-                setCardTexture(texture)
+
+                const timeoutPromise = new Promise<THREE.CanvasTexture>(
+                    resolve => {
+                        setTimeout(() => {
+                            console.warn(
+                                'Texture creation timeout, using fallback',
+                            )
+                            const fallbackCanvas =
+                                document.createElement('canvas')
+                            fallbackCanvas.width = 512
+                            fallbackCanvas.height = 1200
+                            const ctx = fallbackCanvas.getContext('2d')!
+                            const gradient = ctx.createLinearGradient(
+                                0,
+                                0,
+                                0,
+                                fallbackCanvas.height,
+                            )
+                            gradient.addColorStop(0, '#0a0e27')
+                            gradient.addColorStop(1, '#0f1f2e')
+                            ctx.fillStyle = gradient
+                            ctx.fillRect(
+                                0,
+                                0,
+                                fallbackCanvas.width,
+                                fallbackCanvas.height,
+                            )
+                            resolve(new THREE.CanvasTexture(fallbackCanvas))
+                        }, 5000)
+                    },
+                )
+
+                const texture = await Promise.race([
+                    texturePromise,
+                    timeoutPromise,
+                ])
+
+                if (isMounted) {
+                    setCardTexture(texture)
+                }
             } catch (error) {
                 console.error('Failed to load card texture:', error)
-                // Crear una textura de fallback mínima
-                const fallbackCanvas = document.createElement('canvas')
-                fallbackCanvas.width = 512
-                fallbackCanvas.height = 1200
-                const ctx = fallbackCanvas.getContext('2d')!
-                const gradient = ctx.createLinearGradient(
-                    0,
-                    0,
-                    0,
-                    fallbackCanvas.height,
-                )
-                gradient.addColorStop(0, '#0a0e27')
-                gradient.addColorStop(1, '#0f1f2e')
-                ctx.fillStyle = gradient
-                ctx.fillRect(0, 0, fallbackCanvas.width, fallbackCanvas.height)
-                setCardTexture(new THREE.CanvasTexture(fallbackCanvas))
+                if (isMounted) {
+                    // Crear una textura de fallback mínima
+                    const fallbackCanvas = document.createElement('canvas')
+                    fallbackCanvas.width = 512
+                    fallbackCanvas.height = 1200
+                    const ctx = fallbackCanvas.getContext('2d')!
+                    const gradient = ctx.createLinearGradient(
+                        0,
+                        0,
+                        0,
+                        fallbackCanvas.height,
+                    )
+                    gradient.addColorStop(0, '#0a0e27')
+                    gradient.addColorStop(1, '#0f1f2e')
+                    ctx.fillStyle = gradient
+                    ctx.fillRect(
+                        0,
+                        0,
+                        fallbackCanvas.width,
+                        fallbackCanvas.height,
+                    )
+                    setCardTexture(new THREE.CanvasTexture(fallbackCanvas))
+                }
             }
         }
+
         loadCardTexture()
+
+        return () => {
+            isMounted = false
+        }
     }, [props.usuario, props.taller, props.tipo])
 
     async function createCardTexture(
@@ -607,21 +682,36 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                 width: number,
                 height: number,
             ) => {
-                return new Promise<void>(resolve => {
-                    const img = new Image()
-                    img.crossOrigin = 'anonymous'
-                    img.onload = () => {
-                        ctx.drawImage(img, x, y, width, height)
+                return new Promise<void>((resolve, reject) => {
+                    try {
+                        const img = new Image()
+                        img.crossOrigin = 'anonymous'
+                        img.onerror = () => {
+                            console.warn(`Failed to load image: ${src}`)
+                            resolve() // Resolver sin error, solo saltar la imagen
+                        }
+                        img.onload = () => {
+                            try {
+                                ctx.drawImage(img, x, y, width, height)
+                                resolve()
+                            } catch (e) {
+                                console.error('Error drawing image:', e)
+                                resolve()
+                            }
+                        }
+                        // Agregar timestamp para evitar cache issues
+                        const separator = src.includes('?') ? '&' : '?'
+                        const timestamp = Date.now()
+                        img.src = `${src}${separator}t=${timestamp}`
+
+                        // Timeout de 3 segundos para evitar cuelgues
+                        setTimeout(() => {
+                            resolve()
+                        }, 3000)
+                    } catch (e) {
+                        console.error('Error creating image:', e)
                         resolve()
                     }
-                    img.onerror = () => {
-                        // Si falla cargar la imagen, solo resolvemos sin dibujar
-                        console.warn(`Failed to load image: ${src}`)
-                        resolve()
-                    }
-                    // Agregar timestamp para evitar cache issues
-                    const separator = src.includes('?') ? '&' : '?'
-                    img.src = src + separator + 't=' + Date.now()
                 })
             }
 
@@ -778,41 +868,41 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
             drawTextWithShadow(
                 'INSTITUTO TECNOLÓGICO DE ALTAMIRA',
                 canvas.width / 2,
-                1290,
-                40,
+                1280,
+                50,
                 '#b8c5d6',
                 'normal',
                 'rgba(0, 0, 0, 0.4)',
-                8,
+                10,
             )
 
             // NC y semestre - Información de identificación
             ctx.fillStyle = 'rgba(0, 217, 255, 0.08)'
-            ctx.fillRect(40, 1380, canvas.width - 80, 110)
+            ctx.fillRect(40, 1350, canvas.width - 80, 150)
             ctx.strokeStyle = '#00d9ff'
             ctx.lineWidth = 1.5
-            ctx.strokeRect(40, 1380, canvas.width - 80, 110)
+            ctx.strokeRect(40, 1350, canvas.width - 80, 150)
 
             drawTextWithShadow(
                 `NC: ${usuario.nc}`,
-                canvas.width / 2 - 130,
-                1435,
-                50,
+                canvas.width / 2 - 300,
+                1390,
+                72,
                 '#00ffff',
                 'bold',
                 'rgba(0, 217, 255, 0.3)',
-                8,
+                10,
             )
 
             drawTextWithShadow(
                 `${usuario.semestre}° SEMESTRE`,
-                canvas.width / 2 + 130,
-                1435,
-                50,
+                canvas.width / 2 + 300,
+                1390,
+                72,
                 '#00ffff',
                 'bold',
                 'rgba(0, 217, 255, 0.3)',
-                8,
+                10,
             )
 
             // Línea inferior decorativa
