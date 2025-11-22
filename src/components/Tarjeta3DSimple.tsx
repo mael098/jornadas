@@ -122,7 +122,7 @@ function TarjetaTexture({
 
             {/* Fondo con gradiente decorativo - usando textura pre-renderizada */}
             <mesh position={[0, 0, -0.005]}>
-                <planeGeometry args={[1.75, 2.48]} />
+                <planeGeometry args={[1.75, 3.42]} />
                 <meshBasicMaterial map={bgTexture} />
             </mesh>
 
@@ -337,6 +337,9 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
     )
     const [dragged, drag] = useState<THREE.Vector3 | false>(false)
     const [hovered, setHovered] = useState(false)
+    const [cardTexture, setCardTexture] = useState<THREE.CanvasTexture | null>(
+        null,
+    )
 
     // Sensor de movimiento del dispositivo
     useEffect(() => {
@@ -486,13 +489,20 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
         }
     }, [hovered, dragged])
 
-    // Memoizar la textura para evitar crear una nueva en cada render
-    const cardTexture = useMemo(
-        () => createCardTexture(props.usuario, props.taller, props.tipo),
-        [props.usuario, props.taller, props.tipo],
-    )
+    // Cargar la textura de forma asincrónica con logos
+    useEffect(() => {
+        const loadCardTexture = async () => {
+            const texture = await createCardTexture(
+                props.usuario,
+                props.taller,
+                props.tipo,
+            )
+            setCardTexture(texture)
+        }
+        loadCardTexture()
+    }, [props.usuario, props.taller, props.tipo])
 
-    function createCardTexture(
+    async function createCardTexture(
         usuario: {
             nombre: string
             apellidos: string
@@ -503,36 +513,92 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
             | { nombre: string; tallerista: string; horario: string }
             | undefined,
         tipo: string,
-    ): THREE.CanvasTexture {
+    ): Promise<THREE.CanvasTexture> {
         // Crear canvas con resolución adecuada para la tarjeta
         const canvas = document.createElement('canvas')
-        const scale = 2 // Para mejor resolución
+        const scale = 3 // Para máxima resolución
         canvas.width = 512 * scale
-        canvas.height = 724 * scale
+        canvas.height = 1000 * scale
         const ctx = canvas.getContext('2d')!
 
-        // Fondo con gradiente
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-        gradient.addColorStop(0, '#1a1a2e')
-        gradient.addColorStop(0.5, '#16213e')
-        gradient.addColorStop(1, '#0f3460')
-        ctx.fillStyle = gradient
+        // Fondo con gradiente premium: azul oscuro a cian
+        const mainGradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+        mainGradient.addColorStop(0, '#0a0e27')
+        mainGradient.addColorStop(0.3, '#1a1f3a')
+        mainGradient.addColorStop(0.6, '#162d4a')
+        mainGradient.addColorStop(1, '#0f1f2e')
+        ctx.fillStyle = mainGradient
         ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-        // Función helper para dibujar texto centrado
-        const drawCenteredText = (
+        // Agregar ruido/textura sutil
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const data = imageData.data
+        for (let i = 0; i < data.length; i += 4) {
+            const noise = Math.random() * 10
+            data[i] += noise // R
+            data[i + 1] += noise * 0.8 // G
+            data[i + 2] += noise * 0.6 // B
+        }
+        ctx.putImageData(imageData, 0, 0)
+
+        // Función helper para dibujar texto con sombra
+        const drawTextWithShadow = (
             text: string,
+            x: number,
             y: number,
             fontSize: number,
             color: string = '#ffffff',
             fontWeight: string = 'normal',
+            shadowColor: string = 'rgba(0, 0, 0, 0.5)',
+            shadowBlur: number = 8,
         ) => {
             ctx.font = `${fontWeight} ${fontSize}px 'Inter', sans-serif`
+            ctx.shadowColor = shadowColor
+            ctx.shadowBlur = shadowBlur
+            ctx.shadowOffsetX = 2
+            ctx.shadowOffsetY = 2
             ctx.fillStyle = color
             ctx.textAlign = 'center'
             ctx.textBaseline = 'top'
-            ctx.fillText(text, canvas.width / 2, y)
+            ctx.fillText(text, x, y)
+            ctx.shadowColor = 'transparent'
         }
+
+        // Función para cargar y dibujar imagen
+        const drawImage = (
+            src: string,
+            x: number,
+            y: number,
+            width: number,
+            height: number,
+        ) => {
+            return new Promise<void>(resolve => {
+                const img = new Image()
+                img.onload = () => {
+                    ctx.drawImage(img, x, y, width, height)
+                    resolve()
+                }
+                img.onerror = () => {
+                    // Si falla cargar la imagen, solo resolvemos sin dibujar
+                    resolve()
+                }
+                img.src = src
+            })
+        }
+
+        // Línea superior decorativa con gradiente
+        const topLineGradient = ctx.createLinearGradient(
+            50,
+            30,
+            canvas.width - 50,
+            30,
+        )
+        topLineGradient.addColorStop(0, '#00000000')
+        topLineGradient.addColorStop(0.2, '#00d9ff')
+        topLineGradient.addColorStop(0.8, '#00d9ff')
+        topLineGradient.addColorStop(1, '#00000000')
+        ctx.fillStyle = topLineGradient
+        ctx.fillRect(50, 28, canvas.width - 100, 4)
 
         // Meta izquierda / Ubicación derecha
         const metaLeft = (() => {
@@ -542,79 +608,187 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
             return 'JORNADAS 2025'
         })()
 
-        ctx.font = `12px 'Inter', sans-serif`
+        // Texto superior izquierdo
+        ctx.font = `bold 28px 'Inter', sans-serif`
         ctx.fillStyle = '#00d9ff'
         ctx.textAlign = 'left'
-        ctx.fillText(metaLeft, 40, 40)
+        ctx.shadowColor = 'rgba(0, 217, 255, 0.3)'
+        ctx.shadowBlur = 12
+        ctx.shadowOffsetX = 0
+        ctx.shadowOffsetY = 0
+        ctx.fillText(metaLeft, 60, 50)
+        ctx.shadowColor = 'transparent'
 
-        ctx.font = `18px 'Inter', sans-serif`
+        // Texto superior derecho
+        ctx.font = `bold 36px 'Inter', sans-serif`
         ctx.fillStyle = '#ffffff'
         ctx.textAlign = 'right'
-        ctx.fillText('ALTAMIRA', canvas.width - 40, 35)
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.2)'
+        ctx.shadowBlur = 10
+        ctx.fillText('ALTAMIRA', canvas.width - 60, 45)
+        ctx.shadowColor = 'transparent'
 
-        // Nombre (grande)
-        drawCenteredText(
-            usuario.nombre.toUpperCase(),
-            120,
+        // Cargar logos en las esquinas
+        const logoSize = 120
+        // Logo izquierdo superior (JORNADAS)
+        await drawImage(
+            '/logos/LOGO_JORNADAS_SIN.png',
+            30,
             80,
+            logoSize,
+            logoSize,
+        )
+        // Logo derecho superior (JORNADAS)
+        await drawImage(
+            '/logos/LOGO_JORNADAS_SIN.png',
+            canvas.width - 150,
+            80,
+            logoSize,
+            logoSize,
+        )
+
+        // Insignia/Badge decorativa
+        ctx.fillStyle = tipo === 'taller' ? '#00ffff' : '#ff00ff'
+        ctx.beginPath()
+        ctx.arc(canvas.width / 2, 320, 50, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = '#ffffff'
+        ctx.font = `bold 44px 'Inter', sans-serif`
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(usuario.semestre.toString(), canvas.width / 2, 320)
+
+        // Nombre principal (muy grande y elegante)
+        drawTextWithShadow(
+            usuario.nombre.toUpperCase(),
+            canvas.width / 2,
+            450,
+            120,
             '#ffffff',
             'bold',
+            'rgba(0, 217, 255, 0.4)',
+            20,
         )
 
         // Apellidos
-        drawCenteredText(
+        drawTextWithShadow(
             usuario.apellidos.toUpperCase(),
-            210,
-            60,
+            canvas.width / 2,
+            620,
+            110,
             '#ffffff',
             'bold',
+            'rgba(0, 217, 255, 0.3)',
+            15,
         )
 
-        // STUDENT
-        drawCenteredText(
-            usuario.semestre ? `STUDENT` : 'GUEST',
-            380,
+        // Línea separadora central con gradiente
+        const separatorGradient = ctx.createLinearGradient(
+            100,
+            730,
+            canvas.width - 100,
+            730,
+        )
+        separatorGradient.addColorStop(0, '#00000000')
+        separatorGradient.addColorStop(0.2, '#00d9ff')
+        separatorGradient.addColorStop(0.8, '#00d9ff')
+        separatorGradient.addColorStop(1, '#00000000')
+        ctx.fillStyle = separatorGradient
+        ctx.fillRect(100, 728, canvas.width - 200, 6)
+
+        // Rol/Categoría
+        ctx.fillStyle = 'rgba(0, 217, 255, 0.1)'
+        ctx.fillRect(150, 780, canvas.width - 300, 90)
+        drawTextWithShadow(
+            'STUDENT',
+            canvas.width / 2,
+            815,
+            62,
+            '#00ffff',
+            'bold',
+            'rgba(0, 217, 255, 0.5)',
+            10,
+        )
+
+        // Título del taller o evento
+        const tallerTitle =
+            tipo === 'taller' && taller ?
+                taller.nombre.toUpperCase()
+            :   'JORNADAS TECNOLÓGICAS'
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'
+        ctx.fillRect(40, 920, canvas.width - 80, 140)
+
+        // Borde decorativo para la sección de taller
+        ctx.strokeStyle = '#00d9ff'
+        ctx.lineWidth = 2
+        ctx.strokeRect(40, 920, canvas.width - 80, 140)
+
+        drawTextWithShadow(
+            tallerTitle,
+            canvas.width / 2,
+            980,
+            52,
+            '#ffffff',
+            'bold',
+            'rgba(0, 217, 255, 0.3)',
+            12,
+        )
+
+        // Instituto
+        drawTextWithShadow(
+            'INSTITUTO TECNOLÓGICO DE ALTAMIRA',
+            canvas.width / 2,
+            1290,
+            40,
+            '#b8c5d6',
+            'normal',
+            'rgba(0, 0, 0, 0.4)',
+            8,
+        )
+
+        // NC y semestre - Información de identificación
+        ctx.fillStyle = 'rgba(0, 217, 255, 0.08)'
+        ctx.fillRect(40, 1380, canvas.width - 80, 110)
+        ctx.strokeStyle = '#00d9ff'
+        ctx.lineWidth = 1.5
+        ctx.strokeRect(40, 1380, canvas.width - 80, 110)
+
+        drawTextWithShadow(
+            `NC: ${usuario.nc}`,
+            canvas.width / 2 - 130,
+            1435,
             50,
             '#00ffff',
             'bold',
+            'rgba(0, 217, 255, 0.3)',
+            8,
         )
 
-        // Título del taller
-        if (tipo === 'taller' && taller) {
-            drawCenteredText(
-                taller.nombre.toUpperCase(),
-                480,
-                34,
-                '#ffffff',
-                'normal',
-            )
-        } else {
-            drawCenteredText(
-                'JORNADAS TECNOLÓGICAS',
-                480,
-                34,
-                '#ffffff',
-                'normal',
-            )
-        }
-
-        // Instituto
-        drawCenteredText(
-            'INSTITUTO TECNOLÓGICO DE ALTAMIRA',
-            580,
-            30,
-            '#b8c5d6',
-            'normal',
+        drawTextWithShadow(
+            `${usuario.semestre}° SEMESTRE`,
+            canvas.width / 2 + 130,
+            1435,
+            50,
+            '#00ffff',
+            'bold',
+            'rgba(0, 217, 255, 0.3)',
+            8,
         )
 
-        // NC y semestre
-        drawCenteredText(
-            `NC: ${usuario.nc} • ${usuario.semestre}° SEMESTRE`,
-            680,
-            40,
-            '#9ba8b8',
-            'normal',
+        // Línea inferior decorativa
+        const bottomLineGradient = ctx.createLinearGradient(
+            50,
+            1540,
+            canvas.width - 50,
+            1540,
         )
+        bottomLineGradient.addColorStop(0, '#00000000')
+        bottomLineGradient.addColorStop(0.2, '#00d9ff')
+        bottomLineGradient.addColorStop(0.8, '#00d9ff')
+        bottomLineGradient.addColorStop(1, '#00000000')
+        ctx.fillStyle = bottomLineGradient
+        ctx.fillRect(50, 1538, canvas.width - 100, 4)
 
         return new THREE.CanvasTexture(canvas)
     }
@@ -668,7 +842,7 @@ function TarjetaConFisica(props: Tarjeta3DSimpleProps) {
                     linearDamping={2}
                     type={dragged ? 'kinematicPosition' : 'dynamic'}
                 >
-                    <CuboidCollider args={[0.9, 1.18, 0.01]} />
+                    <CuboidCollider args={[0.9, 1.71, 0.01]} />
 
                     {/* Cara frontal de la tarjeta */}
                     <mesh

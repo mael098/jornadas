@@ -102,7 +102,7 @@ export function Nav() {
                     <MenuOption href="/expositores">Expositores</MenuOption>
                     {/* <MenuOption href="/talleres">Talleres Día Jueves</MenuOption> */}
                     <MenuOption href="/talleres-viernes">
-                        Talleres Día Viernes
+                        Talleres Día martes
                     </MenuOption>
                     <MenuOption href="/videojuegos">
                         Concurso de Videojuegos
