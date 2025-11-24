@@ -18,8 +18,7 @@ export const LIMITE_DE_SUSCRIPCION = {
 }
 
 export const FECHA_DEL_EVENTO: number | string | Date = (() => {
-    // Crear una fecha que sea exactamente 1 día y 10 horas desde ahora
-    const ahora = new Date()
-    const fecha = new Date(ahora.getTime() + (1 * 24 + 10) * 60 * 60 * 1000) // 1 día + 10 horas
+    // Evento: 25 de noviembre de 2025 a las 8:30
+    const fecha = new Date(2025, 10, 25, 8, 30, 0) // mes es 0-indexed, por eso 10 = noviembre
     return fecha
 })()
