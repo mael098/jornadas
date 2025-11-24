@@ -10,11 +10,11 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import './index.css'
 
 export const metadata: Metadata = {
-    title: 'Jornadas Sistemas 2024 - ITA',
+    title: 'Jornadas Sistemas 2025 - ITA',
     description:
         'Decima primera jornadas de sistemas del Instituto Tecnologico de Altamira',
     openGraph: {
-        title: 'XI Jornadas Tecnológicas - ISC',
+        title: 'XII Jornadas Tecnológicas - ISC',
         description: 'Instituto Tecnológico de Altamira',
         type: 'website',
     },
