@@ -1,8 +1,8 @@
 export type Juegos = keyof typeof JUEGOS
 export const JUEGOS = {
-    Juego_1: 'FIFA',
-    Juego_2: 'Super Smash Bros',
-    Juego_3: 'Mario Kart',
+    Juego_1: 'KOF 2002',
+    Juego_2: 'Smash',
+    Juego_3: 'Minecraft',
 }
 
 export const HEADERS = {
