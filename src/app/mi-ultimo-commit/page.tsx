@@ -189,8 +189,8 @@ export default function page() {
 
                     <div className="pt-8 border-t border-cyan-500/30 text-right">
                         <p className="text-blue-200 mb-2">
-                            Con cariño, con humor y con un par de bugs que jamás
-                            encontré,
+                            Con todo mi corazón, mis recuerdos y mis bugs que
+                            nunca aparecieron,
                         </p>
                         <p className="text-2xl font-bold bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                             Iván Asdrúbal Villegas Espinosa
