@@ -20,6 +20,20 @@ export async function conteoDeVideojuegos() {
             },
         }),
     ])
+
+    // Debug: Mostrar todos los registros de videojuegos
+    const todosLosRegistros = await db.registro_videojuegos.findMany({
+        select: {
+            videojuego_seleccionado: true,
+        },
+    })
+    console.log('📊 Todos los videojuegos en BD:', todosLosRegistros)
+    console.log('🎮 Buscando por:', {
+        juego1: JUEGOS.Juego_1,
+        juego2: JUEGOS.Juego_2,
+        juego3: JUEGOS.Juego_3,
+    })
+
     return {
         juego1,
         juego2,
