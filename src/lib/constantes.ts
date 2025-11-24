@@ -17,13 +17,9 @@ export const LIMITE_DE_SUSCRIPCION = {
     TALLER: 37,
 }
 
-export const FECHA_DEL_EVENTO: number | string | Date = new Date(
-    // la fecha es el 25 de noviembre de 2025 a las 8:00 am horas (CST)
-    // CST es UTC-6, así que 8:00 AM CST = 14:00 UTC
-    2025,
-    10,
-    25,
-    14,
-    0,
-    0, // Año, Mes (0-indexado, por eso 10 = noviembre), Día, Hora (UTC), Minuto, Segundo
-)
+export const FECHA_DEL_EVENTO: number | string | Date = (() => {
+    // Crear una fecha que sea exactamente 1 día y 10 horas desde ahora
+    const ahora = new Date()
+    const fecha = new Date(ahora.getTime() + (1 * 24 + 10) * 60 * 60 * 1000) // 1 día + 10 horas
+    return fecha
+})()
