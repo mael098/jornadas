@@ -12,7 +12,7 @@ import './index.css'
 export const metadata: Metadata = {
     title: 'Jornadas Sistemas 2025 - ITA',
     description:
-        'Decima primera jornadas de sistemas del Instituto Tecnologico de Altamira',
+        'Decima segunda jornadas de sistemas del Instituto Tecnologico de Altamira',
     openGraph: {
         title: 'XII Jornadas Tecnológicas - ISC',
         description: 'Instituto Tecnológico de Altamira',
