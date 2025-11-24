@@ -101,16 +101,16 @@ export function Nav() {
                     <MenuOption href="/">Página Principal</MenuOption>
                     <MenuOption href="/expositores">Expositores</MenuOption>
                     {/* <MenuOption href="/talleres">Talleres Día Jueves</MenuOption> */}
-                    <MenuOption href="/talleres-viernes">
+                    <MenuOption href="/talleres-martes">
                         Talleres Día martes
                     </MenuOption>
                     <MenuOption href="/videojuegos">
                         Concurso de Videojuegos
                     </MenuOption>
                     <MenuOption href="/mi-tarjeta">Mi Tarjeta</MenuOption>
-                    {/* <MenuOption href="/mi-ultimo-commit">
+                    <MenuOption href="/mi-ultimo-commit">
                         Mi Último Commit
-                    </MenuOption> */}
+                    </MenuOption>
                     {/* <MenuOption href="/tarjeta">Tarjetas Digitales</MenuOption> */}
                     {/* <MenuOption href="/tarjeta-usuario">Mi Pase Digital</MenuOption> */}
                     {/* <MenuOption href="/tarjeta-3d">Tarjetas 3D</MenuOption> */}

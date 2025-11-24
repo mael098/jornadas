@@ -93,6 +93,15 @@ export async function registrarVideojuego({
                 },
             },
         })
+
+        // Guardar número de control en cookies
+        const { cookies } = await import('next/headers')
+        const cookieStore = await cookies()
+        cookieStore.set('numero_control_registrado', nc, {
+            httpOnly: false,
+            maxAge: 60 * 60 * 24 * 30, // 30 días
+            path: '/',
+        })
     } catch (error) {
         console.log(error)
         return {
