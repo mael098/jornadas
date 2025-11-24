@@ -9,7 +9,31 @@ export interface GenerarTarjetaProps {
     tipo: 'taller' | 'videojuego'
 }
 
-export async function generarTarjeta({ nc, tipo }: GenerarTarjetaProps) {
+export type GenerarTarjetaResponse =
+    | {
+          success: true
+          url: string
+          tarjetaId: number
+          info: string
+          tipo: 'taller' | 'videojuego'
+          tipoLabel: string
+      }
+    | {
+          success: true
+          url: string
+          info: string
+          tipo: 'taller' | 'videojuego'
+          tipoLabel: string
+          message: string
+      }
+    | {
+          error: string
+      }
+
+export async function generarTarjeta({
+    nc,
+    tipo,
+}: GenerarTarjetaProps): Promise<GenerarTarjetaResponse> {
     try {
         // Buscar usuario
         const usuario = await db.usuarios.findUnique({
@@ -39,9 +63,26 @@ export async function generarTarjeta({ nc, tipo }: GenerarTarjetaProps) {
         })
 
         if (tarjetaExistente) {
+            // Obtener información según el tipo
+            let info = ''
+            if (tipo === 'taller' && usuario.registro_talleres) {
+                info = usuario.registro_talleres.taller.nombre
+            } else if (
+                tipo === 'videojuego' &&
+                usuario.Registro_videojuegos.length > 0
+            ) {
+                const videojuego = usuario.Registro_videojuegos[0]
+                info = videojuego.videojuego_seleccionado
+                console.log('Videojuego encontrado:', videojuego)
+            }
+
             return {
                 success: true,
                 url: tarjetaExistente.url,
+                info: info || 'No especificado',
+                tipo: tipo,
+                tipoLabel:
+                    tipo === 'taller' ? 'Taller' : 'Torneo de Videojuegos',
                 message: 'Tarjeta ya existe',
             }
         }
@@ -54,7 +95,15 @@ export async function generarTarjeta({ nc, tipo }: GenerarTarjetaProps) {
             tipo === 'videojuego' &&
             usuario.Registro_videojuegos.length > 0
         ) {
-            info = usuario.Registro_videojuegos[0].videojuego_seleccionado
+            const videojuego = usuario.Registro_videojuegos[0]
+            info = videojuego.videojuego_seleccionado
+            console.log('Videojuego encontrado:', videojuego)
+        } else {
+            return {
+                error:
+                    'No hay registro de ' +
+                    (tipo === 'taller' ? 'taller' : 'videojuego'),
+            }
         }
 
         // Por ahora guardamos una URL placeholder
@@ -77,6 +126,9 @@ export async function generarTarjeta({ nc, tipo }: GenerarTarjetaProps) {
             success: true,
             url: tarjeta.url,
             tarjetaId: tarjeta.id,
+            info: info,
+            tipo: tipo,
+            tipoLabel: tipo === 'taller' ? 'Taller' : 'Torneo de Videojuegos',
         }
     } catch (error) {
         console.error('Error generando tarjeta:', error)
