@@ -71,3 +71,51 @@ console.log('✅ Exports generados:')
 console.log(`  - Taller 1: ${taller_1.length} registros`)
 console.log(`  - Taller 2: ${taller_2.length} registros`)
 console.log(`  - Taller 3: ${taller_3.length} registros`)
+
+const allUsers_juego = await db.usuarios.findMany({
+    where: {
+        Registro_videojuegos: {
+            some: {
+                videojuego_seleccionado: 'Smash',
+            },
+        },
+    },
+    select: {
+        nc: true,
+        nombre: true,
+        apellidos: true,
+        email: true,
+        semestre: true,
+    },
+})
+
+const allUsers_juego_minecraft = await db.usuarios.findMany({
+    where: {
+        Registro_videojuegos: {
+            some: {
+                videojuego_seleccionado: 'Minecraft',
+            },
+        },
+    },
+    select: {
+        nc: true,
+        nombre: true,
+        apellidos: true,
+        email: true,
+        semestre: true,
+    },
+})
+
+const allUsers_juego_KOF_2002 = await db.usuarios.findMany({})
+
+await writeFile('exports/usuarios_smash.tsv', asTsv(allUsers_juego))
+await writeFile(
+    'exports/usuarios_minecraft.tsv',
+    asTsv(allUsers_juego_minecraft),
+)
+console.log(
+    `  - Usuarios que eligieron Smash: ${allUsers_juego.length} registros`,
+)
+console.log(
+    `  - Usuarios que eligieron Minecraft: ${allUsers_juego_minecraft.length} registros`,
+)
