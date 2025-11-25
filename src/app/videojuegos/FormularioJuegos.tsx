@@ -71,8 +71,8 @@ export function GamesForm({}: FormularioJuegosProps) {
                 />
                 <Radio
                     name="juego"
-                    taller="Juego 2: Minecraft"
-                    descripcion="Compite en el torneo de Minecraft"
+                    taller="Juego 2: Smash"
+                    descripcion="Compite en el torneo de Smash"
                     docente=""
                     value={JUEGOS.Juego_2}
                     required
@@ -81,8 +81,8 @@ export function GamesForm({}: FormularioJuegosProps) {
                 />
                 <Radio
                     name="juego"
-                    taller="Juego 3: Smash"
-                    descripcion="Compite en el torneo de Smash"
+                    taller="Juego 3: Minecraft"
+                    descripcion="Compite en el torneo de Minecraft"
                     docente=""
                     value={JUEGOS.Juego_3}
                     required

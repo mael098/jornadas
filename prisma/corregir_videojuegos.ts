@@ -11,6 +11,7 @@ async function corregirVideojuegos() {
             FIFA: 'KOF 2002',
             'Super Smash Bros': 'Smash',
             'Mario Kart': 'Minecraft',
+            Minecraft: 'Smash', // Gente que eligió Smash quedó registrada como Minecraft
             // Agregar más si es necesario
         }
 
